@@ -108,7 +108,6 @@ public class SanPhamChiTiet {
         // Set default creation and modification dates
         this.ngayTao = Instant.now();
         this.deleted = Boolean.FALSE;
-        this.trangThai = Status.HOAT_DONG;
 
     }
 

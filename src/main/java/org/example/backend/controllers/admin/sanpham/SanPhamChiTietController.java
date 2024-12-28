@@ -8,6 +8,7 @@ import org.example.backend.common.ResponseData;
 import org.example.backend.constants.api.Admin;
 import org.example.backend.dto.request.sanPham.SanPhamChiTietSearchRequest;
 import org.example.backend.dto.request.sanPhamV2.SanPhamChiTietRequest;
+import org.example.backend.dto.request.sanPhamV2.SanPhamChiTietV2Request;
 import org.example.backend.dto.response.SanPham.SanPhamChiTietRespon;
 import org.example.backend.dto.response.SanPham.SanPhamClientResponse;
 import org.example.backend.dto.response.SanPham.SanPhamResponse;
@@ -322,6 +323,12 @@ public class SanPhamChiTietController {
     @PostMapping("/api/v1/admin/product/generate")
     public ResponseEntity<?> generateSanPhamChiTiet(@RequestBody SanPhamChiTietRequest request) {
         List<SanPhamChiTiet> sanPhamChiTiets = sanPhamChiTietService.generateSanPhamChiTiet(request);
+        return ResponseEntity.ok(sanPhamChiTiets);
+    }
+
+    @PostMapping("/api/v1/admin/product/generate/v2")
+    public ResponseEntity<?> generateSanPhamChiTietV2(@RequestBody SanPhamChiTietV2Request request) {
+        List<SanPhamChiTiet> sanPhamChiTiets = sanPhamChiTietService.generateSanPhamChiTietV2(request);
         return ResponseEntity.ok(sanPhamChiTiets);
     }
 

@@ -2,7 +2,9 @@ package org.example.backend.services;
 
 import jakarta.persistence.EntityNotFoundException;
 import org.example.backend.common.PageResponse;
+import org.example.backend.constants.Status;
 import org.example.backend.dto.request.sanPhamV2.SanPhamChiTietRequest;
+import org.example.backend.dto.request.sanPhamV2.SanPhamChiTietV2Request;
 import org.example.backend.dto.response.NhanVien.NhanVienRespon;
 import org.example.backend.dto.response.banHang.banHangClientResponse;
 import org.example.backend.dto.response.dotGiamGia.DotGiamGiaResponse;
@@ -38,6 +40,10 @@ public class SanPhamChiTietService extends GenericServiceImpl<SanPhamChiTiet, UU
     private DeGiayRepository deGiayRepository;
     @Autowired
     private DanhMucRepository danhMucRepository;
+    @Autowired
+    private LopLotRepository lopLotRepository;
+    @Autowired
+    private ChatLieuRepository chatLieuRepository;
 
     public SanPhamChiTietService(JpaRepository<SanPhamChiTiet, UUID> repository, SanPhamChiTietRepository SPCTRepository) {
         super(repository);
@@ -116,6 +122,35 @@ public class SanPhamChiTietService extends GenericServiceImpl<SanPhamChiTiet, UU
                 chiTiet.setSoLuong(request.getSoLuong());
                 chiTiet.setMoTa(request.getMoTa());
                 chiTiet.setTen(chiTiet.getIdSanPham().getTen()+" "+chiTiet.getIdKichThuoc().getTen()+" "+chiTiet.getIdMauSac().getTen());
+                sanPhamChiTiets.add(chiTiet);
+            }
+        }
+        return sanPhamChiTietRepository.saveAll(sanPhamChiTiets);
+    }
+
+    public List<SanPhamChiTiet> generateSanPhamChiTietV2(SanPhamChiTietV2Request request) {
+        SanPham sanPham = new SanPham();
+        sanPham.setIdLopLot(lopLotRepository.findById(request.getIdLopLot()).orElse(null));
+        sanPham.setIdChatLieu(chatLieuRepository.findById(request.getIdChatLieu()).orElse(null));
+        sanPham.setIdHang(hangRepository.findById(request.getIdHang()).orElse(null));
+        sanPham.setIdDanhMuc(danhMucRepository.findById(request.getIdDanhMuc()).orElse(null));
+        sanPham.setIdDeGiay(deGiayRepository.findById(request.getIdDeGiay()).orElse(null));
+        sanPham.setTen(request.getTenSp());
+        sanPham.setTrangThai(Status.DANG_DUOC_KHOI_TAO);
+        sanPhamRepository.save(sanPham);
+        List<SanPhamChiTiet> sanPhamChiTiets = new ArrayList<>();
+        for (UUID mauSacId : request.getMauSacIds()) {
+            for (UUID kichThuocId : request.getKichThuocIds()) {
+                SanPhamChiTiet chiTiet = new SanPhamChiTiet();
+                chiTiet.setIdSanPham(sanPhamRepository.findById(sanPham.getId()).orElse(null));
+                chiTiet.setIdMauSac(mauSacRepository.findById(mauSacId).orElse(null));
+                chiTiet.setIdKichThuoc(kichThuocRepository.findById(kichThuocId).orElse(null));
+                chiTiet.setGiaBan(request.getGiaBan());
+                chiTiet.setGiaNhap(request.getGiaNhap());
+                chiTiet.setSoLuong(request.getSoLuong());
+                chiTiet.setMoTa(request.getMoTa());
+                chiTiet.setTen(chiTiet.getIdSanPham().getTen()+" - "+chiTiet.getIdKichThuoc().getTen()+" - "+chiTiet.getIdMauSac().getTen());
+                chiTiet.setTrangThai(Status.DANG_DUOC_KHOI_TAO);
                 sanPhamChiTiets.add(chiTiet);
             }
         }
