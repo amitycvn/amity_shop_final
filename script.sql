@@ -1052,3 +1052,108 @@ ALTER TABLE [dbo].[tra_hang] CHECK CONSTRAINT [FK_tra_hang.id_spct]
     GO
 ALTER DATABASE [amity_shop_empty] SET  READ_WRITE 
 GO
+
+USE [amity_shop_empty]
+GO
+
+CREATE TRIGGER trg_san_pham_ma_tu_sinh
+    ON dbo.san_pham
+    AFTER INSERT
+AS
+BEGIN
+UPDATE dbo.san_pham
+SET ma = 'san_pham_' + RIGHT('00000' + CAST((SELECT COUNT(*) FROM dbo.san_pham) AS NVARCHAR(50)), 5)
+WHERE id IN (SELECT id FROM inserted);
+END;
+GO
+USE [amity_shop_empty]
+GO
+
+CREATE TRIGGER trg_chat_lieu_ma_tu_sinh
+    ON dbo.chat_lieu
+    AFTER INSERT
+AS
+BEGIN
+UPDATE dbo.chat_lieu
+SET ma = 'chat_lieu_' + RIGHT('00000' + CAST((SELECT COUNT(*) FROM dbo.chat_lieu) AS NVARCHAR(50)), 5)
+WHERE id IN (SELECT id FROM inserted);
+END;
+GO
+USE [amity_shop_empty]
+GO
+
+CREATE TRIGGER trg_danh_muc_ma_tu_sinh
+    ON dbo.danh_muc
+    AFTER INSERT
+AS
+BEGIN
+UPDATE dbo.danh_muc
+SET ma = 'danh_muc_' + RIGHT('00000' + CAST((SELECT COUNT(*) FROM dbo.danh_muc) AS NVARCHAR(50)), 5)
+WHERE id IN (SELECT id FROM inserted);
+END;
+GO
+USE [amity_shop_empty]
+GO
+
+CREATE TRIGGER trg_de_giay_ma_tu_sinh
+    ON dbo.de_giay
+    AFTER INSERT
+AS
+BEGIN
+UPDATE dbo.de_giay
+SET ma = 'de_giay_' + RIGHT('00000' + CAST((SELECT COUNT(*) FROM dbo.de_giay) AS NVARCHAR(50)), 5)
+WHERE id IN (SELECT id FROM inserted);
+END;
+GO
+USE [amity_shop_empty]
+GO
+
+CREATE TRIGGER trg_hang_ma_tu_sinh
+    ON dbo.hang
+    AFTER INSERT
+AS
+BEGIN
+UPDATE dbo.hang
+SET ma = 'hang_' + RIGHT('00000' + CAST((SELECT COUNT(*) FROM dbo.hang) AS NVARCHAR(50)), 5)
+WHERE id IN (SELECT id FROM inserted);
+END;
+GO
+USE [amity_shop_empty]
+GO
+
+CREATE TRIGGER trg_kich_thuoc_ma_tu_sinh
+    ON dbo.kich_thuoc
+    AFTER INSERT
+AS
+BEGIN
+UPDATE dbo.kich_thuoc
+SET ma = 'kich_thuoc_' + RIGHT('00000' + CAST((SELECT COUNT(*) FROM dbo.kich_thuoc) AS NVARCHAR(50)), 5)
+WHERE id IN (SELECT id FROM inserted);
+END;
+GO
+USE [amity_shop_empty]
+GO
+
+CREATE TRIGGER trg_lop_lot_ma_tu_sinh
+    ON dbo.lop_lot
+    AFTER INSERT
+AS
+BEGIN
+UPDATE dbo.lop_lot
+SET ma = 'lop_lot_' + RIGHT('00000' + CAST((SELECT COUNT(*) FROM dbo.lop_lot) AS NVARCHAR(50)), 5)
+WHERE id IN (SELECT id FROM inserted);
+END;
+GO
+USE [amity_shop_empty]
+GO
+
+CREATE TRIGGER trg_mau_sac_ma_tu_sinh
+    ON dbo.mau_sac
+    AFTER INSERT
+AS
+BEGIN
+UPDATE dbo.mau_sac
+SET ma = 'mau_sac_' + RIGHT('00000' + CAST((SELECT COUNT(*) FROM dbo.mau_sac) AS NVARCHAR(50)), 5)
+WHERE id IN (SELECT id FROM inserted);
+END;
+GO
