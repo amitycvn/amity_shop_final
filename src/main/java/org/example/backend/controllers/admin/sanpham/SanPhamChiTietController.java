@@ -75,10 +75,6 @@ public class SanPhamChiTietController {
 
     @PostMapping(value = Admin.PRODUCT_DETAIL_CREATE, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> create(
-
-            @RequestParam("idHang") Hang idHang,
-            @RequestParam("idDanhMuc") DanhMuc idDanhMuc,
-            @RequestParam("idDeGiay") DeGiay idDeGiay,
             @PathVariable("id") UUID idSanPham,
             @RequestParam("idMauSac") MauSac idMauSac,
             @RequestParam("idKichThuoc") KichThuoc idKichThuoc,
@@ -116,9 +112,6 @@ public class SanPhamChiTietController {
     @PutMapping(value = Admin.PRODUCT_DETAIL_UPDATE, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> update(
             @PathVariable("id") UUID id,
-            @RequestParam("idHang") Hang idHang,
-            @RequestParam("idDanhMuc") DanhMuc idDanhMuc,
-            @RequestParam("idDeGiay") DeGiay idDeGiay,
             @PathVariable("idSanPham") UUID idSanPham,
             @RequestParam("idMauSac") MauSac idMauSac,
             @RequestParam("idKichThuoc") KichThuoc idKichThuoc,
