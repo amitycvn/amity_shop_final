@@ -3,6 +3,7 @@ package org.example.backend.repositories;
 import jakarta.transaction.Transactional;
 import org.example.backend.dto.request.dotGiamGia.DotGiamGiaSearch;
 import org.example.backend.dto.request.sanPham.SanPhamChiTietSearchRequest;
+import org.example.backend.dto.request.sanPham.SanPhamChiTietSearchRequest2;
 import org.example.backend.dto.response.SanPham.SanPhamChiTietRespon;
 import org.example.backend.dto.response.SanPham.SanPhamClientResponse;
 import org.example.backend.dto.response.banHang.banHangClientResponse;
@@ -42,7 +43,7 @@ public interface SanPhamChiTietRepository extends JpaRepository<SanPhamChiTiet, 
 
     @Query("""
                     select new org.example.backend.dto.response.SanPham.SanPhamChiTietRespon(s.id,s.idSanPham.id,
-                    s.idSanPham.ten,s.idMauSac.id,
+                    s.ten,s.idMauSac.id,
                     s.idMauSac.ten,s.idKichThuoc.id,s.idKichThuoc.ten,
                     s.soLuong,s.giaBan,s.giaNhap,s.trangThai,s.hinhAnh,s.moTa
                     )
@@ -56,8 +57,23 @@ public interface SanPhamChiTietRepository extends JpaRepository<SanPhamChiTiet, 
     Page<SanPhamChiTietRespon> search(Pageable pageable, SanPhamChiTietSearchRequest SPCTSearch);
 
     @Query("""
+        SELECT new org.example.backend.dto.response.SanPham.SanPhamChiTietRespon(s.id, s.idSanPham.id,
+        s.ten, s.idMauSac.id,
+        s.idMauSac.ten, s.idKichThuoc.id, s.idKichThuoc.ten,
+        s.soLuong, s.giaBan, s.giaNhap, s.trangThai, s.hinhAnh, s.moTa)
+        FROM SanPhamChiTiet s
+        WHERE s.deleted = false
+        AND (:#{#SPCTSearch.kichThuoc} IS NULL OR s.idKichThuoc.ten LIKE %:#{#SPCTSearch.kichThuoc}%)
+        AND (:#{#SPCTSearch.mauSac} IS NULL OR s.idMauSac.ten LIKE %:#{#SPCTSearch.mauSac}%)
+        AND (:#{#SPCTSearch.tenSanPhamChiTiet} IS NULL OR s.ten LIKE %:#{#SPCTSearch.tenSanPhamChiTiet}%)
+        AND (:#{#SPCTSearch.trangThai} IS NULL OR s.trangThai = :#{#SPCTSearch.trangThai})
+    """)
+    Page<SanPhamChiTietRespon> search2(Pageable pageable, SanPhamChiTietSearchRequest2 SPCTSearch);
+
+
+    @Query("""
                     select new org.example.backend.dto.response.SanPham.SanPhamChiTietRespon(s.id,s.idSanPham.id,
-                    s.idSanPham.ten,s.idMauSac.id,
+                    s.ten,s.idMauSac.id,
                     s.idMauSac.ten,s.idKichThuoc.id,s.idKichThuoc.ten,
                     s.soLuong,s.giaBan,s.giaNhap,s.trangThai,s.hinhAnh,s.moTa
                     )
