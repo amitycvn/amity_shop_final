@@ -7,6 +7,7 @@ import org.example.backend.common.PageResponse;
 import org.example.backend.common.ResponseData;
 import org.example.backend.constants.api.Admin;
 import org.example.backend.dto.request.sanPham.SanPhamChiTietSearchRequest;
+import org.example.backend.dto.request.sanPham.SanPhamChiTietSearchRequest2;
 import org.example.backend.dto.request.sanPhamV2.SanPhamChiTietRequest;
 import org.example.backend.dto.request.sanPhamV2.SanPhamChiTietV2Request;
 import org.example.backend.dto.response.SanPham.SanPhamChiTietRespon;
@@ -171,7 +172,7 @@ public class SanPhamChiTietController {
     public ResponseEntity<?> detail(@PathVariable UUID id) {
         return ResponseEntity.ok(sanPhamChiTietRepository.findById(id).orElse(null));
     }
-
+    //tim kieems cux
     @GetMapping(Admin.PRODUCT_DETAIL_SEARCH)
     public ResponseEntity<?> search(
             @RequestParam(value = "page", defaultValue = "0") int page,
@@ -200,6 +201,44 @@ public class SanPhamChiTietController {
         return ResponseEntity.ok(responseData);
     }
 
+    /// tim kiem sau khi sua - dang dung cai nay trong tim kiem spct
+
+    @GetMapping(Admin.PRODUCT_DETAIL_SEARCH2)
+    public ResponseEntity<?> search(
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "5") int size,
+            @RequestParam(defaultValue = "ngayTao") String sortBy,
+            @RequestParam(defaultValue = "desc") String sortDir,
+
+            @RequestParam(defaultValue = "") String mauSac,
+            @RequestParam(defaultValue = "") String kichThuoc,
+            @RequestParam(defaultValue = "") String tenSanPhamChiTiet,
+            @RequestParam(required = false) String trangThai) {
+
+        SanPhamChiTietSearchRequest2 searchRequest = new SanPhamChiTietSearchRequest2();
+        searchRequest.setMauSac(mauSac);
+        searchRequest.setKichThuoc(kichThuoc);
+        searchRequest.setTenSanPhamChiTiet(tenSanPhamChiTiet);
+        searchRequest.setTrangThai(trangThai);
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(sortDir), sortBy));
+        Page<SanPhamChiTietRespon> searchSPCTPaginate = sanPhamChiTietRepository.search2(pageable, searchRequest);
+
+        PageResponse<List<SanPhamChiTietRespon>> data = PageResponse.<List<SanPhamChiTietRespon>>builder()
+                .page(searchSPCTPaginate.getNumber())
+                .size(searchSPCTPaginate.getSize())
+                .totalPage(searchSPCTPaginate.getTotalPages())
+                .items(searchSPCTPaginate.getContent()).build();
+
+        ResponseData<PageResponse<List<SanPhamChiTietRespon>>> responseData = ResponseData
+                .<PageResponse<List<SanPhamChiTietRespon>>>builder()
+                .message("Search Sale")
+                .status(HttpStatus.OK.value())
+                .data(data).build();
+
+        return ResponseEntity.ok(responseData);
+    }
+
     @GetMapping(Admin.PRODUCT_DETAIL_PAGE)
     public ResponseEntity<ResponseData<PageResponse<List<SanPhamChiTietRespon>>>> phanTrang(
             @RequestParam(value = "itemsPerPage", defaultValue = "5") int itemsperPage,
@@ -223,6 +262,8 @@ public class SanPhamChiTietController {
 
         return ResponseEntity.ok(responseData);
     }
+
+
 
     @GetMapping(Admin.PRODUCT_DETAIL_GET_BY_ID)
     public ResponseEntity<?> getById(@PathVariable UUID id) {

@@ -67,6 +67,7 @@ public class Admin {
     public static final String PRODUCT_DETAIL_SET_DELETE = PRODUCT_DETAIL + "/delete/{id}";
     public static final String PRODUCT_DETAIL_DETAIL = PRODUCT_DETAIL + "/detail/{id}";
     public static final String PRODUCT_DETAIL_SEARCH = PRODUCT_DETAIL + "/search";
+    public static final String PRODUCT_DETAIL_SEARCH2 = PRODUCT_DETAIL + "/search2";
     public static final String PRODUCT_DETAIL_PAGE = PRODUCT_DETAIL + "/page";
     public static final String PRODUCT_DETAIL_QR = PRODUCT_DETAIL + "/qrcode/{id}";
     public static final String PRODUCT_DETAIL_QR_TO_CART = PRODUCT_DETAIL + "/qrcode/cart/{id}";
