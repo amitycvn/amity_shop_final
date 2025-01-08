@@ -13,6 +13,7 @@ import java.util.UUID;
 @Setter
 public class HinhAnhRespon {
     private UUID id;
+    private UUID idSp;
     private String ma;
     private String ten;
     private String url;

@@ -1158,6 +1158,19 @@ WHERE id IN (SELECT id FROM inserted);
 END;
 GO
 
+
+
+CREATE TRIGGER trg_hinh_anh_ma_tu_sinh
+    ON dbo.hinh_anh
+    AFTER INSERT
+AS
+BEGIN
+UPDATE dbo.hinh_anh
+SET ma = 'hinh_anh_' + RIGHT('00000' + CAST((SELECT COUNT(*) FROM dbo.hinh_anh) AS NVARCHAR(50)), 5)
+WHERE id IN (SELECT id FROM inserted);
+END;
+GO
+
 INSERT INTO [dbo].[nguoi_dung] 
     ( [ma], [email], [sdt], [mat_khau], [ten], [dia_chi], [ngay_sinh], [gioi_tinh], [hinh_anh], [cccd], [diem], [nguoi_tao], [nguoi_sua], [ngay_tao], [ngay_sua], [chuc_vu], [trang_thai], [deleted]) 
 VALUES 
@@ -1173,4 +1186,5 @@ BEGIN
     SET ma = 'hoa_don_' + RIGHT('00000' + CAST((SELECT COUNT(*) FROM dbo.hoa_don) AS NVARCHAR(50)), 5)
     WHERE id IN (SELECT id FROM inserted);
 END;
+
 

@@ -29,8 +29,8 @@ public class HinhAnh {
     private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_spct")
-    private SanPhamChiTiet idSpct;
+    @JoinColumn(name = "id_sp")
+    private SanPham idsp;
 
     @Nationalized
     @Column(name = "ma", length = 50)

@@ -12,11 +12,20 @@ import java.util.UUID;
 
 public interface HinhAnhRepository extends JpaRepository<HinhAnh, UUID> {
     @Query("""
-    select new org.example.backend.dto.response.SanPham.HinhAnhRespon(h.id,h.ma,h.ten,h.url,h.trangThai)
+    select new org.example.backend.dto.response.SanPham.HinhAnhRespon(h.id,h.idsp.id,h.ma,h.ten,h.url,h.trangThai)
     from HinhAnh h 
     where h.deleted=false 
 """)
     List<HinhAnhRespon> getAll();
+
+
+    @Query("""
+    select new org.example.backend.dto.response.SanPham.HinhAnhRespon(h.id,h.idsp.id, h.ma, h.ten, h.url, h.trangThai)
+    from HinhAnh h
+    where h.deleted = false and h.idsp.id = :idSanPham
+""")
+    List<HinhAnhRespon> findByIdspId(UUID idSanPham);
+
 
     @Modifying
     @Transactional
