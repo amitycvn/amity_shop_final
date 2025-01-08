@@ -6,7 +6,7 @@ import org.example.backend.dto.response.thongKe.ThongKeResponse;
 
 import org.example.backend.dto.response.quanLyDonHang.hoaDonChiTietReponse;
 
-import org.example.backend.dto.response.thongKe.Top5SanPhamResponse;
+
 import org.example.backend.models.HoaDonChiTiet;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,7 +17,6 @@ import org.springframework.stereotype.Repository;
 
 import java.time.Instant;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Repository
@@ -99,6 +98,28 @@ public interface HoaDonChiTietRepository extends JpaRepository<HoaDonChiTiet, UU
     List<ThongKeResponse> getAllThongKeByDay(@Param("trangThai") String trangThai, @Param("year") int year, @Param("month") int month,@Param("day") int day);
 
 
+    @Query("""
+    SELECT new org.example.backend.dto.response.thongKe.ThongKeResponse(
+        hd.id,
+        SUM(hdct.soLuong),
+        SUM(hdct.idHoaDon.tongTien - COALESCE(hdct.giaGiam, 0)),
+        SUM(hdct.soLuong * spct.giaNhap),
+        (SUM(hdct.idHoaDon.tongTien - COALESCE(hdct.giaGiam, 0))) - (SUM(hdct.soLuong * spct.giaNhap)),
+        hd.trangThai,
+        hd.deleted)
+    FROM HoaDonChiTiet hdct
+    JOIN HoaDon hd ON hdct.idHoaDon.id = hd.id
+    JOIN SanPhamChiTiet spct ON hdct.idSpct.id = spct.id
+    WHERE hd.trangThai = :trangThai
+      AND hd.deleted = false
+      AND hd.ngayTao BETWEEN :startDate AND :endDate
+    GROUP BY hd.id, hd.trangThai, hd.deleted
+""")
+    List<ThongKeResponse> getAllThongKeByDateRange(
+            @Param("trangThai") String trangThai,
+            @Param("startDate") Instant startDate,
+            @Param("endDate") Instant endDate
+    );
 
 
 
