@@ -55,7 +55,7 @@ public interface SanPhamChiTietRepository extends JpaRepository<SanPhamChiTiet, 
 
             """)
     Page<SanPhamChiTietRespon> search(Pageable pageable, SanPhamChiTietSearchRequest SPCTSearch);
-
+    //tim kiếm spct trong tất cả các spct--bán hàng
     @Query("""
         SELECT new org.example.backend.dto.response.SanPham.SanPhamChiTietRespon(s.id, s.idSanPham.id,
         s.ten, s.idMauSac.id,
@@ -104,21 +104,21 @@ public interface SanPhamChiTietRepository extends JpaRepository<SanPhamChiTiet, 
 
             """)
     List<SanPhamChiTietRespon> findByIdSpct(UUID idSanPham);
-
+    //tìm kiếm spct trong spct
     @Query("""
-                    select new org.example.backend.dto.response.SanPham.SanPhamChiTietRespon(s.id,s.idSanPham.id,
-                    s.idSanPham.ten,s.idMauSac.id,
-                    s.idMauSac.ten,s.idKichThuoc.id,s.idKichThuoc.ten,
-                    s.soLuong,s.giaBan,s.giaNhap,s.trangThai,s.hinhAnh,s.moTa
-                    )
-                    from SanPhamChiTiet s
-                    where s.deleted=false
-                    and s.idSanPham.id = :#{#SPCTSearch.idSanPham}
-                    AND (COALESCE(:#{#SPCTSearch.kichThuoc}, '') ='' OR s.idKichThuoc.ten LIKE %:#{#SPCTSearch.kichThuoc}%)
-                    AND (COALESCE(:#{#SPCTSearch.mauSac}, '') ='' OR s.idMauSac.ten LIKE %:#{#SPCTSearch.mauSac}%)
-
-            """)
+    select new org.example.backend.dto.response.SanPham.SanPhamChiTietRespon(s.id, s.idSanPham.id,
+        s.idSanPham.ten, s.idMauSac.id, s.idMauSac.ten, s.idKichThuoc.id, s.idKichThuoc.ten,
+        s.soLuong, s.giaBan, s.giaNhap, s.trangThai, s.hinhAnh, s.moTa)
+    from SanPhamChiTiet s
+    where s.deleted = false
+    and s.idSanPham.id = :#{#SPCTSearch.idSanPham}
+    AND (:#{#SPCTSearch.kichThuoc} IS NULL OR s.idKichThuoc.ten LIKE %:#{#SPCTSearch.kichThuoc}%)
+    AND (:#{#SPCTSearch.mauSac} IS NULL OR s.idMauSac.ten LIKE %:#{#SPCTSearch.mauSac}%)
+    AND (:#{#SPCTSearch.tenSanPhamChiTiet} IS NULL OR s.ten LIKE %:#{#SPCTSearch.tenSanPhamChiTiet}%)
+    AND (:#{#SPCTSearch.trangThai} IS NULL OR :#{#SPCTSearch.trangThai} = '' OR s.trangThai = :#{#SPCTSearch.trangThai})
+""")
     Page<SanPhamChiTietRespon> findByIdSpct1(Pageable pageable, SanPhamChiTietSearchRequest SPCTSearch);
+
 
     @Query("""
                      select new org.example.backend.dto.response.SanPham.SanPhamChiTietRespon(s.id,s.idSanPham.id,
