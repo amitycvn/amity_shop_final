@@ -23,6 +23,7 @@ public class Admin {
     public static final String USER_REGISTER = USER + "/createUser";
     public static final String USER_UPDATE_PASSWORD = USER + "/updateUser/{id}";
     public static final String USER_SEARCH_EMAIL = USER + "/searchEmail";
+    public static final String USER_SEARCH_SDT = USER + "/searchSdt";
     public static final String USER_UPDATE_PASSWORD_BY_EMAIL = USER + "/updatePassword/{email}";
 
 
