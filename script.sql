@@ -1157,3 +1157,20 @@ SET ma = 'mau_sac_' + RIGHT('00000' + CAST((SELECT COUNT(*) FROM dbo.mau_sac) AS
 WHERE id IN (SELECT id FROM inserted);
 END;
 GO
+
+INSERT INTO [dbo].[nguoi_dung] 
+    ( [ma], [email], [sdt], [mat_khau], [ten], [dia_chi], [ngay_sinh], [gioi_tinh], [hinh_anh], [cccd], [diem], [nguoi_tao], [nguoi_sua], [ngay_tao], [ngay_sua], [chuc_vu], [trang_thai], [deleted]) 
+VALUES 
+    ( 'admin', 'admin@gmail.com', '0123456789', '$2a$10$MqeShHw9YqMt19byWf6BSOSdC7TxtgkVVCmFXsIWmi2witCGa6HyG', N'admin', N', ', '1990-01-01', N'Nam', NULL, '000000000', 100, N'Admin', N'Admin', '2023-01-01 10:00:00', '2023-01-02 15:00:00', N'admin', N'Hoạt động', 0);
+
+
+	CREATE TRIGGER trg_hoa_don_ma_tu_sinh
+ON dbo.hoa_don
+AFTER INSERT
+AS
+BEGIN
+    UPDATE dbo.hoa_don
+    SET ma = 'hoa_don_' + RIGHT('00000' + CAST((SELECT COUNT(*) FROM dbo.hoa_don) AS NVARCHAR(50)), 5)
+    WHERE id IN (SELECT id FROM inserted);
+END;
+
