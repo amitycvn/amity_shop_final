@@ -2,18 +2,23 @@ package org.example.backend.controllers.admin.thongKe;
 
 import org.example.backend.constants.api.Admin;
 import org.example.backend.dto.response.thongKe.ThongKeResponse;
-import org.example.backend.dto.response.thongKe.Top5SanPhamResponse;
+
 import org.example.backend.services.HoaDonChiTietService;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.Instant;
 import java.time.LocalDate;
-import java.util.ArrayList;
+
+import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.List;
 
 @RestController
@@ -43,6 +48,16 @@ public class ThongKeController {
             return null;
         }
     }
+    @GetMapping(Admin.THONG_KE_PRO)
+    public ResponseEntity<?> getThongKeByDateRange(
+            @RequestParam String trangThai,
+            @RequestParam Instant startDate,
+            @RequestParam Instant endDate
+    ) {
+        List<ThongKeResponse> response = hoaDonChiTietService.getAllThongKeByDateRange(trangThai, startDate, endDate);
+        return ResponseEntity.ok(response);
+    }
+
 
 
     @GetMapping(Admin.THONG_KE_MONTH)
