@@ -139,6 +139,9 @@
             if (nguoiDungRepository.findByEmail(email).isPresent()) {
                 return ResponseEntity.status(HttpStatus.CONFLICT).body("Email đã tồn tại, vui lòng sử dụng email khác.");
             }
+            if (nguoiDungRepository.findBySdt(sdt).isPresent()){
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("SĐT đã tồn tại, vui lòng sử dụng email khác.");
+            }
             if (!cccd.matches("\\d{12}")) {
                 return ResponseEntity.badRequest().body("CCCD phải có đúng 12 chữ số.");
             }
@@ -405,6 +408,17 @@
                 return ResponseEntity.ok(nguoiDung.get());
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("khong tim thay email : " + email);
+            }
+        }
+
+        @GetMapping(USER_SEARCH_SDT)
+        public ResponseEntity<?> searchSdt(@RequestParam String sdt) {
+            Optional<NguoiDung> nguoiDung = nguoiDungService.searchBySdt(sdt);
+
+            if (nguoiDung.isPresent()) {
+                return ResponseEntity.ok(nguoiDung.get());
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("khong tim thay sdt : " + sdt);
             }
         }
 

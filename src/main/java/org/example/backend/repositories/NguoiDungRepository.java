@@ -134,6 +134,13 @@ public interface NguoiDungRepository extends JpaRepository<NguoiDung, UUID> {
 """)
     Optional<NguoiDung> findByEmail(@Param("email") String email);
 
+    @Query("""
+    select nd
+    from NguoiDung nd
+    where nd.sdt = :sdt and nd.deleted = false
+""")
+    Optional<NguoiDung> findBySdt(@Param("sdt") String sdt);
+
 
 
 
