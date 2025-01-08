@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.example.backend.models.SanPham;
 import org.example.backend.models.SanPhamChiTiet;
 
 import java.time.Instant;
@@ -32,7 +33,7 @@ public class HinhAnhRequest {
 
     private String trangThai;
 
-    private SanPhamChiTiet idSanPhamChiTiet;
+    private SanPham idSanPham;
 
 
 }

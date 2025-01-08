@@ -222,7 +222,7 @@ public class Admin {
     // Endpoint IMAGE
     public static final String IMAGE = BASE + "/image";
     public static final String IMAGE_GET_ALL = IMAGE + "/all";
-    public static final String IMAGE_GET_BY_ID = IMAGE + "/{id}";
+    public static final String IMAGE_GET_BY_ID = IMAGE + "/{idSanPham}";
     public static final String IMAGE_CREATE = IMAGE + "/create";
     public static final String IMAGE_SET_UPDATE = IMAGE + "/update/{id}";
     public static final String IMAGE_DELETE = IMAGE + "/delete/{id}";

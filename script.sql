@@ -1157,3 +1157,15 @@ SET ma = 'mau_sac_' + RIGHT('00000' + CAST((SELECT COUNT(*) FROM dbo.mau_sac) AS
 WHERE id IN (SELECT id FROM inserted);
 END;
 GO
+
+
+CREATE TRIGGER trg_hinh_anh_ma_tu_sinh
+    ON dbo.hinh_anh
+    AFTER INSERT
+AS
+BEGIN
+UPDATE dbo.hinh_anh
+SET ma = 'hinh_anh_' + RIGHT('00000' + CAST((SELECT COUNT(*) FROM dbo.hinh_anh) AS NVARCHAR(50)), 5)
+WHERE id IN (SELECT id FROM inserted);
+END;
+GO

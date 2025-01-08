@@ -1,52 +1,19 @@
-//package org.example.backend.controllers.admin.sanpham;
-//
-//import org.example.backend.constants.api.Admin;
-//import org.example.backend.models.HinhAnh;
-//import org.example.backend.repositories.HinhAnhRepository;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.http.ResponseEntity;
-//import org.springframework.web.bind.annotation.*;
-//
-//import java.util.UUID;
-//
-//@RestController
-//public class HinhAnhController {
-//    @Autowired
-//    HinhAnhRepository hinhAnhRepository;
-//
-//    @GetMapping(Admin.IMAGE_GET_ALL)
-//    public ResponseEntity<?> getAllHinhAnh() {
-//        return ResponseEntity.ok(hinhAnhRepository.getAll());
-//    }
-//    @PostMapping(Admin.IMAGE_CREATE)
-//    public ResponseEntity<?> createHinhAnh(@RequestBody HinhAnh hinhAnh) {
-//        HinhAnh m = new HinhAnh();
-//        m.setMa(hinhAnh.getMa());
-//        m.setTen(hinhAnh.getTen());
-//        m.setUrl(hinhAnh.getUrl());
-//        m.setTrangThai(hinhAnh.getTrangThai());
-//        return ResponseEntity.ok(hinhAnhRepository.save(m));
-//    }
-//
-//    @PutMapping(Admin.IMAGE_SET_UPDATE)
-//    public ResponseEntity<?>  updateHinhAnh(@PathVariable UUID id) {
-//        HinhAnh m = hinhAnhRepository.findById(id).orElse(null);
-//        if(m!=null){
-//            hinhAnhRepository.setDeleted(!m.getDeleted(),id);
-//            return ResponseEntity.ok("set deleted successfully id "+id);
-//        }
-//        return ResponseEntity.notFound().build();
-//    }
-//}
+
 
 package org.example.backend.controllers.admin.sanpham;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 
+import org.example.backend.constants.api.Admin;
 import org.example.backend.dto.request.sanPham.HinhAnhRequest;
+import org.example.backend.dto.response.SanPham.HinhAnhRespon;
 import org.example.backend.models.HinhAnh;
+import org.example.backend.models.SanPham;
+import org.example.backend.models.SanPhamChiTiet;
 import org.example.backend.repositories.HinhAnhRepository;
+import org.example.backend.repositories.SanPhamChiTietRepository;
+import org.example.backend.repositories.SanPhamRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.http.ResponseEntity;
@@ -55,45 +22,89 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RestController
 
 public class HinhAnhController {
-
-
-
-    @Autowired
-    private Cloudinary cloudinary;
     @Autowired
     private HinhAnhRepository hinhAnhRepository;
-    @PostMapping("/upload")
 
+    @Autowired
+    private SanPhamRepository sanPhamRepository;
 
-    public ResponseEntity<String> uploadImage(
-//            @RequestBody HinhAnhRequest request,
-            @RequestParam("file") MultipartFile file) {
+    @PostMapping(Admin.IMAGE_CREATE)
+    public ResponseEntity<?> addHinhAnh(@RequestBody HinhAnhRequest hinhAnhRequest) {
         try {
+            // Check if the associated product detail exists
+            UUID sanPhamId = hinhAnhRequest.getIdSanPham().getId();
+            SanPham sanPham = sanPhamRepository.findById(sanPhamId)
+                    .orElseThrow(() -> new RuntimeException("Sản phẩm chi tiết không tồn tại với ID: " + sanPhamId));
 
-            Map<String, Object> uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap());
-            String imageUrl = (String) uploadResult.get("secure_url");
+            // Create new HinhAnh entity
+            HinhAnh hinhAnh = HinhAnh.builder()
+                    .ma(hinhAnhRequest.getMa())
+                    .ten(hinhAnhRequest.getTen())
+                    .url(hinhAnhRequest.getUrl())
+                    .nguoiTao(hinhAnhRequest.getNguoiTao())
+                    .nguoiSua(hinhAnhRequest.getNguoiSua())
+                    .trangThai(hinhAnhRequest.getTrangThai())
+                    .idsp(sanPham)
+                    .build();
 
+            // Save to database
+            HinhAnh savedHinhAnh = hinhAnhRepository.save(hinhAnh);
 
-            HinhAnh hinhAnh = new HinhAnh();
-            hinhAnh.setUrl(imageUrl);
-            hinhAnh.setMa("a");
-            hinhAnh.setTen("a");
-            hinhAnh.setIdSpct(null);
-
-
-            
-            hinhAnhRepository.save(hinhAnh);
-
-            return ResponseEntity.ok(imageUrl);
-        } catch (IOException e) {
-            return ResponseEntity.status(500).body("Tải lên hình ảnh thất bại: " + e.getMessage());
+            return ResponseEntity.ok("Thêm hình ảnh thành công! ID: " + savedHinhAnh.getId());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Lỗi khi thêm hình ảnh: " + e.getMessage());
         }
     }
+
+    // 1. Hiển thị tất cả hình ảnh
+//    @GetMapping(Admin.IMAGE_GET_ALL)
+//    public ResponseEntity<?> getAllImages() {
+//        try {
+//            List<HinhAnhRespon> images = hinhAnhRepository.getAll();
+//            return ResponseEntity.ok(images);
+//        } catch (Exception e) {
+//            return ResponseEntity.badRequest().body("Lỗi khi lấy danh sách hình ảnh: " + e.getMessage());
+//        }
+//    }
+    @GetMapping(Admin.IMAGE_GET_ALL)
+    public ResponseEntity<?> getAllImagesGroupedByProduct() {
+        try {
+            // Lấy danh sách tất cả hình ảnh từ repository
+            List<HinhAnhRespon> images = hinhAnhRepository.getAll();
+
+            // Nhóm các hình ảnh theo idSanPham
+            Map<UUID, List<HinhAnhRespon>> groupedImages = images.stream()
+                    .collect(Collectors.groupingBy(HinhAnhRespon::getIdSp));
+
+            // Trả về danh sách được nhóm
+            return ResponseEntity.ok(groupedImages);
+        } catch (Exception e) {
+            // Xử lý lỗi nếu có
+            return ResponseEntity.badRequest().body("Lỗi khi lấy danh sách hình ảnh: " + e.getMessage());
+        }
+    }
+
+    // 2. Lấy hình ảnh theo id sản phẩm
+    @GetMapping(Admin.IMAGE_GET_BY_ID)
+    public ResponseEntity<?> getImagesByProductId(@PathVariable UUID idSanPham) {
+        try {
+            List<HinhAnhRespon> images = hinhAnhRepository.findByIdspId(idSanPham);
+            if (images.isEmpty()) {
+                return ResponseEntity.ok("Không có hình ảnh nào cho sản phẩm với ID: " + idSanPham);
+            }
+            return ResponseEntity.ok(images);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Lỗi khi lấy hình ảnh: " + e.getMessage());
+        }
+    }
+
 }
 
