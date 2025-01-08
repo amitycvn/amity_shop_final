@@ -201,7 +201,7 @@ public class SanPhamChiTietController {
         return ResponseEntity.ok(responseData);
     }
 
-    /// tim kiem sau khi sua - dang dung cai nay trong tim kiem spct
+    /// tim kiem spct trong tất cả spct -- bán hàng
 
     @GetMapping(Admin.PRODUCT_DETAIL_SEARCH2)
     public ResponseEntity<?> search(
@@ -264,7 +264,7 @@ public class SanPhamChiTietController {
     }
 
 
-
+    //tìm kiếm spct theo sp
     @GetMapping(Admin.PRODUCT_DETAIL_GET_BY_ID)
     public ResponseEntity<?> getById(@PathVariable UUID id) {
         List<SanPhamChiTietRespon> sanPhamChiTietList = sanPhamChiTietRepository.findByIdSpct(id);
@@ -273,19 +273,22 @@ public class SanPhamChiTietController {
         }
         return null;
     }
-
+    // tim kiếm spct trong spct (spct)
     @GetMapping(Admin.PRODUCT_DETAIL_GET_BY_ID1)
     public ResponseEntity<?> getSpctById(@PathVariable UUID id,
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "5") int size,
             @RequestParam(defaultValue = "ngayTao") String sortBy,
             @RequestParam(defaultValue = "desc") String sortDir,
-            @RequestParam(defaultValue = "") String hang,
+
             @RequestParam(defaultValue = "") String mauSac,
-            @RequestParam(defaultValue = "") String kichThuoc) {
+            @RequestParam(defaultValue = "") String kichThuoc,
+            @RequestParam(defaultValue = "") String trangThai
+                                         ) {
         SanPhamChiTietSearchRequest searchRequest = new SanPhamChiTietSearchRequest();
         searchRequest.setMauSac(mauSac);
         searchRequest.setKichThuoc(kichThuoc);
+        searchRequest.setTrangThai(trangThai);
         searchRequest.setIdSanPham(id);
 
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(sortDir), sortBy));
