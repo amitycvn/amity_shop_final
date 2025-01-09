@@ -58,6 +58,9 @@ public class SanPhamController {
             sp.setTen(sanPhamRequest.getTen());
             sp.setIdChatLieu(sanPhamRequest.getIdChatLieu());
             sp.setIdLopLot(sanPhamRequest.getIdLopLot());
+            sp.setIdHang(sanPhamRequest.getIdHang());
+            sp.setIdDanhMuc(sanPhamRequest.getIdDanhMuc());
+            sp.setIdDeGiay(sanPhamRequest.getIdDeGiay());
             sp.setTrangThai(sanPhamRequest.getTrangThai());
             return ResponseEntity.ok(sanPhamRepository.save(sp));
         }
@@ -66,6 +69,9 @@ public class SanPhamController {
         sanPham.setTen(sanPhamRequest.getTen());
         sanPham.setIdChatLieu(sanPhamRequest.getIdChatLieu());
         sanPham.setIdLopLot(sanPhamRequest.getIdLopLot());
+        sanPham.setIdHang(sanPhamRequest.getIdHang());
+        sanPham.setIdDanhMuc(sanPhamRequest.getIdDanhMuc());
+        sanPham.setIdDeGiay(sanPhamRequest.getIdDeGiay());
         sanPham.setTrangThai(sanPhamRequest.getTrangThai());
         return ResponseEntity.ok(sanPhamRepository.save(sanPham));
     }
