@@ -166,7 +166,7 @@ public class SanPhamChiTietService extends GenericServiceImpl<SanPhamChiTiet, UU
 
 
         // Tìm các sản phẩm chi tiết liên quan
-        List<SanPhamChiTiet> chiTietList = sanPhamChiTietRepository.findByIdSanPham(sanPham);
+        List<SanPhamChiTiet> chiTietList = sanPhamChiTietRepository.findByIdSanPhamAndTrangThai(sanPham, "Hoạt động");
 
         if (chiTietList.isEmpty()) {
             throw new EntityNotFoundException("Không có sản phẩm chi tiết cho sản phẩm này.");
@@ -194,7 +194,7 @@ public class SanPhamChiTietService extends GenericServiceImpl<SanPhamChiTiet, UU
     }
 
     public List<SanPham> getAllSanPham(){
-        return sanPhamRepository.findAll();
+        return sanPhamRepository.findAllByTrangThai("Hoạt động");
     }
 
     public List<SanPhamChiTietDTO> mapToDTO(List<SanPhamChiTiet> entities) {

@@ -20,7 +20,7 @@ import java.util.UUID;
 public interface DotGiamGiaRepository extends JpaRepository<DotGiamGia, UUID> {
     @Query("""
                 select new org.example.backend.dto.response.dotGiamGia.DotGiamGiaResponse(d.id, d.ma, d.ten, d.giaTri, d.ngayBatDau, d.ngayKetThuc, d.loai, d.trangThai, d.hinhThuc, d.dieuKien)
-                from DotGiamGia d where d.deleted=false 
+                from DotGiamGia d
             """)
     List<DotGiamGiaResponse> getAllDotGiamGia();
 
@@ -48,7 +48,7 @@ public interface DotGiamGiaRepository extends JpaRepository<DotGiamGia, UUID> {
 
     @Query("""
     select new org.example.backend.dto.response.dotGiamGia.DotGiamGiaResponse(d.id, d.ma, d.ten, d.giaTri, d.ngayBatDau, d.ngayKetThuc, d.loai, d.trangThai, d.hinhThuc, d.dieuKien)
-    from DotGiamGia d where d.deleted=false 
+    from DotGiamGia d
 """)
     Page<DotGiamGiaResponse> getAllDotGiamGiaPaginate(Pageable pageable);
 

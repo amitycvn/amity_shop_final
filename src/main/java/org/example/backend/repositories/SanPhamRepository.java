@@ -56,4 +56,6 @@ public interface SanPhamRepository extends JpaRepository<SanPham, UUID> {
             """)
     Page<SanPhamResponse> phanTrang(Pageable pageable);
 
+
+    List<SanPham> findAllByTrangThai(String trangThai);
 }
