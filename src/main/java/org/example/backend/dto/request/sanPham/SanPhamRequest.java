@@ -1,8 +1,7 @@
 package org.example.backend.dto.request.sanPham;
 
 import jakarta.persistence.*;
-import org.example.backend.models.ChatLieu;
-import org.example.backend.models.LopLot;
+import org.example.backend.models.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.Nationalized;
 
@@ -17,6 +16,9 @@ public class SanPhamRequest {
 
 
     private LopLot idLopLot;
+    private Hang idHang;
+    private DanhMuc idDanhMuc;
+    private DeGiay idDeGiay;
 
     private String ma;
 
@@ -35,24 +37,6 @@ public class SanPhamRequest {
     private String trangThai;
 
     private Boolean deleted;
-
-    public SanPhamRequest(UUID id) {
-        this.id = id;
-    }
-
-    public SanPhamRequest(UUID id, ChatLieu idChatLieu, LopLot idLopLot, String ma, String ten, Instant ngayTao, Instant ngaySua, String nguoiTao, String nguoiSua, String trangThai, Boolean deleted) {
-        this.id = id;
-        this.idChatLieu = idChatLieu;
-        this.idLopLot = idLopLot;
-        this.ma = ma;
-        this.ten = ten;
-        this.ngayTao = ngayTao;
-        this.ngaySua = ngaySua;
-        this.nguoiTao = nguoiTao;
-        this.nguoiSua = nguoiSua;
-        this.trangThai = trangThai;
-        this.deleted = deleted;
-    }
 
     public UUID getId() {
         return id;
@@ -76,6 +60,30 @@ public class SanPhamRequest {
 
     public void setIdLopLot(LopLot idLopLot) {
         this.idLopLot = idLopLot;
+    }
+
+    public Hang getIdHang() {
+        return idHang;
+    }
+
+    public void setIdHang(Hang idHang) {
+        this.idHang = idHang;
+    }
+
+    public DanhMuc getIdDanhMuc() {
+        return idDanhMuc;
+    }
+
+    public void setIdDanhMuc(DanhMuc idDanhMuc) {
+        this.idDanhMuc = idDanhMuc;
+    }
+
+    public DeGiay getIdDeGiay() {
+        return idDeGiay;
+    }
+
+    public void setIdDeGiay(DeGiay idDeGiay) {
+        this.idDeGiay = idDeGiay;
     }
 
     public String getMa() {
@@ -139,6 +147,26 @@ public class SanPhamRequest {
     }
 
     public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
+    }
+
+    public SanPhamRequest() {
+    }
+
+    public SanPhamRequest(UUID id, ChatLieu idChatLieu, LopLot idLopLot, Hang idHang, DanhMuc idDanhMuc, DeGiay idDeGiay, String ma, String ten, Instant ngayTao, Instant ngaySua, String nguoiTao, String nguoiSua, String trangThai, Boolean deleted) {
+        this.id = id;
+        this.idChatLieu = idChatLieu;
+        this.idLopLot = idLopLot;
+        this.idHang = idHang;
+        this.idDanhMuc = idDanhMuc;
+        this.idDeGiay = idDeGiay;
+        this.ma = ma;
+        this.ten = ten;
+        this.ngayTao = ngayTao;
+        this.ngaySua = ngaySua;
+        this.nguoiTao = nguoiTao;
+        this.nguoiSua = nguoiSua;
+        this.trangThai = trangThai;
         this.deleted = deleted;
     }
 }

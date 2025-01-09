@@ -20,6 +20,12 @@ public class SanPhamResponse {
     private String tenChatLieu;
     private UUID idLopLot;
     private String tenLopLot;
+    private UUID idHang;
+    private String tenHang;
+    private UUID idDanhMuc;
+    private String tenDanhMuc;
+    private UUID idDeGiay;
+    private String tenDeGiay;
 
 
     private String trangThai;
