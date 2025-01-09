@@ -23,6 +23,7 @@ public class Admin {
     public static final String USER_REGISTER = USER + "/createUser";
     public static final String USER_UPDATE_PASSWORD = USER + "/updateUser/{id}";
     public static final String USER_SEARCH_EMAIL = USER + "/searchEmail";
+    public static final String USER_SEARCH_SDT = USER + "/searchSdt";
     public static final String USER_UPDATE_PASSWORD_BY_EMAIL = USER + "/updatePassword/{email}";
 
 
@@ -98,6 +99,7 @@ public class Admin {
     public static final String COUT_BY_STATUS_BILL = BILL + "/status";
     public static final String BILL_EXCEL = BILL + "/excel";
     public static final String THONG_KE = BILL + "/thongke";
+    public static final String THONG_KE_PRO = BILL + "/thongKePro";
     public static final String THONG_KE_MONTH = BILL + "/month";
     public static final String TOP_5_SP = BILL + "/top5";
     public static final String SP_SAP_HET = BILL + "/sp50";

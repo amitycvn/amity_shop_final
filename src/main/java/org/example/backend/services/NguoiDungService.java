@@ -101,6 +101,9 @@ public class NguoiDungService extends GenericServiceImpl<NguoiDung, UUID> {
     public Optional<NguoiDung> searchByEmail(String email) {
         return nguoiDungRepository.findByEmail(email);
     }
+    public Optional<NguoiDung> searchBySdt(String sdt) {
+        return nguoiDungRepository.findBySdt(sdt);
+    }
 
 }
 
