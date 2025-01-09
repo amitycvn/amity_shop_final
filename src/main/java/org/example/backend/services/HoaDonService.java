@@ -115,5 +115,4 @@ public class HoaDonService extends GenericServiceImpl<HoaDon, UUID> {
         return outputStream.toByteArray();
     }
 
-
 }

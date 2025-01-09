@@ -124,7 +124,7 @@ public ResponseEntity<?> create() {
                         // Tìm tất cả các đợt giảm giá đang hoạt động
                         List<DotGiamGiaSpct> discounts =
                                 dotGiamGiaSpctRepository.findActiveDiscountsByProductDetail(hdct.getIdSpct());
-                        System.out.println("discount: " + discounts);
+                        System.out.println("discount123: " + discounts);
 
                         BigDecimal giaGiamTotNhat = BigDecimal.ZERO;
 

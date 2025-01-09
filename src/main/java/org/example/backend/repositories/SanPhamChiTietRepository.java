@@ -8,6 +8,8 @@ import org.example.backend.dto.response.SanPham.SanPhamChiTietRespon;
 import org.example.backend.dto.response.SanPham.SanPhamClientResponse;
 import org.example.backend.dto.response.banHang.banHangClientResponse;
 import org.example.backend.dto.response.dotGiamGia.DotGiamGiaResponse;
+import org.example.backend.models.KichThuoc;
+import org.example.backend.models.MauSac;
 import org.example.backend.models.SanPham;
 import org.example.backend.models.SanPhamChiTiet;
 import org.springframework.data.domain.Page;
@@ -317,7 +319,7 @@ public interface SanPhamChiTietRepository extends JpaRepository<SanPhamChiTiet, 
             """)
     List<banHangClientResponse> showGiamGiaTheoSp(List<String> trangThais, UUID id);
 
-    List<SanPhamChiTiet> findByIdSanPham(SanPham idSanPham);
+    List<SanPhamChiTiet> findByIdSanPhamAndTrangThai(SanPham idSanPham, String trangThai);
 
     @Query("""
                 SELECT spct FROM SanPhamChiTiet spct
@@ -328,4 +330,5 @@ public interface SanPhamChiTietRepository extends JpaRepository<SanPhamChiTiet, 
             """)
     List<SanPhamChiTiet> findAllBySanPhamId(UUID idSanPham);
 
+    boolean existsByIdSanPhamAndIdMauSacAndIdKichThuoc(SanPham idSanPham, MauSac idMauSac, KichThuoc idKichThuoc);
 }

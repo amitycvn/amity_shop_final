@@ -84,12 +84,23 @@ public class SanPhamChiTietController {
             @RequestParam("giaNhap") BigDecimal giaNhap,
             @RequestParam("trangThai") String trangThai,
             @RequestParam("moTa") String moTa,
-
-            @RequestParam("hinhAnh") MultipartFile hinhAnhFile) throws IOException {
+            @RequestParam("hinhAnh") MultipartFile hinhAnhFile) {
 
         try {
-            SanPhamChiTiet s = new SanPhamChiTiet();
+            // Kiểm tra sản phẩm tồn tại
+            if (!sanPhamRepository.existsById(idSanPham)) {
+                return ResponseEntity.badRequest().body("Sản phẩm không tồn tại!");
+            }
 
+            // Kiểm tra biến thể đã tồn tại
+            boolean exists = sanPhamChiTietRepository.existsByIdSanPhamAndIdMauSacAndIdKichThuoc(
+                    sanPhamRepository.findById(idSanPham).orElse(null), idMauSac, idKichThuoc);
+            if (exists) {
+                return ResponseEntity.badRequest().body("Biến thể đã tồn tại trong sản phẩm chi tiết!");
+            }
+
+            // Tạo mới sản phẩm chi tiết
+            SanPhamChiTiet s = new SanPhamChiTiet();
             s.setIdSanPham(sanPhamRepository.findById(idSanPham).orElse(null));
             s.setIdMauSac(idMauSac);
             s.setIdKichThuoc(idKichThuoc);
@@ -99,16 +110,19 @@ public class SanPhamChiTietController {
             s.setTrangThai(trangThai);
             s.setMoTa(moTa);
 
-            Map<String, Object> uploadResult = cloudinary.uploader().upload(hinhAnhFile.getBytes(),
-                    ObjectUtils.emptyMap());
+            // Upload hình ảnh
+            Map<String, Object> uploadResult = cloudinary.uploader().upload(hinhAnhFile.getBytes(), ObjectUtils.emptyMap());
             String imageUrl = (String) uploadResult.get("secure_url");
             s.setHinhAnh(imageUrl);
 
+            // Lưu sản phẩm chi tiết
             return ResponseEntity.ok(sanPhamChiTietRepository.save(s));
+
         } catch (IOException e) {
             return ResponseEntity.status(500).body("Tải lên hình ảnh thất bại: " + e.getMessage());
         }
     }
+
 
     @PutMapping(value = Admin.PRODUCT_DETAIL_UPDATE, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> update(
