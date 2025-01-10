@@ -231,8 +231,8 @@ public boolean checkProductQuantity(UUID productId, int requiredQuantity) {
 }
 
 public banHangClient getbanHangClientbyIDSPCT(UUID id) {
-    banHangClient bhClient = SPCTRepository.getBanHangClientbyIDSPCT(id);
-    return bhClient;
+   List<banHangClient> bhClient = SPCTRepository.getBanHangClientbyIDSPCT(id);
+    return bhClient.get(0);
 }
 
 }
