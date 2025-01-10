@@ -130,9 +130,9 @@ public interface NguoiDungRepository extends JpaRepository<NguoiDung, UUID> {
     @Query("""
     select nd
     from NguoiDung nd
-    where nd.email = :email and nd.deleted = false
+    where nd.email = :email and nd.deleted = false and nd.trangThai = :trangThai
 """)
-    Optional<NguoiDung> findByEmail(@Param("email") String email);
+    Optional<NguoiDung> findByEmail(@Param("email") String email,String trangThai);
 
     @Query("""
     select nd

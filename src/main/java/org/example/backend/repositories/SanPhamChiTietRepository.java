@@ -347,13 +347,7 @@ public interface SanPhamChiTietRepository extends JpaRepository<SanPhamChiTiet, 
     // int findSoLuongById(UUID productId);
 
     @Query("""
-<<<<<<< HEAD
-                    select s.soLuong
-                    from SanPhamChiTiet s
-                    where s.id = :productId
-            """)
-    Optional<Integer> findSoLuongById(UUID productId);
-=======
+
     select s.soLuong
     from SanPhamChiTiet s
     where s.id = :productId
@@ -361,9 +355,6 @@ public interface SanPhamChiTietRepository extends JpaRepository<SanPhamChiTiet, 
 """)
     Optional<Integer> findSoLuongById(UUID productId, String status);
 
-
-
->>>>>>> 9db026be03b59310217536c966e7fdb25b231b7e
 
     @Query("""
                 select new org.example.backend.dto.response.banHang.banHangClient(

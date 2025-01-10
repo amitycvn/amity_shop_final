@@ -65,7 +65,7 @@ public class EmailController {
     }
     @PutMapping("/reset-password")
     public ResponseEntity<?> resetPassword(@RequestParam(required = false) String email) {
-        Optional<NguoiDung> optionalNguoiDung = nguoiDungRepository.findByEmail(email);
+        Optional<NguoiDung> optionalNguoiDung = nguoiDungRepository.findByEmail(email,"Hoạt động");
         if (optionalNguoiDung.isEmpty()) {
             return ResponseEntity.status(404).body("Email không tồn tại.");
         }

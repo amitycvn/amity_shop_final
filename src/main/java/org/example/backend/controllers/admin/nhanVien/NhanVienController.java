@@ -16,6 +16,7 @@
     import org.example.backend.mapper.NhanVienMapper;
     import org.example.backend.models.NguoiDung;
     import org.example.backend.repositories.NguoiDungRepository;
+    import org.example.backend.services.GioHangService;
     import org.example.backend.services.NguoiDungService;
     import org.springframework.core.io.InputStreamResource;
     import org.springframework.data.domain.Page;
@@ -48,14 +49,16 @@
         private final Cloudinary cloudinary;
         private final PasswordEncoder passwordEncoder;
         private final NguoiDungService nguoiDungService;
+        private final GioHangService gioHangService;
 
-        public NhanVienController(NguoiDungService nhanVienService, NhanVienMapper nhanVienMapper, NguoiDungRepository nguoiDungRepository, Cloudinary cloudinary, PasswordEncoder passwordEncoder, NguoiDungService nguoiDungService) {
+        public NhanVienController(NguoiDungService nhanVienService, NhanVienMapper nhanVienMapper, NguoiDungRepository nguoiDungRepository, Cloudinary cloudinary, PasswordEncoder passwordEncoder, NguoiDungService nguoiDungService, GioHangService gioHangService) {
             this.nhanVienService = nhanVienService;
             this.nhanVienMapper = nhanVienMapper;
             this.nguoiDungRepository = nguoiDungRepository;
             this.cloudinary = cloudinary;
             this.passwordEncoder=passwordEncoder;
             this.nguoiDungService = nguoiDungService;
+            this.gioHangService = gioHangService;
         }
 
         @GetMapping(USER_GET_ALL)
@@ -136,7 +139,7 @@
                 return ResponseEntity.badRequest().body("Trạng thái không được để trống.");
             }
 
-            if (nguoiDungRepository.findByEmail(email).isPresent()) {
+            if (nguoiDungRepository.findByEmail(email,"Hoạt động").isPresent()) {
                 return ResponseEntity.status(HttpStatus.CONFLICT).body("Email đã tồn tại, vui lòng sử dụng email khác.");
             }
             if (nguoiDungRepository.findBySdt(sdt).isPresent()){
@@ -331,6 +334,7 @@
 //                @RequestParam(value = "ma",defaultValue = "") String ma,
                 @RequestParam(value = "ten",defaultValue = "") String ten,
                 @RequestParam(value = "email" ,defaultValue = "") String email,
+                @RequestParam(value = "sdt" ,defaultValue = "") String sdt,
                 @RequestParam(value = "matKhau",defaultValue = "") String matKhau,
                 @RequestParam(value = "matKhauNhapLai",defaultValue = "") String matKhauNhapLai,
                 @RequestParam(value = "chucVu" ,defaultValue = "") String chucVu,
@@ -343,6 +347,9 @@
             if (email.trim().isEmpty()) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email không được để trống.");
             }
+            if (sdt.trim().isEmpty()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("sdt không được để trống.");
+            }
             if (matKhau.trim().isEmpty()) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Mật khẩu không được để trống.");
             }
@@ -352,12 +359,16 @@
             if (!email.matches("^[\\w-.]+@(gmail\\.com|fpt\\.edu\\.vn)$")) {
                 return ResponseEntity.badRequest().body("Email không hợp lệ. Chỉ chấp nhận email có đuôi @gmail.com hoặc @fpt.edu.vn.");
             }
+            if (!sdt.matches("\\d{10}")) {
+                return ResponseEntity.badRequest().body("Số điện thoại phải có đúng 10 chữ số.");
+            }
             if (matKhau.length() < 8) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Mật khẩu phải có ít nhất 8 ký tự.");
             }
             NguoiDung nd = new NguoiDung();
             nd.setMa(ma);
             nd.setEmail(email);
+            nd.setSdt(sdt);
             nd.setMatKhau(passwordEncoder.encode(matKhau));
             nd.setTen(ten);
             nd.setChucVu(chucVu);
@@ -366,11 +377,16 @@
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                         .body("mật khẩu và mật khẩu nhập lại chưa trung khớp");
             }
-            if (nguoiDungRepository.findByEmail(email).isPresent()){
+            if (nguoiDungRepository.findByEmail(email,"Hoạt động").isPresent()){
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                         .body("Email đã tồn tại vui lòng điền email khac");
             }
-            return ResponseEntity.ok(nhanVienService.save(nd));
+            if (nguoiDungRepository.findBySdt(sdt).isPresent()){
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body("Số Điện Thoại đã tồn tại vui lòng điền SDT khac");
+            }nhanVienService.save(nd);
+            gioHangService.getGioHang(nd.getId());
+            return ResponseEntity.ok("");
         }
         @PutMapping(USER_UPDATE_PASSWORD)
         public ResponseEntity<?> updatePasswordUser(
