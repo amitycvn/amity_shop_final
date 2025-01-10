@@ -4,6 +4,7 @@ import org.example.backend.common.PageResponse;
 import org.example.backend.common.ResponseData;
 import org.example.backend.constants.api.Admin;
 import org.example.backend.dto.request.phieuGiamGia.phieuGiamGiaRequestAdd;
+import org.example.backend.dto.response.banHang.banHangClient;
 import org.example.backend.dto.response.banHang.banHangClientResponse;
 import org.example.backend.dto.response.quanLyDonHang.hoaDonChiTietReponse;
 import org.example.backend.dto.response.quanLyDonHang.hoaDonClientResponse;
@@ -43,6 +44,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.ArrayList;
 
 import static org.example.backend.constants.api.Admin.*;
 
@@ -260,6 +262,18 @@ public class banHangClientController {
             return ResponseEntity.ok(spct);
         }
         return ResponseEntity.notFound().build();
+    }
+
+    @GetMapping(Admin.SELL_CLIENT_GET_BY_ID_SPCT)
+    public ResponseEntity<?> getbanHangClientbyIDSPCT(@RequestParam List<UUID> ids) {
+        List<banHangClient> resultList = new ArrayList<>();
+        
+        for (UUID id : ids) {
+            banHangClient products = sanPhamChiTietService.getbanHangClientbyIDSPCT(id);
+            resultList.add(products);
+        }
+        
+        return ResponseEntity.ok(resultList);
     }
 
 }

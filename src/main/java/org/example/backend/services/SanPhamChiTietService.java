@@ -6,6 +6,7 @@ import org.example.backend.constants.Status;
 import org.example.backend.dto.request.sanPhamV2.SanPhamChiTietRequest;
 import org.example.backend.dto.request.sanPhamV2.SanPhamChiTietV2Request;
 import org.example.backend.dto.response.NhanVien.NhanVienRespon;
+import org.example.backend.dto.response.banHang.banHangClient;
 import org.example.backend.dto.response.banHang.banHangClientResponse;
 import org.example.backend.dto.response.dotGiamGia.DotGiamGiaResponse;
 import org.example.backend.dto.response.sanPhamV2.SanPhamChiTietDTO;
@@ -229,5 +230,9 @@ public boolean checkProductQuantity(UUID productId, int requiredQuantity) {
     return availableQuantity >= requiredQuantity;
 }
 
+public banHangClient getbanHangClientbyIDSPCT(UUID id) {
+    banHangClient bhClient = SPCTRepository.getBanHangClientbyIDSPCT(id);
+    return bhClient;
+}
 
 }
