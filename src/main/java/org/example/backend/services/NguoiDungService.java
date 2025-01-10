@@ -81,7 +81,8 @@ public class NguoiDungService extends GenericServiceImpl<NguoiDung, UUID> {
     }
 
     public ResponseEntity<?> login(String email, String password) {
-        Optional<NguoiDung> user = nguoiDungRepository.findByEmail(email);
+        String trangThai = "Hoạt động";
+        Optional<NguoiDung> user = nguoiDungRepository.findByEmail(email,trangThai);
 
         if (user.isPresent()) {
             NguoiDung nguoiDung = user.get();
@@ -99,7 +100,8 @@ public class NguoiDungService extends GenericServiceImpl<NguoiDung, UUID> {
         }
     }
     public Optional<NguoiDung> searchByEmail(String email) {
-        return nguoiDungRepository.findByEmail(email);
+        String trangThai = "Hoạt động";
+        return nguoiDungRepository.findByEmail(email,trangThai);
     }
     public Optional<NguoiDung> searchBySdt(String sdt) {
         return nguoiDungRepository.findBySdt(sdt);

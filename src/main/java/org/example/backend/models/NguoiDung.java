@@ -34,8 +34,7 @@ public class NguoiDung {
     private String ma;
 
     @Nationalized
-    @Lob
-    @Column(name = "email")
+    @Column(name = "email", length = 50)
     private String email;
 
     @Nationalized

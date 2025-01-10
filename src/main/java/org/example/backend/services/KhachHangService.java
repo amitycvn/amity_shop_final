@@ -59,7 +59,8 @@ khachHangRespository.deletedKhachHangStatus(id);
     }
     public List<KhachHangResponse> sortKhachHang(){return nguoiDungRepository.sortKhachHang();}
     public ResponseEntity<?> login(String email, String password) {
-        Optional<NguoiDung> customer = nguoiDungRepository.findByEmail(email);
+        String trangThai = "Hoạt động";
+        Optional<NguoiDung> customer = nguoiDungRepository.findByEmail(email,trangThai);
 
         if (customer.isPresent()) {
             NguoiDung nguoiDung = customer.get();

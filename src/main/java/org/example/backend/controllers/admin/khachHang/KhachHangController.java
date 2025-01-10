@@ -132,7 +132,7 @@ public KhachHangController(KhachHangService khachHangService, NguoiDungRepositor
             return ResponseEntity.badRequest().body("Trạng thái không được để trống.");
         }
 
-        if (nguoiDungRepository.findByEmail(email).isPresent()) {
+        if (nguoiDungRepository.findByEmail(email,"Hoạt động").isPresent()) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Email đã tồn tại, vui lòng sử dụng email khác.");
         }
         if (!sdt.matches("\\d{10}")) {

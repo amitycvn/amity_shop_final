@@ -109,6 +109,7 @@ public interface PhieuGiamGiaRepository extends JpaRepository<PhieuGiamGia, UUID
     select p.soLuong
     from PhieuGiamGia p
     where p.id =:SaleId
+    and p.trangThai=:trangThai
 """)
-    Optional<Integer> findSoLuongGiamGiaById(UUID SaleId);
+    Optional<Integer> findSoLuongGiamGiaById(UUID SaleId , String trangThai);
 }
