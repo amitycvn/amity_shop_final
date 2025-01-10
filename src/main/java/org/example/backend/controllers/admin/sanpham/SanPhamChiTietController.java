@@ -459,6 +459,13 @@ public class SanPhamChiTietController {
             @RequestParam("soLuong") int soLuong) {
         boolean isAvailable = sanPhamChiTietService.checkProductQuantity(productId, soLuong);
         String message = isAvailable ? "Số lượng sản phẩm đủ" : "Không đủ số lượng sản phẩm trong kho";
+//        boolean isActive = sanPhamChiTietService.isProductActive(productId);
+//        if (!isActive) {
+//            return ResponseEntity.ok(Map.of(
+//                    "isAvailable", true,
+//                    "message", "Sản phẩm không ở trạng thái hoạt động"
+//            ));
+//        }
         return ResponseEntity.ok(Map.of(
                 "isAvailable", isAvailable,
                 "message", message
