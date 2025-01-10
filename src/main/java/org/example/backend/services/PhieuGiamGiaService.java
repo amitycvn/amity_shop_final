@@ -29,6 +29,7 @@ import java.math.BigDecimal;
 import java.sql.Date;
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 @Service
 public class PhieuGiamGiaService extends GenericServiceImpl<PhieuGiamGia , UUID> {
@@ -194,5 +195,17 @@ public class PhieuGiamGiaService extends GenericServiceImpl<PhieuGiamGia , UUID>
                 updateTrangThaiAndNgayKetThuc("Đã kết thúc", phieu.getNgayKetThuc(), phieu.getId());
             }
         }
+    }
+
+
+    //check so luong phieu dung cho ban hang tai quầy
+
+    public boolean checkVoucherQuantity(UUID saleId, int requiredQuantity) {
+        Optional<Integer> availableQuantity = PGGrepository.findSoLuongGiamGiaById(saleId);
+        // Nếu không tìm thấy phiếu giảm giá, coi như không đủ số lượng
+        if (availableQuantity.isEmpty()) {
+            return false;
+        }
+        return availableQuantity.get() >= requiredQuantity;
     }
 }

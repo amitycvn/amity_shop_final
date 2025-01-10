@@ -71,18 +71,18 @@ public class banHangClientController {
     private HoaDonRepository hoaDonRepository;
 
 
-    @GetMapping(Admin.SELL_CLIENT_GET_ALL)
-    public ResponseEntity<?> getbanHangClient(@RequestParam(value = "itemsPerPage", defaultValue = "5") int itemsPerPage,
-                                              @RequestParam(value = "page", defaultValue = "0") int page
-    ){
-        PageResponse<List<banHangClientResponse>> bhPage = sanPhamChiTietService.getbanHangClient(page, itemsPerPage);
-        ResponseData<PageResponse<List<banHangClientResponse>>> responseData = ResponseData.<PageResponse<List<banHangClientResponse>>>builder()
-                .message("Get all banHangCient done")
-                .status(HttpStatus.OK.value())
-                .data(bhPage)
-                .build();
-        return ResponseEntity.ok(responseData);
-    }
+//    @GetMapping(Admin.SELL_CLIENT_GET_ALL)
+//    public ResponseEntity<?> getbanHangClient(@RequestParam(value = "itemsPerPage", defaultValue = "5") int itemsPerPage,
+//                                              @RequestParam(value = "page", defaultValue = "0") int page
+//    ){
+//        PageResponse<List<banHangClientResponse>> bhPage = sanPhamChiTietService.getbanHangClient(page, itemsPerPage);
+//        ResponseData<PageResponse<List<banHangClientResponse>>> responseData = ResponseData.<PageResponse<List<banHangClientResponse>>>builder()
+//                .message("Get all banHangCient done")
+//                .status(HttpStatus.OK.value())
+//                .data(bhPage)
+//                .build();
+//        return ResponseEntity.ok(responseData);
+//    }
 
     @GetMapping(Admin.SELL_CLIENT_GET_BY_ID_DGG)
     public ResponseEntity<?> getbanHangClientbyIDDGG(@RequestParam(value = "itemsPerPage", defaultValue = "5") int itemsPerPage,

@@ -34,6 +34,7 @@ import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -267,5 +268,21 @@ public class PhieuGiamGiaController {
         PhieuGiamGiaNguoiDung pgg = phieuGiamGiaNguoiDungService.findByIdNguoiDungIdAndIdPhieuGiamGiaId(idKhachHang,
                 idPhieuGiamGia);
         return ResponseEntity.ok(pgg);
+    }
+
+    //check số lương phiêu giam giá
+
+    @GetMapping("/api/v1/admin/kiem-tra-so-luong-giam-gia/{id}")
+    public ResponseEntity<Map<String, Object>> checkVoucherQuantity(
+            @PathVariable("id") UUID saleId,
+            @RequestParam("soLuong") int requiredQuantity) {
+        boolean isAvailable = PGGService.checkVoucherQuantity(saleId, requiredQuantity);
+        String message = isAvailable
+                ? "Số lượng phiếu giảm giá đủ"
+                : "Không đủ số lượng phiếu giảm giá";
+        return ResponseEntity.ok(Map.of(
+                "isAvailable", isAvailable,
+                "message", message
+        ));
     }
 }

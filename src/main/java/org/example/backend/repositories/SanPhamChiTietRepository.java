@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import org.example.backend.dto.request.dotGiamGia.DotGiamGiaSearch;
 import org.example.backend.dto.request.sanPham.SanPhamChiTietSearchRequest;
 import org.example.backend.dto.request.sanPham.SanPhamChiTietSearchRequest2;
+import org.example.backend.dto.response.SanPham.SanPhamChiTietAdminResponse;
 import org.example.backend.dto.response.SanPham.SanPhamChiTietRespon;
 import org.example.backend.dto.response.SanPham.SanPhamClientResponse;
 import org.example.backend.dto.response.banHang.banHangClientResponse;
@@ -50,13 +51,13 @@ public interface SanPhamChiTietRepository extends JpaRepository<SanPhamChiTiet, 
                     s.soLuong,s.giaBan,s.giaNhap,s.trangThai,s.hinhAnh,s.moTa
                     )
                     from SanPhamChiTiet s
-                    where s.deleted=false
+                    where s.deleted=false and s.trangThai =:trangThai
 
                     AND (COALESCE(:#{#SPCTSearch.kichThuoc}, '') ='' OR s.idKichThuoc.ten LIKE %:#{#SPCTSearch.kichThuoc}%)
                     AND (COALESCE(:#{#SPCTSearch.mauSac}, '') ='' OR s.idMauSac.ten LIKE %:#{#SPCTSearch.mauSac}%)
 
             """)
-    Page<SanPhamChiTietRespon> search(Pageable pageable, SanPhamChiTietSearchRequest SPCTSearch);
+    Page<SanPhamChiTietRespon> search(Pageable pageable, SanPhamChiTietSearchRequest SPCTSearch,String trangThai);
     //tim kiếm spct trong tất cả các spct--bán hàng
     @Query("""
         SELECT new org.example.backend.dto.response.SanPham.SanPhamChiTietRespon(s.id, s.idSanPham.id,
@@ -165,7 +166,7 @@ public interface SanPhamChiTietRepository extends JpaRepository<SanPhamChiTiet, 
 
                 left join DotGiamGiaSpct ds on s.id = ds.idSpct.id
                 left join DotGiamGia d on d.id = ds.idDotGiamGia.id
-                where s.soLuong > 0
+                where s.soLuong > 0 
             """)
     Page<banHangClientResponse> getBanHangClient(Pageable pageable);
 
@@ -331,4 +332,29 @@ public interface SanPhamChiTietRepository extends JpaRepository<SanPhamChiTiet, 
     List<SanPhamChiTiet> findAllBySanPhamId(UUID idSanPham);
 
     boolean existsByIdSanPhamAndIdMauSacAndIdKichThuoc(SanPham idSanPham, MauSac idMauSac, KichThuoc idKichThuoc);
+
+
+    //check số lượng spct
+//    @Query("""
+//        select new org.example.backend.dto.response.SanPham.SanPhamChiTietRespon(
+//        s.id,s.idSanPham.id,
+//                    s.ten,s.idMauSac.id,
+//                    s.idMauSac.ten,s.idKichThuoc.id,s.idKichThuoc.ten,
+//                    s.soLuong,s.giaBan,s.giaNhap,s.trangThai,s.hinhAnh,s.moTa
+//        )
+//        from SanPhamChiTiet  s
+//""")
+//    int findSoLuongById(UUID productId);
+
+    @Query("""
+        select s.soLuong
+        from SanPhamChiTiet s
+        where s.id = :productId
+""")
+    Optional<Integer> findSoLuongById(UUID productId);
+
+
+
+
+
 }
