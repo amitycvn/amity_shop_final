@@ -17,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,6 +32,7 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 
 import static org.example.backend.constants.Status.HOAT_DONG;
@@ -112,39 +114,76 @@ public class DotGiamGiaController {
 
     @PostMapping(SALE_CREATE)
     public ResponseEntity<?> createSale(@RequestBody DotGiamGiaCreate dotGiamGiaCreate) {
-        if (dotGiamGiaCreate.getMa().trim().isEmpty()) {
-            return ResponseEntity.badRequest().body("Mã không được để trống");
-        }
-        if (dotGiamGiaCreate.getTen().trim().isEmpty()) {
-            return ResponseEntity.badRequest().body("Tên không được để trống");
-        }
-        if (dotGiamGiaCreate.getGiaTri().compareTo(BigDecimal.ZERO) <= 0) {
-            return ResponseEntity.badRequest().body("Giá trị phải lớn hơn 0");
-        }
-        if (dotGiamGiaCreate.getNgayBatDau() == null) {
-            return ResponseEntity.badRequest().body("Ngày bắt đầu không được để trống");
-        }
-        if (dotGiamGiaCreate.getNgayKetThuc() == null) {
-            return ResponseEntity.badRequest().body("Ngày kết thúc không được để trống");
-        }
-        if (dotGiamGiaCreate.getLoai() == null) {
-            return ResponseEntity.badRequest().body("Loại không được để trống");
-        }
-        if (dotGiamGiaCreate.getTrangThai().trim().isEmpty()) {
-            return ResponseEntity.badRequest().body("Trạng thái không được để trống");
-        }
-        if (dotGiamGiaCreate.getHinhThuc().trim().isEmpty()) {
-            return ResponseEntity.badRequest().body("Hình thức không được để trống");
-        }
-        if (dotGiamGiaCreate.getDieuKien() == null) {
-            return ResponseEntity.badRequest().body("Điều kiện không được để trống");
-        }
+        try {
+            // Kiểm tra mã
+            if (dotGiamGiaCreate.getMa() == null || dotGiamGiaCreate.getMa().isBlank()) {
+                return ResponseEntity.badRequest().body("Mã không được để trống");
+            }
 
-        DotGiamGia d = new DotGiamGia();
-        dotGiamGiaMapper.createDotGiamGiaFromDto(dotGiamGiaCreate, d);
+            // Kiểm tra tên
+            if (dotGiamGiaCreate.getTen() == null || dotGiamGiaCreate.getTen().isBlank()) {
+                return ResponseEntity.badRequest().body("Tên không được để trống");
+            }
 
-        return ResponseEntity.ok().body(dotGiamGiaService.save(d));
+            // Kiểm tra giá trị
+            if (dotGiamGiaCreate.getGiaTri() == null || dotGiamGiaCreate.getGiaTri().compareTo(BigDecimal.ZERO) <= 0) {
+                return ResponseEntity.badRequest().body("Giá trị phải lớn hơn 0");
+            }
+
+            if (dotGiamGiaCreate.getLoai() != null) {
+                if (dotGiamGiaCreate.getLoai()) {
+                    // Tiền mặt phải lớn hơn 10000
+                    if (dotGiamGiaCreate.getGiaTri().compareTo(new BigDecimal("10000")) <= 0) {
+                        return ResponseEntity.badRequest().body("Giá trị tiền mặt phải lớn hơn 10000");
+                    }
+                } else {
+                    // Phần trăm phải từ 10 đến 80
+                    if (dotGiamGiaCreate.getGiaTri().compareTo(new BigDecimal("10")) < 0 ||
+                        dotGiamGiaCreate.getGiaTri().compareTo(new BigDecimal("80")) > 0) {
+                        return ResponseEntity.badRequest().body("Phần trăm giảm giá phải từ 10 đến 80");
+                    }
+                }
+            } else {
+                return ResponseEntity.badRequest().body("Loại không được để trống");
+            }
+
+            // Kiểm tra ngày bắt đầu
+            if (dotGiamGiaCreate.getNgayBatDau() == null || dotGiamGiaCreate.getNgayBatDau().isBefore(Instant.now())) {
+                return ResponseEntity.badRequest().body("Ngày bắt đầu phải lớn hơn thời điểm hiện tại");
+            }
+
+            // Kiểm tra ngày kết thúc
+            if (dotGiamGiaCreate.getNgayKetThuc() == null ||
+                dotGiamGiaCreate.getNgayKetThuc().isBefore(dotGiamGiaCreate.getNgayBatDau())) {
+                return ResponseEntity.badRequest().body("Ngày kết thúc không được nhỏ hơn ngày bắt đầu");
+            }
+
+            // Kiểm tra trạng thái
+            if (dotGiamGiaCreate.getTrangThai() == null || dotGiamGiaCreate.getTrangThai().isBlank()) {
+                return ResponseEntity.badRequest().body("Trạng thái không được để trống");
+            }
+
+            // Kiểm tra hình thức
+            if (dotGiamGiaCreate.getHinhThuc() == null || dotGiamGiaCreate.getHinhThuc().isBlank()) {
+                return ResponseEntity.badRequest().body("Hình thức không được để trống");
+            }
+
+            // Kiểm tra điều kiện
+            if (dotGiamGiaCreate.getDieuKien() == null) {
+                return ResponseEntity.badRequest().body("Điều kiện không được để trống");
+            }
+
+            // Nếu tất cả các kiểm tra đều hợp lệ, tiến hành lưu
+            DotGiamGia d = new DotGiamGia();
+            dotGiamGiaMapper.createDotGiamGiaFromDto(dotGiamGiaCreate, d);
+            d.setTrangThai("Sắp diễn ra");
+            return ResponseEntity.ok().body(dotGiamGiaService.save(d));
+
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Có lỗi xảy ra: " + e.getMessage());
+        }
     }
+
 
 
     @PutMapping(SALE_UPDATE)
