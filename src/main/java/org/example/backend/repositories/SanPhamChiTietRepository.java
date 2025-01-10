@@ -347,13 +347,14 @@ public interface SanPhamChiTietRepository extends JpaRepository<SanPhamChiTiet, 
     // int findSoLuongById(UUID productId);
 
     @Query("""
-
     select s.soLuong
     from SanPhamChiTiet s
+    join s.idSanPham sp
     where s.id = :productId
     and s.trangThai =:status
+    and sp.trangThai=:trangThai
 """)
-    Optional<Integer> findSoLuongById(UUID productId, String status);
+    Optional<Integer> findSoLuongById(UUID productId, String status, String trangThai);
 
 
     @Query("""

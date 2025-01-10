@@ -225,7 +225,8 @@ public class SanPhamChiTietService extends GenericServiceImpl<SanPhamChiTiet, UU
 //    }
 public boolean checkProductQuantity(UUID productId, int requiredQuantity) {
         String Status = "Hoạt động";
-    int availableQuantity = sanPhamChiTietRepository.findSoLuongById(productId,Status)
+        String trangThai="Hoạt động";
+    int availableQuantity = sanPhamChiTietRepository.findSoLuongById(productId,Status,trangThai)
             .orElse(0); // Nếu không tìm thấy sản phẩm, mặc định là 0
     return availableQuantity >= requiredQuantity;
 }
