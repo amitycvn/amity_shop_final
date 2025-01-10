@@ -215,4 +215,17 @@ public class SanPhamChiTietService extends GenericServiceImpl<SanPhamChiTiet, UU
         return mapToDTO(variants);
     }
 
+    // check so luong spct
+
+//    public boolean checkProductQuantity(UUID productId, int requiredQuantity) {
+//        int availableQuantity = sanPhamChiTietRepository.findSoLuongById(productId);
+//        return availableQuantity >= requiredQuantity;
+//    }
+public boolean checkProductQuantity(UUID productId, int requiredQuantity) {
+    int availableQuantity = sanPhamChiTietRepository.findSoLuongById(productId)
+            .orElse(0); // Nếu không tìm thấy sản phẩm, mặc định là 0
+    return availableQuantity >= requiredQuantity;
+}
+
+
 }

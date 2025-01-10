@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface PhieuGiamGiaRepository extends JpaRepository<PhieuGiamGia, UUID> {
@@ -102,4 +103,12 @@ public interface PhieuGiamGiaRepository extends JpaRepository<PhieuGiamGia, UUID
     );
     
     List<PhieuGiamGia> findByNgayBatDauAfterAndTrangThaiNot(Instant now, String trangThai);
+
+    //check so luong phieu giam gia
+    @Query("""
+    select p.soLuong
+    from PhieuGiamGia p
+    where p.id =:SaleId
+""")
+    Optional<Integer> findSoLuongGiamGiaById(UUID SaleId);
 }

@@ -17,6 +17,7 @@ import org.example.backend.dto.response.dotGiamGia.DotGiamGiaResponse;
 import org.example.backend.dto.response.sanPhamV2.SanPhamChiTietDTO;
 import org.example.backend.dto.response.sanPhamV2.SanPhamChiTietResponse;
 import org.example.backend.models.*;
+import org.example.backend.repositories.DotGiamGiaSpctRepository;
 import org.example.backend.repositories.SanPhamChiTietRepository;
 import org.example.backend.repositories.SanPhamRepository;
 import org.example.backend.services.SanPhamChiTietService;
@@ -50,6 +51,8 @@ public class SanPhamChiTietController {
     private Cloudinary cloudinary;
     @Autowired
     private SanPhamRepository sanPhamRepository;
+    @Autowired
+    private DotGiamGiaSpctRepository dotGiamGiaSpctRepository;
 
     @GetMapping(Admin.PRODUCT_DETAIL_GET_ALL)
     public ResponseEntity<?> getAll() {
@@ -199,9 +202,41 @@ public class SanPhamChiTietController {
         SanPhamChiTietSearchRequest searchRequest = new SanPhamChiTietSearchRequest();
         searchRequest.setMauSac(mauSac);
         searchRequest.setKichThuoc(kichThuoc);
-
+        String trangThai = "Hoạt động";
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(sortDir), sortBy));
-        Page<SanPhamChiTietRespon> searchSPCTPaginate = sanPhamChiTietRepository.search(pageable, searchRequest);
+        Page<SanPhamChiTietRespon> searchSPCTPaginate = sanPhamChiTietRepository.search(pageable, searchRequest,trangThai);
+
+        for (SanPhamChiTietRespon spct : searchSPCTPaginate.getContent()) {
+            spct.setGiaNhap(BigDecimal.valueOf(0));
+            // Tìm tất cả các đợt giảm giá đang hoạt động
+            List<DotGiamGiaSpct> discounts =
+                    dotGiamGiaSpctRepository.findActiveDiscountsByProductDetail(spct.getId());
+            System.out.println("discount123: " + discounts);
+
+            BigDecimal giaGiamTotNhat = BigDecimal.ZERO;
+
+            // Tính toán đợt giảm giá tốt nhất
+            for (DotGiamGiaSpct discount : discounts) {
+                DotGiamGia dotGiamGia = discount.getIdDotGiamGia();
+                BigDecimal giaGiamHienTai;
+
+                if (!dotGiamGia.getLoai()) { // Giảm giá theo tiền mawjt (loai = false)
+                    giaGiamHienTai = spct.getGiaBan().multiply(dotGiamGia.getGiaTri())
+                            .divide(BigDecimal.valueOf(100));
+                } else { // Giảm giá theo tiền mặt
+                    giaGiamHienTai = dotGiamGia.getGiaTri();
+                }
+
+                // So sánh và chọn giá giảm lớn nhất
+                if (giaGiamHienTai.compareTo(giaGiamTotNhat) > 0) {
+                    giaGiamTotNhat = giaGiamHienTai;
+                }
+            }
+
+            // Set giá giảm tốt nhất vào hóa đơn chi tiết
+            spct.setGiaNhap(giaGiamTotNhat);
+        }
+
         PageResponse<List<SanPhamChiTietRespon>> data = PageResponse.<List<SanPhamChiTietRespon>>builder()
                 .page(searchSPCTPaginate.getNumber())
                 .size(searchSPCTPaginate.getSize())
@@ -404,4 +439,32 @@ public class SanPhamChiTietController {
     public ResponseEntity<?> getAllSanPhamV2() {
         return ResponseEntity.ok(sanPhamChiTietService.getAllSanPham());
     }
+
+//    //check so luowng spct
+//    @GetMapping("/api/v1/admin/kiem-tra-so-luong/{id}")
+//    public ResponseEntity<Map<String, Object>> checkProductQuantity(
+//            @PathVariable("id") UUID productId,
+//            @RequestParam("soLuong") int soLuong) {
+//        boolean isAvailable = sanPhamChiTietService.checkProductQuantity(productId, soLuong);
+//        String message = isAvailable ? "Số lượng sản phẩm đủ" : "Không đủ số lượng sản phẩm trong kho";
+//        return ResponseEntity.ok(Map.of(
+//                "isAvailable", isAvailable,
+//                "message", message
+//        ));
+//    }
+
+    @GetMapping("/api/v1/admin/kiem-tra-so-luong/{id}")
+    public ResponseEntity<Map<String, Object>> checkProductQuantity(
+            @PathVariable("id") UUID productId,
+            @RequestParam("soLuong") int soLuong) {
+        boolean isAvailable = sanPhamChiTietService.checkProductQuantity(productId, soLuong);
+        String message = isAvailable ? "Số lượng sản phẩm đủ" : "Không đủ số lượng sản phẩm trong kho";
+        return ResponseEntity.ok(Map.of(
+                "isAvailable", isAvailable,
+                "message", message
+        ));
+    }
+
+
+
 }
