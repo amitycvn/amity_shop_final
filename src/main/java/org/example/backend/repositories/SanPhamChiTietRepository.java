@@ -384,17 +384,16 @@ public interface SanPhamChiTietRepository extends JpaRepository<SanPhamChiTiet, 
                     COALESCE(s.moTa, 'Sản Phẩm Chất Lượng') as moTa,
                     COALESCE(s.trangThai, 'Không Có') as trangThai,
                     s.idSanPham.trangThai as trangThaiSanPham,
-                    s.ngayTao as ngayTao
-
+                    s.ngayTao as ngayTao,
+                    s.deleted
                 )
                 from SanPhamChiTiet s
                 left join DotGiamGiaSpct ds on s.id = ds.idSpct.id
                 left join DotGiamGia d on d.id = ds.idDotGiamGia.id
-                where s.id =:id and s.trangThai =:trangThai and s.deleted = false
-                and s.soLuong > 0 and s.idSanPham.trangThai =:trangThai
+                where s.id =:id 
                 order by giaSauGiam asc
             """)
-    List<banHangClient> getBanHangClientbyIDSPCT(UUID id, String trangThai);
+    List<banHangClient> getBanHangClientbyIDSPCT(UUID id);
     @Query("""
                 select new org.example.backend.dto.response.banHang.banHangClient(
                     s.id,
@@ -422,13 +421,13 @@ public interface SanPhamChiTietRepository extends JpaRepository<SanPhamChiTiet, 
                     COALESCE(s.moTa, 'Sản Phẩm Chất Lượng') as moTa,
                     COALESCE(s.trangThai, 'Không Có') as trangThai,
                     s.idSanPham.trangThai as trangThaiSanPham,
-                    s.ngayTao as ngayTao
-
+                    s.ngayTao as ngayTao,
+                    s.deleted
                 )
                 from SanPhamChiTiet s
                 left join DotGiamGiaSpct ds on s.id = ds.idSpct.id
                 left join DotGiamGia d on d.id = ds.idDotGiamGia.id
-                where s.id =:id and s.deleted = false and s.soLuong > 0
+                where s.id =:id 
                 order by giaSauGiam asc
             """)
     List<banHangClient> getBanHangClientbyIDSPCTV2(UUID id);

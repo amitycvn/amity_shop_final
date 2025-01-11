@@ -36,4 +36,5 @@ public class banHangClient
     private String trangThai;
     private String trangThaiSanPham;
     private Instant ngayTao;
+    private Boolean deleted;
 }
