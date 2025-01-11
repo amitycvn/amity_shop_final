@@ -117,4 +117,26 @@ public class PhieuGiamGia {
         this.ngaySua = Instant.now();
     }
 
+    @Override
+    public String toString() {
+        return "PhieuGiamGia{" +
+                "id=" + id +
+                ", ma='" + ma + '\'' +
+                ", ten='" + ten + '\'' +
+                ", loai=" + loai +
+                ", giaTri=" + giaTri +
+                ", giamToiDa=" + giamToiDa +
+                ", mucDo='" + mucDo + '\'' +
+                ", ngayBatDau=" + ngayBatDau +
+                ", ngayKetThuc=" + ngayKetThuc +
+                ", soLuong=" + soLuong +
+                ", dieuKien=" + dieuKien +
+                ", nguoiTao='" + nguoiTao + '\'' +
+                ", nguoiSua='" + nguoiSua + '\'' +
+                ", ngayTao=" + ngayTao +
+                ", ngaySua=" + ngaySua +
+                ", trangThai='" + trangThai + '\'' +
+                ", deleted=" + deleted +
+                '}';
+    }
 }
