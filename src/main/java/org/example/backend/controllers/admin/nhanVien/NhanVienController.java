@@ -557,5 +557,14 @@
 //                return ResponseEntity.status(500).build();
 //            }
 //        }
+        @GetMapping(USER_GET_TRANG_THAI)
+        public ResponseEntity<String> checkTrangThaiUser(@PathVariable("userId") UUID userId) {
+            boolean isActive = nguoiDungService.checkTrangThaiUser(userId);
+            if (isActive) {
+                return ResponseEntity.ok("Người dùng đang hoạt động.");
+            } else {
+                return ResponseEntity.ok("Người dùng không tồn tại hoặc không hoạt động.");
+            }
+}
 
     }

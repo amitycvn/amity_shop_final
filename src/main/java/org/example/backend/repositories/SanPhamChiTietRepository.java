@@ -349,10 +349,12 @@ public interface SanPhamChiTietRepository extends JpaRepository<SanPhamChiTiet, 
     @Query("""
     select s.soLuong
     from SanPhamChiTiet s
+    join s.idSanPham sp
     where s.id = :productId
     and s.trangThai =:status
+    and sp.trangThai=:trangThai
 """)
-    Optional<Integer> findSoLuongById(UUID productId, String status);
+    Optional<Integer> findSoLuongById(UUID productId, String status, String trangThai);
 
     @Query("""
                 select new org.example.backend.dto.response.banHang.banHangClient(
