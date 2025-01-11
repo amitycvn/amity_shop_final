@@ -107,5 +107,17 @@ public class NguoiDungService extends GenericServiceImpl<NguoiDung, UUID> {
         return nguoiDungRepository.findBySdt(sdt);
     }
 
+    public boolean checkTrangThaiUser(UUID userId) {
+        String status = "Hoạt động";
+        Boolean isActive = nguoiDungRepository.findTrangThaiById(userId, status);
+
+        // Kiểm tra nếu là null hoặc không tìm thấy người dùng hợp lệ
+        if (isActive == null || !isActive) {
+            return false; // Người dùng không tồn tại hoặc không hoạt động
+        }
+
+        return true; // Người dùng hoạt động và không bị xóa
+    }
+
 }
 

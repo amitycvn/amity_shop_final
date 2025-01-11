@@ -17,5 +17,7 @@ public interface GioHangRepository extends JpaRepository<GioHang, UUID> {
     GioHang finbyIDKH(UUID id);
 
     Optional<GioHang> findByIdNguoiDungAndDeletedFalse(NguoiDung nguoiDung);
+
+
     
 }

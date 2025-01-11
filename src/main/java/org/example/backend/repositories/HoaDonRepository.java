@@ -136,4 +136,8 @@ public interface HoaDonRepository extends JpaRepository<HoaDon, UUID> {
                 """)
     Page<QuanLyDonHangRespose> searchHoaDon(Pageable pageable, String keyFind, String loai,
             Instant minNgay, Instant maxNgay, BigDecimal minGia, BigDecimal maxGia, String status, String choXacNhan);
+
+
+    ///ban hang tai quay
+
 }

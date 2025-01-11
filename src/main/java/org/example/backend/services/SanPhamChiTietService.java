@@ -225,10 +225,18 @@ public class SanPhamChiTietService extends GenericServiceImpl<SanPhamChiTiet, UU
 //    }
 public boolean checkProductQuantity(UUID productId, int requiredQuantity) {
         String Status = "Hoạt động";
-    int availableQuantity = sanPhamChiTietRepository.findSoLuongById(productId,Status)
+        String trangThai="Hoạt động";
+    int availableQuantity = sanPhamChiTietRepository.findSoLuongById(productId,Status,trangThai)
             .orElse(0); // Nếu không tìm thấy sản phẩm, mặc định là 0
     return availableQuantity >= requiredQuantity;
 }
+
+
+///giỏ hàng trong bán hàng tại quầy
+    public SanPhamChiTiet getSanPhamChiTietByIdAdmin(UUID id) {
+        return sanPhamChiTietRepository.findById(id).orElse(null);
+}
+
 
 public banHangClient getbanHangClientbyIDSPCT(UUID id) {
     String trangThai = "Hoạt động";
@@ -240,5 +248,6 @@ public banHangClient getbanHangClientbyIDSPCTV2(UUID id) {
    List<banHangClient> bhClient = SPCTRepository.getBanHangClientbyIDSPCTV2(id);
     return bhClient.get(0);
 }
+
 
 }

@@ -140,7 +140,14 @@ public interface NguoiDungRepository extends JpaRepository<NguoiDung, UUID> {
     where nd.sdt = :sdt and nd.deleted = false
 """)
     Optional<NguoiDung> findBySdt(@Param("sdt") String sdt);
-
+    @Query("""
+    select case when count(nd) > 0 then true else false end
+    from NguoiDung nd
+    where nd.id = :userId
+    and nd.trangThai = :status
+    and nd.deleted = false
+""")
+    Boolean findTrangThaiById(UUID userId, String status);
 
 
 

@@ -112,7 +112,7 @@ public interface SanPhamChiTietRepository extends JpaRepository<SanPhamChiTiet, 
     // tìm kiếm spct trong spct
     @Query("""
                 select new org.example.backend.dto.response.SanPham.SanPhamChiTietRespon(s.id, s.idSanPham.id,
-                    s.idSanPham.ten, s.idMauSac.id, s.idMauSac.ten, s.idKichThuoc.id, s.idKichThuoc.ten,
+                    s.ten, s.idMauSac.id, s.idMauSac.ten, s.idKichThuoc.id, s.idKichThuoc.ten,
                     s.soLuong, s.giaBan, s.giaNhap, s.trangThai, s.hinhAnh, s.moTa)
                 from SanPhamChiTiet s
                 where s.deleted = false
@@ -347,12 +347,15 @@ public interface SanPhamChiTietRepository extends JpaRepository<SanPhamChiTiet, 
     // int findSoLuongById(UUID productId);
 
     @Query("""
-                select s.soLuong
-                from SanPhamChiTiet s
-                where s.id = :productId
-                and s.trangThai =:status
-            """)
-    Optional<Integer> findSoLuongById(UUID productId, String status);
+
+    select s.soLuong
+    from SanPhamChiTiet s
+    join s.idSanPham sp
+    where s.id = :productId
+    and s.trangThai =:status
+    and sp.trangThai=:trangThai
+""")
+    Optional<Integer> findSoLuongById(UUID productId, String status, String trangThai);
 
     @Query("""
                 select new org.example.backend.dto.response.banHang.banHangClient(

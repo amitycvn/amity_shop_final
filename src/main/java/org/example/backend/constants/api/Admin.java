@@ -17,7 +17,7 @@ public class Admin {
     public static final String USER_SORT = USER + "/sort";
     public static final String PAGE_USER = USER + "/page";
     public static final String USER_GET_BY_NV = USER + "/search";
-    public static final String USER_SET_TRANG_THAI = USER + "/status/{id}";
+    public static final String USER_GET_TRANG_THAI = USER + "/status/{userId}";
     public static final String USER_SAVE_EXCEL = USER + "/excel";
     public static final String USER_LOGIN = USER + "/login";
     public static final String USER_REGISTER = USER + "/createUser";
