@@ -96,7 +96,6 @@ public ResponseEntity<?> create() {
             .mapToLong(TrangThaiRespon::getCount)
             .sum();
     if(trangThaiRespon == null || totalCount <5) {
-        System.out.println("lol thuong"+ trangThaiRespon);
         HoaDon hoaDon = new HoaDon();
         return ResponseEntity.ok(hoaDonRepository.save(hoaDon));
     }
@@ -197,20 +196,23 @@ public ResponseEntity<?> create() {
 
     @PostMapping(Admin.SELL_CLIENT_CHECK_THONG_TIN_HOA_DON)
     public ResponseEntity<?> checkThongTinHoaDon(@RequestBody thongTinHoaDon request) {
+        String hoatDong = "Hoạt động";
         for (HoaDonChiTietRequestV2 hdct : request.getListHoaDonChiTiet()) {
-            banHangClient hd = sanPhamChiTietService.getbanHangClientbyIDSPCT(hdct.getIdSpct());
+            banHangClient hd = sanPhamChiTietService.getbanHangClientbyIDSPCTV2(hdct.getIdSpct());
             if (hdct.getGia().compareTo(hd.getGiaSauGiam()) != 0) {
                 return ResponseEntity.badRequest().body("Giá sản phẩm đã thay đổi");
             }
             if (hdct.getSoLuong() > hd.getSoLuong()) {
                 return ResponseEntity.badRequest().body("Số lượng sản phẩm không đủ");
             }
-            if (!hdct.getTrangThai().equals("Hoạt Động")) {
+            if (!hd.getTrangThai().equals(hoatDong)) {
+                return ResponseEntity.badRequest().body("Sản phẩm đã ngừng bán");
+            }
+            if (!hd.getTrangThaiSanPham().equals(hoatDong)) {
                 return ResponseEntity.badRequest().body("Sản phẩm đã ngừng bán");
             }
         }
         String trangThai = nguoiDungRepository.findById(request.getIdNguoiDung().getId()).orElse(null).getTrangThai();
-        String hoatDong = "Hoạt động";
         if(!trangThai.equals(hoatDong)) {
             return ResponseEntity.badRequest().body("khách hàng không tồn tại");
         }

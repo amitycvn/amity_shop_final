@@ -236,4 +236,9 @@ public banHangClient getbanHangClientbyIDSPCT(UUID id) {
     return bhClient.get(0);
 }
 
+public banHangClient getbanHangClientbyIDSPCTV2(UUID id) {
+   List<banHangClient> bhClient = SPCTRepository.getBanHangClientbyIDSPCTV2(id);
+    return bhClient.get(0);
+}
+
 }
