@@ -127,7 +127,7 @@ public class SanPhamChiTietController {
     }
 
 
-    @PutMapping(value = Admin.PRODUCT_DETAIL_UPDATE, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping(value = Admin.PRODUCT_DETAIL_UPDATE)
     public ResponseEntity<?> update(
             @PathVariable("id") UUID id,
             @PathVariable("idSanPham") UUID idSanPham,
@@ -138,7 +138,7 @@ public class SanPhamChiTietController {
             @RequestParam("giaNhap") BigDecimal giaNhap,
             @RequestParam("trangThai") String trangThai,
             @RequestParam("moTa") String moTa,
-            @RequestPart(value = "hinhAnh", required = false) MultipartFile hinhAnhFile) {
+            @RequestPart("hinhAnh")String hinhAnh) {
         try {
             SanPhamChiTiet s = sanPhamChiTietRepository.findById(id).orElse(null);
 
@@ -152,23 +152,21 @@ public class SanPhamChiTietController {
                 s.setGiaNhap(giaNhap);
                 s.setTrangThai(trangThai);
                 s.setMoTa(moTa);
+                s.setHinhAnh(hinhAnh);
 
                 // Tải lên hình ảnh lên Cloudinary nếu có tệp hình ảnh
-                if (hinhAnhFile != null && !hinhAnhFile.isEmpty()) {
-                    Map<String, Object> uploadResult = cloudinary.uploader().upload(hinhAnhFile.getBytes(),
-                            ObjectUtils.emptyMap());
-                    String imageUrl = (String) uploadResult.get("secure_url");
-                    s.setHinhAnh(imageUrl);
-                }
+//                if (hinhAnhFile != null && !hinhAnhFile.isEmpty()) {
+//                    Map<String, Object> uploadResult = cloudinary.uploader().upload(hinhAnhFile.getBytes(),
+//                            ObjectUtils.emptyMap());
+//                    String imageUrl = (String) uploadResult.get("secure_url");
+//                    s.setHinhAnh(imageUrl);
+//                }
 
                 // Lưu đối tượng đã cập nhật vào cơ sở dữ liệu
                 return ResponseEntity.ok(sanPhamChiTietRepository.save(s));
             }
 
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Sản phẩm chi tiết không tồn tại");
-        } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Tải lên hình ảnh thất bại: " + e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Lỗi xảy ra: " + e.getMessage());
@@ -459,6 +457,13 @@ public class SanPhamChiTietController {
             @RequestParam("soLuong") int soLuong) {
         boolean isAvailable = sanPhamChiTietService.checkProductQuantity(productId, soLuong);
         String message = isAvailable ? "Số lượng sản phẩm đủ" : "Không đủ số lượng sản phẩm trong kho";
+//        boolean isActive = sanPhamChiTietService.isProductActive(productId);
+//        if (!isActive) {
+//            return ResponseEntity.ok(Map.of(
+//                    "isAvailable", true,
+//                    "message", "Sản phẩm không ở trạng thái hoạt động"
+//            ));
+//        }
         return ResponseEntity.ok(Map.of(
                 "isAvailable", isAvailable,
                 "message", message

@@ -81,7 +81,8 @@ public class NguoiDungService extends GenericServiceImpl<NguoiDung, UUID> {
     }
 
     public ResponseEntity<?> login(String email, String password) {
-        Optional<NguoiDung> user = nguoiDungRepository.findByEmail(email);
+        String trangThai = "Hoạt động";
+        Optional<NguoiDung> user = nguoiDungRepository.findByEmail(email,trangThai);
 
         if (user.isPresent()) {
             NguoiDung nguoiDung = user.get();
@@ -99,10 +100,23 @@ public class NguoiDungService extends GenericServiceImpl<NguoiDung, UUID> {
         }
     }
     public Optional<NguoiDung> searchByEmail(String email) {
-        return nguoiDungRepository.findByEmail(email);
+        String trangThai = "Hoạt động";
+        return nguoiDungRepository.findByEmail(email,trangThai);
     }
     public Optional<NguoiDung> searchBySdt(String sdt) {
         return nguoiDungRepository.findBySdt(sdt);
+    }
+
+    public boolean checkTrangThaiUser(UUID userId) {
+        String status = "Hoạt động";
+        Boolean isActive = nguoiDungRepository.findTrangThaiById(userId, status);
+
+        // Kiểm tra nếu là null hoặc không tìm thấy người dùng hợp lệ
+        if (isActive == null || !isActive) {
+            return false; // Người dùng không tồn tại hoặc không hoạt động
+        }
+
+        return true; // Người dùng hoạt động và không bị xóa
     }
 
 }

@@ -201,7 +201,8 @@ public class PhieuGiamGiaService extends GenericServiceImpl<PhieuGiamGia , UUID>
     //check so luong phieu dung cho ban hang tai quầy
 
     public boolean checkVoucherQuantity(UUID saleId, int requiredQuantity) {
-        Optional<Integer> availableQuantity = PGGrepository.findSoLuongGiamGiaById(saleId);
+        String trangThai = "Đang diễn ra";
+        Optional<Integer> availableQuantity = PGGrepository.findSoLuongGiamGiaById(saleId,trangThai);
         // Nếu không tìm thấy phiếu giảm giá, coi như không đủ số lượng
         if (availableQuantity.isEmpty()) {
             return false;

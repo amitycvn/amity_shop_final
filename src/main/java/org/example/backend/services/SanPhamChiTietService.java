@@ -6,6 +6,7 @@ import org.example.backend.constants.Status;
 import org.example.backend.dto.request.sanPhamV2.SanPhamChiTietRequest;
 import org.example.backend.dto.request.sanPhamV2.SanPhamChiTietV2Request;
 import org.example.backend.dto.response.NhanVien.NhanVienRespon;
+import org.example.backend.dto.response.banHang.banHangClient;
 import org.example.backend.dto.response.banHang.banHangClientResponse;
 import org.example.backend.dto.response.dotGiamGia.DotGiamGiaResponse;
 import org.example.backend.dto.response.sanPhamV2.SanPhamChiTietDTO;
@@ -29,6 +30,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -222,14 +224,23 @@ public class SanPhamChiTietService extends GenericServiceImpl<SanPhamChiTiet, UU
 //        return availableQuantity >= requiredQuantity;
 //    }
 public boolean checkProductQuantity(UUID productId, int requiredQuantity) {
-    int availableQuantity = sanPhamChiTietRepository.findSoLuongById(productId)
+        String Status = "Hoạt động";
+        String trangThai="Hoạt động";
+    int availableQuantity = sanPhamChiTietRepository.findSoLuongById(productId,Status,trangThai)
             .orElse(0); // Nếu không tìm thấy sản phẩm, mặc định là 0
     return availableQuantity >= requiredQuantity;
 }
 
+
 ///giỏ hàng trong bán hàng tại quầy
     public SanPhamChiTiet getSanPhamChiTietByIdAdmin(UUID id) {
         return sanPhamChiTietRepository.findById(id).orElse(null);
+}
+
+
+public banHangClient getbanHangClientbyIDSPCT(UUID id) {
+   List<banHangClient> bhClient = SPCTRepository.getBanHangClientbyIDSPCT(id);
+    return bhClient.get(0);
 }
 
 

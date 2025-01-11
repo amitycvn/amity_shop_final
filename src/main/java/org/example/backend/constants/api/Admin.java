@@ -17,7 +17,7 @@ public class Admin {
     public static final String USER_SORT = USER + "/sort";
     public static final String PAGE_USER = USER + "/page";
     public static final String USER_GET_BY_NV = USER + "/search";
-    public static final String USER_SET_TRANG_THAI = USER + "/status/{id}";
+    public static final String USER_GET_TRANG_THAI = USER + "/status/{userId}";
     public static final String USER_SAVE_EXCEL = USER + "/excel";
     public static final String USER_LOGIN = USER + "/login";
     public static final String USER_REGISTER = USER + "/createUser";
@@ -321,6 +321,7 @@ public class Admin {
     public static final String SELL_CLIENT_SEARCH = SELL_CLIENT + "/client/search";
     public static final String SELL_CLIENT_TOP = BASE_CLIENT + "/client/top5";
     public static final String SELL_CLIENT_SALE_SP = BASE_CLIENT + "/client/sale/sp";
+    public static final String SELL_CLIENT_GET_BY_ID_SPCT = BASE_CLIENT + "/sale/spct";
 
     public static final String SELL_CLIENT_SET_PHUONG_THUC_THANH_TOAN =  BASE_CLIENT + "/sellClient/PhuongThucThanhToan";
     public static final String SELL_CLIENT_SET_LICH_SU_HOA_DON = BASE_CLIENT + "/sellClient/LichSuHoaDon";

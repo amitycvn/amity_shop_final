@@ -7,6 +7,7 @@ import org.example.backend.dto.request.sanPham.SanPhamChiTietSearchRequest2;
 import org.example.backend.dto.response.SanPham.SanPhamChiTietAdminResponse;
 import org.example.backend.dto.response.SanPham.SanPhamChiTietRespon;
 import org.example.backend.dto.response.SanPham.SanPhamClientResponse;
+import org.example.backend.dto.response.banHang.banHangClient;
 import org.example.backend.dto.response.banHang.banHangClientResponse;
 import org.example.backend.dto.response.dotGiamGia.DotGiamGiaResponse;
 import org.example.backend.models.KichThuoc;
@@ -57,22 +58,22 @@ public interface SanPhamChiTietRepository extends JpaRepository<SanPhamChiTiet, 
                     AND (COALESCE(:#{#SPCTSearch.mauSac}, '') ='' OR s.idMauSac.ten LIKE %:#{#SPCTSearch.mauSac}%)
 
             """)
-    Page<SanPhamChiTietRespon> search(Pageable pageable, SanPhamChiTietSearchRequest SPCTSearch,String trangThai);
-    //tim kiếm spct trong tất cả các spct--bán hàng
-    @Query("""
-        SELECT new org.example.backend.dto.response.SanPham.SanPhamChiTietRespon(s.id, s.idSanPham.id,
-        s.ten, s.idMauSac.id,
-        s.idMauSac.ten, s.idKichThuoc.id, s.idKichThuoc.ten,
-        s.soLuong, s.giaBan, s.giaNhap, s.trangThai, s.hinhAnh, s.moTa)
-        FROM SanPhamChiTiet s
-        WHERE s.deleted = false
-        AND (:#{#SPCTSearch.kichThuoc} IS NULL OR s.idKichThuoc.ten LIKE %:#{#SPCTSearch.kichThuoc}%)
-        AND (:#{#SPCTSearch.mauSac} IS NULL OR s.idMauSac.ten LIKE %:#{#SPCTSearch.mauSac}%)
-        AND (:#{#SPCTSearch.tenSanPhamChiTiet} IS NULL OR s.ten LIKE %:#{#SPCTSearch.tenSanPhamChiTiet}%)
-        AND (:#{#SPCTSearch.trangThai} IS NULL OR s.trangThai = :#{#SPCTSearch.trangThai})
-    """)
-    Page<SanPhamChiTietRespon> search2(Pageable pageable, SanPhamChiTietSearchRequest2 SPCTSearch);
+    Page<SanPhamChiTietRespon> search(Pageable pageable, SanPhamChiTietSearchRequest SPCTSearch, String trangThai);
 
+    // tim kiếm spct trong tất cả các spct--bán hàng
+    @Query("""
+                SELECT new org.example.backend.dto.response.SanPham.SanPhamChiTietRespon(s.id, s.idSanPham.id,
+                s.ten, s.idMauSac.id,
+                s.idMauSac.ten, s.idKichThuoc.id, s.idKichThuoc.ten,
+                s.soLuong, s.giaBan, s.giaNhap, s.trangThai, s.hinhAnh, s.moTa)
+                FROM SanPhamChiTiet s
+                WHERE s.deleted = false
+                AND (:#{#SPCTSearch.kichThuoc} IS NULL OR s.idKichThuoc.ten LIKE %:#{#SPCTSearch.kichThuoc}%)
+                AND (:#{#SPCTSearch.mauSac} IS NULL OR s.idMauSac.ten LIKE %:#{#SPCTSearch.mauSac}%)
+                AND (:#{#SPCTSearch.tenSanPhamChiTiet} IS NULL OR s.ten LIKE %:#{#SPCTSearch.tenSanPhamChiTiet}%)
+                AND (:#{#SPCTSearch.trangThai} IS NULL OR s.trangThai = :#{#SPCTSearch.trangThai})
+            """)
+    Page<SanPhamChiTietRespon> search2(Pageable pageable, SanPhamChiTietSearchRequest2 SPCTSearch);
 
     @Query("""
                     select new org.example.backend.dto.response.SanPham.SanPhamChiTietRespon(s.id,s.idSanPham.id,
@@ -107,21 +108,21 @@ public interface SanPhamChiTietRepository extends JpaRepository<SanPhamChiTiet, 
 
             """)
     List<SanPhamChiTietRespon> findByIdSpct(UUID idSanPham);
-    //tìm kiếm spct trong spct
-    @Query("""
-    select new org.example.backend.dto.response.SanPham.SanPhamChiTietRespon(s.id, s.idSanPham.id,
-        s.idSanPham.ten, s.idMauSac.id, s.idMauSac.ten, s.idKichThuoc.id, s.idKichThuoc.ten,
-        s.soLuong, s.giaBan, s.giaNhap, s.trangThai, s.hinhAnh, s.moTa)
-    from SanPhamChiTiet s
-    where s.deleted = false
-    and s.idSanPham.id = :#{#SPCTSearch.idSanPham}
-    AND (:#{#SPCTSearch.kichThuoc} IS NULL OR s.idKichThuoc.ten LIKE %:#{#SPCTSearch.kichThuoc}%)
-    AND (:#{#SPCTSearch.mauSac} IS NULL OR s.idMauSac.ten LIKE %:#{#SPCTSearch.mauSac}%)
-    AND (:#{#SPCTSearch.tenSanPhamChiTiet} IS NULL OR s.ten LIKE %:#{#SPCTSearch.tenSanPhamChiTiet}%)
-    AND (:#{#SPCTSearch.trangThai} IS NULL OR :#{#SPCTSearch.trangThai} = '' OR s.trangThai = :#{#SPCTSearch.trangThai})
-""")
-    Page<SanPhamChiTietRespon> findByIdSpct1(Pageable pageable, SanPhamChiTietSearchRequest SPCTSearch);
 
+    // tìm kiếm spct trong spct
+    @Query("""
+                select new org.example.backend.dto.response.SanPham.SanPhamChiTietRespon(s.id, s.idSanPham.id,
+                    s.ten, s.idMauSac.id, s.idMauSac.ten, s.idKichThuoc.id, s.idKichThuoc.ten,
+                    s.soLuong, s.giaBan, s.giaNhap, s.trangThai, s.hinhAnh, s.moTa)
+                from SanPhamChiTiet s
+                where s.deleted = false
+                and s.idSanPham.id = :#{#SPCTSearch.idSanPham}
+                AND (:#{#SPCTSearch.kichThuoc} IS NULL OR s.idKichThuoc.ten LIKE %:#{#SPCTSearch.kichThuoc}%)
+                AND (:#{#SPCTSearch.mauSac} IS NULL OR s.idMauSac.ten LIKE %:#{#SPCTSearch.mauSac}%)
+                AND (:#{#SPCTSearch.tenSanPhamChiTiet} IS NULL OR s.ten LIKE %:#{#SPCTSearch.tenSanPhamChiTiet}%)
+                AND (:#{#SPCTSearch.trangThai} IS NULL OR :#{#SPCTSearch.trangThai} = '' OR s.trangThai = :#{#SPCTSearch.trangThai})
+            """)
+    Page<SanPhamChiTietRespon> findByIdSpct1(Pageable pageable, SanPhamChiTietSearchRequest SPCTSearch);
 
     @Query("""
                      select new org.example.backend.dto.response.SanPham.SanPhamChiTietRespon(s.id,s.idSanPham.id,
@@ -166,7 +167,7 @@ public interface SanPhamChiTietRepository extends JpaRepository<SanPhamChiTiet, 
 
                 left join DotGiamGiaSpct ds on s.id = ds.idSpct.id
                 left join DotGiamGia d on d.id = ds.idDotGiamGia.id
-                where s.soLuong > 0 
+                where s.soLuong > 0
             """)
     Page<banHangClientResponse> getBanHangClient(Pageable pageable);
 
@@ -333,27 +334,63 @@ public interface SanPhamChiTietRepository extends JpaRepository<SanPhamChiTiet, 
 
     boolean existsByIdSanPhamAndIdMauSacAndIdKichThuoc(SanPham idSanPham, MauSac idMauSac, KichThuoc idKichThuoc);
 
-
-    //check số lượng spct
-//    @Query("""
-//        select new org.example.backend.dto.response.SanPham.SanPhamChiTietRespon(
-//        s.id,s.idSanPham.id,
-//                    s.ten,s.idMauSac.id,
-//                    s.idMauSac.ten,s.idKichThuoc.id,s.idKichThuoc.ten,
-//                    s.soLuong,s.giaBan,s.giaNhap,s.trangThai,s.hinhAnh,s.moTa
-//        )
-//        from SanPhamChiTiet  s
-//""")
-//    int findSoLuongById(UUID productId);
+    // check số lượng spct
+    // @Query("""
+    // select new org.example.backend.dto.response.SanPham.SanPhamChiTietRespon(
+    // s.id,s.idSanPham.id,
+    // s.ten,s.idMauSac.id,
+    // s.idMauSac.ten,s.idKichThuoc.id,s.idKichThuoc.ten,
+    // s.soLuong,s.giaBan,s.giaNhap,s.trangThai,s.hinhAnh,s.moTa
+    // )
+    // from SanPhamChiTiet s
+    // """)
+    // int findSoLuongById(UUID productId);
 
     @Query("""
-        select s.soLuong
-        from SanPhamChiTiet s
-        where s.id = :productId
+    select s.soLuong
+    from SanPhamChiTiet s
+    join s.idSanPham sp
+    where s.id = :productId
+    and s.trangThai =:status
+    and sp.trangThai=:trangThai
 """)
-    Optional<Integer> findSoLuongById(UUID productId);
+    Optional<Integer> findSoLuongById(UUID productId, String status, String trangThai);
 
+    @Query("""
+                select new org.example.backend.dto.response.banHang.banHangClient(
+                    s.id,
+                    s.idSanPham.ten as tenSp,
+                    s.ten as tenSpct,
+                    s.idMauSac.ten as tenMauSac,
+                    s.idKichThuoc.ten as tenKichThuoc,
+                    s.idSanPham.idDanhMuc.ten as tenDanhMuc,
+                    s.idSanPham.idHang.ten as tenHang,
+                    s.soLuong as soLuong,
+                    COALESCE(d.id, '00000000-0000-0000-0000-000000000000') as dotGiamGia,
+                    COALESCE(d.loai, false ) as loaiGiamGia,
+                    COALESCE(d.giaTri, 0) as giaTriGiam,
+                    s.giaBan as giaBan,
+                    CASE
+                        WHEN COALESCE(d.loai, false ) = false THEN s.giaBan * COALESCE(d.giaTri, 0) / 100
+                        ELSE COALESCE(d.giaTri, 0)
+                    END as giaGiam,
+                    s.giaBan -
+                    CASE
+                        WHEN COALESCE(d.loai, false ) = false THEN s.giaBan * COALESCE(d.giaTri, 0) / 100
+                        ELSE COALESCE(d.giaTri, 0)
+                    END as giaSauGiam,
+                    s.hinhAnh,
+                    COALESCE(s.moTa, 'Sản Phẩm Chất Lượng') as moTa,
+                    COALESCE(d.trangThai, 'Không Có') as trangThai,
+                    s.ngayTao as ngayTao
 
-
+                )
+                from SanPhamChiTiet s
+                left join DotGiamGiaSpct ds on s.id = ds.idSpct.id
+                left join DotGiamGia d on d.id = ds.idDotGiamGia.id
+                where s.id =:id
+                order by giaSauGiam asc
+            """)
+    List<banHangClient> getBanHangClientbyIDSPCT(UUID id);
 
 }
