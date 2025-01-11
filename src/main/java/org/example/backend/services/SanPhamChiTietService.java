@@ -231,9 +231,17 @@ public boolean checkProductQuantity(UUID productId, int requiredQuantity) {
     return availableQuantity >= requiredQuantity;
 }
 
+
+///giỏ hàng trong bán hàng tại quầy
+    public SanPhamChiTiet getSanPhamChiTietByIdAdmin(UUID id) {
+        return sanPhamChiTietRepository.findById(id).orElse(null);
+}
+
+
 public banHangClient getbanHangClientbyIDSPCT(UUID id) {
    List<banHangClient> bhClient = SPCTRepository.getBanHangClientbyIDSPCT(id);
     return bhClient.get(0);
 }
+
 
 }
