@@ -388,9 +388,9 @@ public interface SanPhamChiTietRepository extends JpaRepository<SanPhamChiTiet, 
                 from SanPhamChiTiet s
                 left join DotGiamGiaSpct ds on s.id = ds.idSpct.id
                 left join DotGiamGia d on d.id = ds.idDotGiamGia.id
-                where s.id =:id
+                where s.id =:id and s.trangThai =:trangThai and s.deleted = false and s.soLuong > 0
                 order by giaSauGiam asc
             """)
-    List<banHangClient> getBanHangClientbyIDSPCT(UUID id);
+    List<banHangClient> getBanHangClientbyIDSPCT(UUID id, String trangThai);
 
 }

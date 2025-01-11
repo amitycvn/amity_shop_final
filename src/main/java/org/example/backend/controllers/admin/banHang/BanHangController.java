@@ -10,8 +10,10 @@ import org.example.backend.common.ResponseData;
 import org.example.backend.constants.api.Admin;
 import org.example.backend.dto.request.banHang.*;
 import org.example.backend.dto.response.banHang.TrangThaiRespon;
+import org.example.backend.dto.response.banHang.banHangClient;
 import org.example.backend.dto.response.banHang.banHangClientResponse;
 import org.example.backend.dto.response.phieuGiamGia.phieuGiamGiaReponse;
+import org.example.backend.dto.response.banHang.thongTinHoaDon;
 import org.example.backend.models.*;
 import org.example.backend.repositories.*;
 import org.example.backend.services.DotGiamGiaSpctService;
@@ -37,6 +39,9 @@ import java.util.UUID;
 
 import static org.example.backend.constants.Status.CHO_THANH_TOAN;
 import static org.example.backend.constants.Status.CHO_XAC_NHAN_HOA_DON;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @RestController
 public class BanHangController {
@@ -56,6 +61,8 @@ public class BanHangController {
     private DotGiamGiaSpctService dotGiamGiaSpctService;
     @Autowired
     private DotGiamGiaSpctRepository dotGiamGiaSpctRepository;
+    @Autowired
+    private NguoiDungRepository nguoiDungRepository;
 
     //    @GetMapping(Admin.SELL_GET_ALL)
 //    public ResponseEntity<?> getAll() {
@@ -124,8 +131,6 @@ public ResponseEntity<?> create() {
                         // Tìm tất cả các đợt giảm giá đang hoạt động
                         List<DotGiamGiaSpct> discounts =
                                 dotGiamGiaSpctRepository.findActiveDiscountsByProductDetail(hdct.getIdSpct());
-                        System.out.println("discount123: " + discounts);
-
                         BigDecimal giaGiamTotNhat = BigDecimal.ZERO;
 
                         // Tính toán đợt giảm giá tốt nhất
@@ -188,6 +193,47 @@ public ResponseEntity<?> create() {
         return ResponseEntity.ok(hoaDonRepository.save(hoaDon));
 
 
+    }
+
+    @PostMapping(Admin.SELL_CLIENT_CHECK_THONG_TIN_HOA_DON)
+    public ResponseEntity<?> checkThongTinHoaDon(@RequestBody thongTinHoaDon request) {
+        for (HoaDonChiTietRequestV2 hdct : request.getListHoaDonChiTiet()) {
+            banHangClient hd = sanPhamChiTietService.getbanHangClientbyIDSPCT(hdct.getIdSpct());
+            if (hdct.getGia().compareTo(hd.getGiaSauGiam()) != 0) {
+                return ResponseEntity.badRequest().body("Giá sản phẩm đã thay đổi");
+            }
+            if (hdct.getSoLuong() > hd.getSoLuong()) {
+                return ResponseEntity.badRequest().body("Số lượng sản phẩm không đủ");
+            }
+            if (!hdct.getTrangThai().equals("Hoạt Động")) {
+                return ResponseEntity.badRequest().body("Sản phẩm đã ngừng bán");
+            }
+        }
+        String trangThai = nguoiDungRepository.findById(request.getIdNguoiDung().getId()).orElse(null).getTrangThai();
+        String hoatDong = "Hoạt động";
+        if(!trangThai.equals(hoatDong)) {
+            return ResponseEntity.badRequest().body("khách hàng không tồn tại");
+        }
+        if (request.getIdPhieuGiamGia() != null) {
+            PhieuGiamGia phieuGiamGia = phieuGiamGiaRepository.findById(request.getIdPhieuGiamGia().getId()).orElse(null);
+            if (phieuGiamGia == null) {
+                return ResponseEntity.badRequest().body("Không tìm thấy phiếu giảm giá");
+            }
+            String trangThaiPhieuGiamGia = "Đang diễn ra";
+            if (!phieuGiamGia.getTrangThai().equals(trangThaiPhieuGiamGia)) {
+                return ResponseEntity.badRequest().body("Phiếu giảm giá chưa được diễn ra");
+            }
+            if (phieuGiamGia.getGiaTri().compareTo(request.getIdPhieuGiamGia().getGiaTri()) != 0) {
+                return ResponseEntity.badRequest().body("Phiếu giảm giá đã thay đổi");
+            }
+            if (phieuGiamGia.getDieuKien().compareTo(request.getIdPhieuGiamGia().getDieuKien()) != 0) {
+                return ResponseEntity.badRequest().body("Phiếu giảm giá đã thay đổi");
+            }
+            if (phieuGiamGia.getSoLuong() < request.getIdPhieuGiamGia().getSoLuong()) {
+                return ResponseEntity.badRequest().body("Phiếu giảm giá đã hết");
+            }
+        }
+        return ResponseEntity.ok("ok");
     }
 
 

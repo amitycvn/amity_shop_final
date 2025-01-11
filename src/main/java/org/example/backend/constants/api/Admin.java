@@ -322,6 +322,7 @@ public class Admin {
     public static final String SELL_CLIENT_TOP = BASE_CLIENT + "/client/top5";
     public static final String SELL_CLIENT_SALE_SP = BASE_CLIENT + "/client/sale/sp";
     public static final String SELL_CLIENT_GET_BY_ID_SPCT = BASE_CLIENT + "/sale/spct";
+    public static final String SELL_CLIENT_CHECK_THONG_TIN_HOA_DON = BASE_CLIENT + "/sellClient/checkThongTinHoaDon";
 
     public static final String SELL_CLIENT_SET_PHUONG_THUC_THANH_TOAN =  BASE_CLIENT + "/sellClient/PhuongThucThanhToan";
     public static final String SELL_CLIENT_SET_LICH_SU_HOA_DON = BASE_CLIENT + "/sellClient/LichSuHoaDon";

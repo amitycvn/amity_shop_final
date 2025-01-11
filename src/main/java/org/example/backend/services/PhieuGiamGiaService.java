@@ -180,6 +180,7 @@ public class PhieuGiamGiaService extends GenericServiceImpl<PhieuGiamGia , UUID>
             if (phieu.getNgayBatDau() != null && 
                 phieu.getNgayBatDau().isBefore(thoiGianHienTai) && 
                 phieu.getNgayKetThuc().isAfter(thoiGianHienTai) && 
+                phieu.getSoLuong() > 0 &&
                 !phieu.getTrangThai().equals("Đang diễn ra")) {
                 
                 // Cập nhật trạng thái thành "Đang diễn ra"

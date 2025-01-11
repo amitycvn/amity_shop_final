@@ -12,14 +12,10 @@ import java.util.UUID;
 @AllArgsConstructor
 @Getter
 @Setter
-public class HoaDonChiTietRequest {
-
-    private UUID idHoaDon;
+public class HoaDonChiTietRequestV2 {
     private UUID idSpct;
     private Integer soLuong;
     private BigDecimal gia;
     private BigDecimal giaGiam;
     private String trangThai;
-
-
 }

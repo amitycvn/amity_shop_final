@@ -239,7 +239,8 @@ public boolean checkProductQuantity(UUID productId, int requiredQuantity) {
 
 
 public banHangClient getbanHangClientbyIDSPCT(UUID id) {
-   List<banHangClient> bhClient = SPCTRepository.getBanHangClientbyIDSPCT(id);
+    String trangThai = "Hoạt động";
+   List<banHangClient> bhClient = SPCTRepository.getBanHangClientbyIDSPCT(id,trangThai);
     return bhClient.get(0);
 }
 
