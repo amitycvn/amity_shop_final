@@ -34,5 +34,6 @@ public class banHangClient
     private String hinhAnh;
     private String moTa;
     private String trangThai;
+    private String trangThaiSanPham;
     private Instant ngayTao;
 }

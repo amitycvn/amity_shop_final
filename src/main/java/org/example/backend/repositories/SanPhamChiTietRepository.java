@@ -347,6 +347,7 @@ public interface SanPhamChiTietRepository extends JpaRepository<SanPhamChiTiet, 
     // int findSoLuongById(UUID productId);
 
     @Query("""
+
     select s.soLuong
     from SanPhamChiTiet s
     join s.idSanPham sp
@@ -381,16 +382,55 @@ public interface SanPhamChiTietRepository extends JpaRepository<SanPhamChiTiet, 
                     END as giaSauGiam,
                     s.hinhAnh,
                     COALESCE(s.moTa, 'Sản Phẩm Chất Lượng') as moTa,
-                    COALESCE(d.trangThai, 'Không Có') as trangThai,
+                    COALESCE(s.trangThai, 'Không Có') as trangThai,
+                    s.idSanPham.trangThai as trangThaiSanPham,
                     s.ngayTao as ngayTao
 
                 )
                 from SanPhamChiTiet s
                 left join DotGiamGiaSpct ds on s.id = ds.idSpct.id
                 left join DotGiamGia d on d.id = ds.idDotGiamGia.id
-                where s.id =:id and s.trangThai =:trangThai and s.deleted = false and s.soLuong > 0
+                where s.id =:id and s.trangThai =:trangThai and s.deleted = false
+                and s.soLuong > 0 and s.idSanPham.trangThai =:trangThai
                 order by giaSauGiam asc
             """)
     List<banHangClient> getBanHangClientbyIDSPCT(UUID id, String trangThai);
+    @Query("""
+                select new org.example.backend.dto.response.banHang.banHangClient(
+                    s.id,
+                    s.idSanPham.ten as tenSp,
+                    s.ten as tenSpct,
+                    s.idMauSac.ten as tenMauSac,
+                    s.idKichThuoc.ten as tenKichThuoc,
+                    s.idSanPham.idDanhMuc.ten as tenDanhMuc,
+                    s.idSanPham.idHang.ten as tenHang,
+                    s.soLuong as soLuong,
+                    COALESCE(d.id, '00000000-0000-0000-0000-000000000000') as dotGiamGia,
+                    COALESCE(d.loai, false ) as loaiGiamGia,
+                    COALESCE(d.giaTri, 0) as giaTriGiam,
+                    s.giaBan as giaBan,
+                    CASE
+                        WHEN COALESCE(d.loai, false ) = false THEN s.giaBan * COALESCE(d.giaTri, 0) / 100
+                        ELSE COALESCE(d.giaTri, 0)
+                    END as giaGiam,
+                    s.giaBan -
+                    CASE
+                        WHEN COALESCE(d.loai, false ) = false THEN s.giaBan * COALESCE(d.giaTri, 0) / 100
+                        ELSE COALESCE(d.giaTri, 0)
+                    END as giaSauGiam,
+                    s.hinhAnh,
+                    COALESCE(s.moTa, 'Sản Phẩm Chất Lượng') as moTa,
+                    COALESCE(s.trangThai, 'Không Có') as trangThai,
+                    s.idSanPham.trangThai as trangThaiSanPham,
+                    s.ngayTao as ngayTao
+
+                )
+                from SanPhamChiTiet s
+                left join DotGiamGiaSpct ds on s.id = ds.idSpct.id
+                left join DotGiamGia d on d.id = ds.idDotGiamGia.id
+                where s.id =:id and s.deleted = false and s.soLuong > 0
+                order by giaSauGiam asc
+            """)
+    List<banHangClient> getBanHangClientbyIDSPCTV2(UUID id);
 
 }
