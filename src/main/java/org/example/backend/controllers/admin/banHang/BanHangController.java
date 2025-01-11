@@ -228,6 +228,9 @@ public ResponseEntity<?> create() {
             if (phieuGiamGia.getGiaTri().compareTo(request.getIdPhieuGiamGia().getGiaTri()) != 0) {
                 return ResponseEntity.badRequest().body("Phiếu giảm giá đã thay đổi");
             }
+            if (phieuGiamGia.getGiamToiDa().compareTo(request.getIdPhieuGiamGia().getGiamToiDa()) != 0) {
+                return ResponseEntity.badRequest().body("Phiếu giảm giá đã thay đổi");
+            }
             if (phieuGiamGia.getDieuKien().compareTo(request.getIdPhieuGiamGia().getDieuKien()) != 0) {
                 return ResponseEntity.badRequest().body("Phiếu giảm giá đã thay đổi");
             }
@@ -238,6 +241,60 @@ public ResponseEntity<?> create() {
         return ResponseEntity.ok("ok");
     }
 
+    // check hóa đơn tại quầy
+    @PostMapping("/api/v1/client/sellClient/checkThongTinHoaDon1")
+    public ResponseEntity<?> checkThongTinHoaDon1(@RequestBody thongTinHoaDon request) {
+        String hoatDong = "Hoạt động";
+
+        for (HoaDonChiTietRequestV2 hdct : request.getListHoaDonChiTiet()) {
+            banHangClient hd = sanPhamChiTietService.getbanHangClientbyIDSPCTV2(hdct.getIdSpct());
+
+            if (hdct.getGia().compareTo(hd.getGiaSauGiam()) != 0) {
+                return ResponseEntity.badRequest().body("Giá sản phẩm đã thay đổi");
+            }
+            if (hdct.getSoLuong() > hd.getSoLuong()) {
+                return ResponseEntity.badRequest().body("Số lượng sản phẩm không đủ");
+            }
+
+            // Kiểm tra trạng thái sản phẩm
+            if (hd.getTrangThai() == null || !hd.getTrangThai().equals(hoatDong)) {
+                return ResponseEntity.badRequest().body("Sản phẩm đã ngừng bán");
+            }
+            if (hd.getTrangThaiSanPham() == null || !hd.getTrangThaiSanPham().equals(hoatDong)) {
+                return ResponseEntity.badRequest().body("Sản phẩm đã ngừng bán");
+            }
+        }
+
+//        String trangThai = nguoiDungRepository.findById(request.getIdNguoiDung().getId()).orElse(null).getTrangThai();
+//        if (trangThai == null || !trangThai.equals(hoatDong)) {
+//            return ResponseEntity.badRequest().body("Khách hàng không tồn tại");
+//        }
+
+        if (request.getIdPhieuGiamGia() != null) {
+            PhieuGiamGia phieuGiamGia = phieuGiamGiaRepository.findById(request.getIdPhieuGiamGia().getId()).orElse(null);
+            if (phieuGiamGia == null) {
+                return ResponseEntity.badRequest().body("Không tìm thấy phiếu giảm giá");
+            }
+            String trangThaiPhieuGiamGia = "Đang diễn ra";
+            if (!phieuGiamGia.getTrangThai().equals(trangThaiPhieuGiamGia)) {
+                return ResponseEntity.badRequest().body("Phiếu giảm giá chưa được diễn ra");
+            }
+            if (phieuGiamGia.getGiaTri().compareTo(request.getIdPhieuGiamGia().getGiaTri()) != 0) {
+                return ResponseEntity.badRequest().body("Phiếu giảm giá đã thay đổi");
+            }
+            if (phieuGiamGia.getGiamToiDa().compareTo(request.getIdPhieuGiamGia().getGiamToiDa()) != 0) {
+                return ResponseEntity.badRequest().body("Phiếu giảm giá đã thay đổi");
+            }
+            if (phieuGiamGia.getDieuKien().compareTo(request.getIdPhieuGiamGia().getDieuKien()) != 0) {
+                return ResponseEntity.badRequest().body("Phiếu giảm giá đã thay đổi");
+            }
+            if (phieuGiamGia.getSoLuong() < request.getIdPhieuGiamGia().getSoLuong()) {
+                return ResponseEntity.badRequest().body("Phiếu giảm giá đã hết");
+            }
+        }
+
+        return ResponseEntity.ok("ok");
+    }
 
     @PutMapping(Admin.SELL_SET_DELETE)
 
