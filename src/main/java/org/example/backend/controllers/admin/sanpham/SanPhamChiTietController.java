@@ -35,6 +35,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -231,8 +232,11 @@ public class SanPhamChiTietController {
                 }
             }
 
-            // Set giá giảm tốt nhất vào hóa đơn chi tiết
-            spct.setGiaNhap(giaGiamTotNhat);
+            // Làm tròn giá trị về số nguyên
+            BigDecimal giaNhapRounded = giaGiamTotNhat.setScale(0, RoundingMode.HALF_UP);
+
+            // Set giá trị đã làm tròn vào spct
+            spct.setGiaNhap(giaNhapRounded);
         }
 
         PageResponse<List<SanPhamChiTietRespon>> data = PageResponse.<List<SanPhamChiTietRespon>>builder()
