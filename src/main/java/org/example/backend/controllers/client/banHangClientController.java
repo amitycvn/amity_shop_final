@@ -267,10 +267,14 @@ public class banHangClientController {
     @GetMapping(Admin.SELL_CLIENT_GET_BY_ID_SPCT)
     public ResponseEntity<?> getbanHangClientbyIDSPCT(@RequestParam List<UUID> ids) {
         List<banHangClient> resultList = new ArrayList<>();
-        
+        String hoatDong = "Hoạt động";
         for (UUID id : ids) {
             banHangClient products = sanPhamChiTietService.getbanHangClientbyIDSPCT(id);
-            resultList.add(products);
+// s.deleted = false
+            if(products.getTrangThai().equals(hoatDong)&&products.getSoLuong()>0&&
+                    products.getTrangThaiSanPham().equals(hoatDong)&&products.getDeleted()==false) {
+                resultList.add(products);
+            }
         }
         
         return ResponseEntity.ok(resultList);
