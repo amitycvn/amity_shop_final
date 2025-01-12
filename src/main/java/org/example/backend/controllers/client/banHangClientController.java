@@ -214,12 +214,24 @@ public class banHangClientController {
 
     // set lich su thanh toan bên client khi thanh toan
     @PostMapping(SELL_CLIENT_SET_LICH_SU_HOA_DON)
-    public ResponseEntity<LichSuHoaDon> setLichSuHoaDon(
+    public ResponseEntity<?> setLichSuHoaDon(
             @RequestParam UUID idHoaDon,
             @RequestParam String trangThai,
             @RequestParam String moTa
     ) {
         HoaDon hoaDon = hoaDonRepository.findById(idHoaDon).orElse(null);
+        if (hoaDon == null) {
+            return ResponseEntity.notFound().build();
+        }
+        if (trangThai.equals("Đã Hủy")){
+            String cxn = "Chờ Xác Nhận";
+            String cbh = "Chuẩn Bị Hàng";
+            if (!hoaDon.getTrangThai().equals(cxn) && !hoaDon.getTrangThai().equals(cbh)) {
+                return ResponseEntity.badRequest().body("Đơn hàng không thể hủy vui lòng kiểm tra lại");
+            }
+        }
+
+// Cập nhật trạng thái thành "Đã Hủy" nếu điều kiện trên được thỏa mãn
         hoaDon.setTrangThai(trangThai);
         hoaDonRepository.save(hoaDon);
         LichSuHoaDon lichSuHoaDon = lichSuHoaDonService.createLichSuHoaDon(idHoaDon, trangThai, moTa);
