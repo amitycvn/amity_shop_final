@@ -30,6 +30,7 @@ import java.io.ByteArrayOutputStream;
 //import net.glxn.qrgen.javase.QRCode;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.Hashtable;
@@ -248,10 +249,12 @@ public ResponseEntity<?> create() {
 
         for (HoaDonChiTietRequestV2 hdct : request.getListHoaDonChiTiet()) {
             banHangClient hd = sanPhamChiTietService.getbanHangClientbyIDSPCTV2(hdct.getIdSpct());
+            BigDecimal giaNhapRounded = hd.getGiaSauGiam().setScale(0, RoundingMode.HALF_UP);
 
-            if (hdct.getGia().compareTo(hd.getGiaSauGiam()) != 0) {
+            if (hdct.getGia().compareTo(giaNhapRounded) != 0) {
                 return ResponseEntity.badRequest().body("Giá sản phẩm đã thay đổi");
             }
+
             if (hdct.getSoLuong() > hd.getSoLuong()) {
                 return ResponseEntity.badRequest().body("Số lượng sản phẩm không đủ");
             }
@@ -264,6 +267,7 @@ public ResponseEntity<?> create() {
                 return ResponseEntity.badRequest().body("Sản phẩm đã ngừng bán");
             }
         }
+
 
 //        String trangThai = nguoiDungRepository.findById(request.getIdNguoiDung().getId()).orElse(null).getTrangThai();
 //        if (trangThai == null || !trangThai.equals(hoatDong)) {
