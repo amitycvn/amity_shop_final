@@ -25,6 +25,8 @@ public class QuanLyDonHangRespose {
 
     private String maHD;
 
+    private UUID idKH;
+
     private String tenKhachHang;
 
     private String soDienThoai;

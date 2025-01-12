@@ -29,14 +29,18 @@ public class TraHang {
     private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_spct")
-    private SanPhamChiTiet idSpct;
+    @JoinColumn(name = "id_hoa_don")
+    private HoaDon idHoaDon;
 
-    @Column(name = "so_luong")
-    private Integer soLuong;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_nguoi_dung")
+    private NguoiDung idNguoiDung;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_spct")
+    private SanPhamChiTiet idSanPhamChiTiet;
 
     @Nationalized
-    @Lob
     @Column(name = "ly_do")
     private String lyDo;
 
@@ -49,27 +53,13 @@ public class TraHang {
     private Instant ngaySua;
 
     @Nationalized
-    @Column(name = "nguoi_tao", length = 50)
-    private String nguoiTao;
-
-    @Nationalized
-    @Column(name = "nguoi_sua", length = 50)
-    private String nguoiSua;
-
-    @Nationalized
     @Column(name = "trang_thai", length = 50)
     private String trangThai;
-
-    @ColumnDefault("0")
-    @Column(name = "deleted")
-    private Boolean deleted;
 
     @PrePersist
     public void prePersist() {
         // Set default creation and modification dates
         this.ngayTao = Instant.now();
-        this.deleted = Boolean.FALSE;
-//        this.trangThai = Status.HOAT_DONG;
 
     }
 

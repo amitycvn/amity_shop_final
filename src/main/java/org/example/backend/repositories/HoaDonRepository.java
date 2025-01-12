@@ -26,7 +26,7 @@ import java.util.UUID;
 public interface HoaDonRepository extends JpaRepository<HoaDon, UUID> {
     @Query("""
             select new org.example.backend.dto.response.quanLyDonHang.QuanLyDonHangRespose(
-                        hd.id, hd.ma, hd.idNguoiDung.ten, hd.soDienThoai, hd.diaChi, hd.tongTien, hd.loaiHoaDon, hd.ngayTao, hd.trangThai, hd.deleted
+                        hd.id, hd.ma,hd.idNguoiDung.id, hd.idNguoiDung.ten, hd.soDienThoai, hd.diaChi, hd.tongTien, hd.loaiHoaDon, hd.ngayTao, hd.trangThai, hd.deleted
                     )
                     from HoaDon hd
                     where hd.deleted = false and hd.id =:id
@@ -78,7 +78,7 @@ public interface HoaDonRepository extends JpaRepository<HoaDon, UUID> {
 
     @Query("""
                   select new org.example.backend.dto.response.quanLyDonHang.QuanLyDonHangRespose(
-                        hd.id, hd.ma, hd.idNguoiDung.ten, hd.soDienThoai, hd.diaChi, hd.tongTien, hd.loaiHoaDon, hd.ngayTao, hd.trangThai, hd.deleted
+                        hd.id, hd.ma,hd.idNguoiDung.id, hd.idNguoiDung.ten, hd.soDienThoai, hd.diaChi, hd.tongTien, hd.loaiHoaDon, hd.ngayTao, hd.trangThai, hd.deleted
                     )
                     from HoaDon hd
                     where hd.deleted = false
@@ -88,7 +88,7 @@ public interface HoaDonRepository extends JpaRepository<HoaDon, UUID> {
 
     @Query("""
                   select new org.example.backend.dto.response.quanLyDonHang.QuanLyDonHangRespose(
-                        hd.id, hd.ma, hd.idNguoiDung.ten, hd.soDienThoai, hd.diaChi, hd.tongTien, hd.loaiHoaDon, hd.ngayTao, hd.trangThai, hd.deleted
+                        hd.id, hd.ma,hd.idNguoiDung.id, hd.idNguoiDung.ten, hd.soDienThoai, hd.diaChi, hd.tongTien, hd.loaiHoaDon, hd.ngayTao, hd.trangThai, hd.deleted
                     )
                     from HoaDon hd
                     where hd.deleted = false
@@ -114,7 +114,7 @@ public interface HoaDonRepository extends JpaRepository<HoaDon, UUID> {
 
     @Query("""
             select new org.example.backend.dto.response.quanLyDonHang.QuanLyDonHangRespose(
-                        hd.id, hd.ma, hd.idNguoiDung.ten, hd.soDienThoai, hd.diaChi, hd.tongTien, hd.loaiHoaDon, hd.ngayTao, hd.trangThai, hd.deleted
+                        hd.id, hd.ma,hd.idNguoiDung.id, hd.idNguoiDung.ten, hd.soDienThoai, hd.diaChi, hd.tongTien, hd.loaiHoaDon, hd.ngayTao, hd.trangThai, hd.deleted
                     )
                     from HoaDon hd
                     where hd.deleted = false
