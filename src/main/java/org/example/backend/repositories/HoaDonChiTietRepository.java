@@ -7,7 +7,9 @@ import org.example.backend.dto.response.thongKe.ThongKeResponse;
 import org.example.backend.dto.response.quanLyDonHang.hoaDonChiTietReponse;
 
 
+import org.example.backend.models.HoaDon;
 import org.example.backend.models.HoaDonChiTiet;
+import org.example.backend.models.SanPhamChiTiet;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -184,7 +186,7 @@ public interface HoaDonChiTietRepository extends JpaRepository<HoaDonChiTiet, UU
 
 
 
-
+    HoaDonChiTiet findAllByIdHoaDonAndIdSpct(HoaDon hoaDon, SanPhamChiTiet sanPhamChiTiet);
 
 
 }

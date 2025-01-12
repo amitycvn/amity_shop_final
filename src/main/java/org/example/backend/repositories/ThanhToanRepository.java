@@ -2,6 +2,7 @@ package org.example.backend.repositories;
 
 
 import org.example.backend.dto.response.banHang.ThanhToanResponse;
+import org.example.backend.models.HoaDon;
 import org.example.backend.models.ThanhToan;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -32,4 +33,5 @@ public interface ThanhToanRepository extends JpaRepository<ThanhToan, UUID> {
 """)
     List<ThanhToanResponse> getAllThanhToan();
 
+    ThanhToan findByIdHoaDon(HoaDon idHoaDon);
 }
