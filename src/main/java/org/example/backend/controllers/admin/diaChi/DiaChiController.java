@@ -37,14 +37,14 @@ public class DiaChiController {
     }
 
     // Cập nhật địa chỉ
-    @PutMapping("/admin/user/diaChi/update/{id}")
-    public ResponseEntity<?> updateDiaChi(
-            @PathVariable UUID id,
-            @RequestBody DiaChiRequet diaChiRequest
-    ) {
-        Optional<DiaChi> updatedDiaChi = diaChiService.updateDiaChi(id, diaChiRequest);
-        return updatedDiaChi.map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
+//    @PutMapping("/admin/user/diaChi/update/{id}")
+//    public ResponseEntity<?> updateDiaChi(
+//            @PathVariable UUID id,
+//            @RequestBody DiaChiRequet diaChiRequest
+//    ) {
+//        Optional<DiaChi> updatedDiaChi = diaChiService.updateDiaChi(id, diaChiRequest);
+//        return updatedDiaChi.map(ResponseEntity::ok)
+//                .orElse(ResponseEntity.notFound().build());
+//    }
 
 }

@@ -10,8 +10,10 @@ import org.example.backend.dto.request.phieuGiamGia.phieuGiamGiaRequestAdd;
 import org.example.backend.dto.request.phieuGiamGia.phieuGiamGiaRequestUpdate;
 import org.example.backend.dto.response.phieuGiamGia.phieuGiamGiaReponse;
 import org.example.backend.mapper.phieuGiamGia.phieuGiamGiaMapper;
+import org.example.backend.models.NguoiDung;
 import org.example.backend.models.PhieuGiamGia;
 import org.example.backend.models.PhieuGiamGiaNguoiDung;
+import org.example.backend.sendEmail.EmailService;
 import org.example.backend.services.KhachHangService;
 import org.example.backend.services.PhieuGiamGiaService;
 import org.example.backend.services.PhieuGiamGiaNguoiDungService;
@@ -56,13 +58,17 @@ public class PhieuGiamGiaController {
     final PhieuGiamGiaNguoiDungService phieuGiamGiaNguoiDungService;
 
     final phieuGiamGiaMapper PGGMapper;
+    private final EmailService emailService;
+    private final PhieuGiamGiaService phieuGiamGiaService;
 
     public PhieuGiamGiaController(PhieuGiamGiaService PGGService, phieuGiamGiaMapper PGGMapper,
-            KhachHangService khachHangService, PhieuGiamGiaNguoiDungService phieuGiamGiaNguoiDungService) {
+                                  KhachHangService khachHangService, PhieuGiamGiaNguoiDungService phieuGiamGiaNguoiDungService, EmailService emailService, PhieuGiamGiaService phieuGiamGiaService) {
         this.PGGService = PGGService;
         this.PGGMapper = PGGMapper;
         this.khachHangService = khachHangService;
         this.phieuGiamGiaNguoiDungService = phieuGiamGiaNguoiDungService;
+        this.emailService = emailService;
+        this.phieuGiamGiaService = phieuGiamGiaService;
     }
 
     @GetMapping(Admin.VOUCHER_GET_ALL)
@@ -104,7 +110,6 @@ public class PhieuGiamGiaController {
         } else {
             trangThai = "Đã kết thúc";
         }
-
         // Set trạng thái vào request trước khi mapping
         PGGadd.setTrangThai(trangThai);
 
@@ -252,7 +257,9 @@ public class PhieuGiamGiaController {
             phieuGiamGiaNguoiDung.setDeleted(false);
             // Lưu vào database
             phieuGiamGiaNguoiDungService.save(phieuGiamGiaNguoiDung);
-
+            NguoiDung  nd = khachHangService.findById(idKhachHang).orElse(null);
+            PhieuGiamGia pgg = phieuGiamGiaService.findById(idPhieuGiamGia).orElse(null);
+            String responseMessage = emailService.sendDiscountNotificationEmail(nd.getEmail(), pgg.getMa(),pgg.getGiaTri(),pgg.getLoai(),pgg.getNgayBatDau(),pgg.getNgayKetThuc(), nd);
             return ResponseEntity.ok("Tạo phiếu giảm giá người dùng thành công");
 
         } catch (Exception e) {
