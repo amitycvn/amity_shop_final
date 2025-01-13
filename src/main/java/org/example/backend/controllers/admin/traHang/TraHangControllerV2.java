@@ -15,6 +15,7 @@ import org.example.backend.repositories.ThanhToanRepository;
 import org.example.backend.repositories.TraHangRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,6 +25,8 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -75,8 +78,65 @@ public class TraHangControllerV2 {
             traHangReponse.setNgaySua(traHang.getNgaySua());
             traHangReponseList.add(traHangReponse);
         }
+        // Định nghĩa thứ tự ưu tiên của các trạng thái
+        List<String> priorityOrder = Arrays.asList(
+                "Đang xử lý trả hàng",
+                "Đã xác nhận trả hàng",
+                "Đã hoàn tiền",
+                "Đã hoàn thành",
+                "Từ chối trả hàng"
+        );
+
+// Sắp xếp danh sách dựa trên thứ tự ưu tiên
+        traHangReponseList.sort(Comparator
+                // Sắp xếp theo thứ tự ưu tiên của trạng thái
+                .comparing((TraHangReponse response) -> priorityOrder.indexOf(response.getTrangThaiTraHang()))
+                // Sắp xếp tiếp theo theo ngày tạo
+                .thenComparing(TraHangReponse::getNgayTao)
+                // Sắp xếp cuối cùng theo mã hóa đơn
+                .thenComparing(TraHangReponse::getMaHoaDon)
+        );
+
         return ResponseEntity.ok(traHangReponseList);
     }
+
+    @GetMapping("api/v1/client/product-return/{idNguoiDung}")
+    public ResponseEntity<?> getAllTraHangByIDNguoiDung(@PathVariable UUID idNguoiDung) {
+        List<TraHang> traHangList = traHangRepository.findAll();
+        List<TraHangReponse> traHangReponseList = new ArrayList<>();
+        for (TraHang traHang : traHangList) {
+            TraHangReponse traHangReponse = new TraHangReponse();
+            traHangReponse.setId(traHang.getId());
+            traHangReponse.setIdHoaDon(traHang.getIdHoaDon().getId());
+            traHangReponse.setMaHoaDon(traHang.getIdHoaDon().getMa());
+            traHangReponse.setSdt(traHang.getIdHoaDon().getSoDienThoai());
+            traHangReponse.setLoaiHoaDon(traHang.getIdHoaDon().getLoaiHoaDon());
+            traHangReponse.setIdNguoiDung(traHang.getIdNguoiDung().getId());
+            traHangReponse.setTenNguoiDung(traHang.getIdNguoiDung().getTen());
+            HoaDonChiTiet hoaDonChiTiet = hoaDonChiTietRepository.findAllByIdHoaDonAndIdSpct(traHang.getIdHoaDon(), traHang.getIdSanPhamChiTiet());
+            traHangReponse.setIdHoaDonChiTiet(hoaDonChiTiet.getId());
+            traHangReponse.setSoLuong(hoaDonChiTiet.getSoLuong());
+            traHangReponse.setGia(hoaDonChiTiet.getGia());
+            traHangReponse.setGiaGiam(hoaDonChiTiet.getGiaGiam());
+            traHangReponse.setIdSpct(hoaDonChiTiet.getIdSpct().getId());
+            traHangReponse.setTenspct(hoaDonChiTiet.getIdSpct().getTen());
+            traHangReponse.setTrangThaiTraHang(traHang.getTrangThai());
+            traHangReponse.setTrangThaiHoaDon(traHang.getIdHoaDon().getTrangThai());
+            traHangReponse.setLyDo(traHang.getLyDo());
+            traHangReponse.setNgayTao(traHang.getNgayTao());
+            traHangReponse.setNgaySua(traHang.getNgaySua());
+            traHangReponseList.add(traHangReponse);
+        }
+        traHangReponseList.sort(Comparator
+                .comparing((TraHangReponse response) ->
+                        response.getTrangThaiTraHang().equalsIgnoreCase("Đang xử lý trả hàng") ? 0 : 1)
+                .thenComparing(TraHangReponse::getNgayTao)
+                .thenComparing(TraHangReponse::getMaHoaDon)
+        );
+        return ResponseEntity.ok(traHangReponseList);
+    }
+
+
 
     @PostMapping("api/v1/admin/product-return/create_return")
     public ResponseEntity<?> addTraHang(@RequestBody TraHangRequest traHangRequest) {
@@ -84,12 +144,12 @@ public class TraHangControllerV2 {
         // Lấy thông tin hóa đơn
         HoaDon hoaDon = hoaDonRepository.findById(traHangRequest.getIdHoaDon())
                 .orElseThrow(() -> new RuntimeException("HoaDon Not Found"));
+        NguoiDung nguoiDung = nguoiDungRepository.findById(traHangRequest.getIdNguoiDung())
+                .orElseThrow(() -> new RuntimeException("NguoiDung Not Found"));
 
-        // Kiểm tra thời gian tạo hóa đơn (kiểu Instant) có vượt quá 7 ngày không
-        Instant ngayTao = hoaDon.getNgaySua(); // Kiểu Instant
-        Instant hienTai = Instant.now(); // Lấy thời gian hiện tại
-        if (Duration.between(ngayTao, hienTai).toDays() > 7) {
-            return ResponseEntity.badRequest().body("Không thể tạo trả hàng vì hóa đơn đã quá 7 ngày kể từ ngày tạo.");
+        List<TraHang> traHang1 = traHangRepository.findAllByIdHoaDon(hoaDon);
+        if (traHang1 != null) {
+            return ResponseEntity.badRequest().body("Hóa đơn đã được tạo yêu cầu trả hàng.");
         }
 
         if (hoaDon.getLoaiHoaDon().equalsIgnoreCase("Bán hàng tại quầy")) {
@@ -121,10 +181,13 @@ public class TraHangControllerV2 {
             return ResponseEntity.badRequest().body("Loại hóa đơn không hợp lệ: " + hoaDon.getLoaiHoaDon());
         }
 
-
+        // Kiểm tra thời gian tạo hóa đơn (kiểu Instant) có vượt quá 7 ngày không
+        Instant ngaySua = hoaDon.getNgaySua(); // Kiểu Instant
+        Instant hienTai = Instant.now(); // Lấy thời gian hiện tại
+        if (Duration.between(ngaySua, hienTai).toDays() > 7) {
+            return ResponseEntity.badRequest().body("Không thể tạo trả hàng vì hóa đơn đã quá 7 ngày kể từ ngày tạo.");
+        }
         // Lấy thông tin người dùng
-        NguoiDung nguoiDung = nguoiDungRepository.findById(traHangRequest.getIdNguoiDung())
-                .orElseThrow(() -> new RuntimeException("NguoiDung Not Found"));
 
         // Kiểm tra người dùng có sở hữu hóa đơn này không
         if (!hoaDon.getIdNguoiDung().getId().equals(nguoiDung.getId())) {

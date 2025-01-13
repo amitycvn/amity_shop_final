@@ -9,6 +9,7 @@ import org.example.backend.constants.api.Admin;
 import org.example.backend.dto.request.phieuGiamGia.phieuGiamGiaRequestAdd;
 import org.example.backend.dto.request.phieuGiamGia.phieuGiamGiaRequestUpdate;
 import org.example.backend.dto.response.phieuGiamGia.phieuGiamGiaReponse;
+import org.example.backend.dto.response.phieuGiamGia.phieuGiamGiaReponseAdmin;
 import org.example.backend.mapper.phieuGiamGia.phieuGiamGiaMapper;
 import org.example.backend.models.NguoiDung;
 import org.example.backend.models.PhieuGiamGia;
@@ -93,6 +94,16 @@ public class PhieuGiamGiaController {
                 .build();
 
         return ResponseEntity.ok(responseData);
+    }
+    //lay pgg ban hang tai quay
+    @GetMapping(Admin.VOUCHER_GET_ALL_ADMIN)
+    public ResponseEntity<?> getALlVoucherAdmin(
+            @RequestParam(required = false, defaultValue = "") String keyFind
+    ) {
+        List<phieuGiamGiaReponseAdmin> PGGPage = PGGService.getAllPGGAdmin(keyFind);
+
+
+        return ResponseEntity.ok(PGGPage);
     }
 
     @PostMapping(VOUCHER_CREATE)

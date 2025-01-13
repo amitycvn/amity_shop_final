@@ -116,6 +116,7 @@ public class Admin {
     // Endpoint VOUCHER
     public static final String VOUCHER = BASE + "/voucher";
     public static final String VOUCHER_GET_ALL = VOUCHER + "/all";
+    public static final String VOUCHER_GET_ALL_ADMIN = VOUCHER + "/all/admin";
     public static final String VOUCHER_GET_BY_ID = VOUCHER + "/{id}";
     public static final String VOUCHER_GET_BY_ID_KH = VOUCHER + "/kh/{id}";
     public static final String VOUCHER_CREATE = VOUCHER + "/create";
@@ -262,6 +263,7 @@ public class Admin {
     public static final String PAY_GET_ALL = PAY + "/all";
     public static final String PAY_GET_BY_ID = PAY + "/{id}";
     public static final String PAY_CREATE = PAY + "/create";
+    public static final String PAY_CREATE_V2 = PAY + "/createv2";
     public static final String PAY_UPDATE = PAY + "/update/{id}";
     public static final String PAY_DELETE = PAY + "/delete/{id}";
 
