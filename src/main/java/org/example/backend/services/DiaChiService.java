@@ -1,5 +1,6 @@
 package org.example.backend.services;
 
+import org.example.backend.controllers.admin.diaChi.DiaChiRequestUpdate;
 import org.example.backend.dto.request.diaChi.DiaChiRequet;
 import org.example.backend.models.DiaChi;
 import org.example.backend.models.NguoiDung;
@@ -47,17 +48,20 @@ public class DiaChiService extends GenericServiceImpl<DiaChi, UUID>{
     }
 
     // Cập nhật địa chỉ
-    public Optional<DiaChi> updateDiaChi(UUID id, DiaChiRequet diaChiRequest) {
-        return diaChiRepository.findById(id).map(diaChi -> {
-            diaChi.setTenNguoiNhan(diaChiRequest.getTenNguoiNhan());
-            diaChi.setSoDienThoai(diaChiRequest.getSoDienThoai());
-            diaChi.setIxa(diaChiRequest.getIxa());
-            diaChi.setIhuyen(diaChiRequest.getIhuyen());
-            diaChi.setIthanhPho(diaChiRequest.getIthanhPho());
-            diaChi.setDiaChi(diaChiRequest.getDiaChi());
-            diaChi.setNguoiSua("Hệ thống"); // Tạm thời để giá trị mặc định
-            diaChi.setNgaySua(Instant.now());
-            return diaChiRepository.save(diaChi);
-        });
-    }
+//    public Optional<?> updateDiaChi(UUID id, DiaChiRequestUpdate diaChiRequest) {
+//        DiaChi diaChi = new DiaChi();
+//        NguoiDung nd = nguoiDungRepository.findById(diaChiRequest.getIdNguoiDung()).orElseThrow(()-> new RuntimeException("người dùng không tôn tại"));
+//        diaChi.setIdNguoiDung(nd);
+//        diaChi.setTenNguoiNhan(diaChiRequest.getTenNguoiNhan());
+//        diaChi.setSoDienThoai(diaChiRequest.getSoDienThoai());
+//        diaChi.setIxa(diaChiRequest.getIxa());
+//        diaChi.setIhuyen(diaChiRequest.getIhuyen());
+//        diaChi.setIthanhPho(diaChiRequest.getIthanhPho());
+//        diaChi.setDiaChi(diaChiRequest.getDiaChi());
+//        diaChi.setNguoiTao("Hệ thống"); // Tạm thời để giá trị mặc định
+//        diaChi.setNgayTao(Instant.now());
+//        diaChi.setTrangThai("Hoạt động");
+//
+//        return diaChiRepository.save(diaChi);
+//    }
 }

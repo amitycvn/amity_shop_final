@@ -2,18 +2,25 @@ package org.example.backend.sendEmail;
 
 import lombok.RequiredArgsConstructor;
 import org.example.backend.models.NguoiDung;
+import org.example.backend.models.PhieuGiamGia;
 import org.example.backend.repositories.NguoiDungRepository;
+import org.example.backend.repositories.PhieuGiamGiaRepository;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("${spring.application.api-prefix}/email")
+@RequestMapping("api/v1/email")
 @RequiredArgsConstructor
 public class EmailController {
     private final EmailService emailService;
     private final NguoiDungRepository nguoiDungRepository;
+    private final PhieuGiamGiaRepository phieuGiamGiaRepository;
 
     @GetMapping("/sendNewAccountNVEmail")
     public String sendNewAccountNVEmail() {
@@ -80,6 +87,29 @@ public class EmailController {
         }
     }
 
+//    @PostMapping("/send-discount-notification")
+//    public ResponseEntity<String> sendDiscountNotification(
+//            @RequestParam String email,
+//            @RequestParam String maGG,
+//            @RequestParam BigDecimal giaTri
+//            ) {
+//        // Tìm người dùng theo email
+//        Optional<NguoiDung> optionalNguoiDung = nguoiDungRepository.findByEmail(email,"Hoạt động");
+//        if (optionalNguoiDung.isEmpty()) {
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+//                    .body("Không tìm thấy người dùng với email: " + email);
+//        }
+//
+//        // Tạo đối tượng phiếu giảm giá
+//        PhieuGiamGia phieuGiamGia = phieuGiamGiaRepository.findByMa(maGG);
+//
+//
+//        // Gọi service để gửi email
+//        NguoiDung nguoiDung = optionalNguoiDung.get();
+//        String responseMessage = emailService.sendDiscountNotificationEmail(email, maGG,giaTri, true,nguoiDung);
+//
+//        return ResponseEntity.ok(responseMessage);
+//    }
 
 
 

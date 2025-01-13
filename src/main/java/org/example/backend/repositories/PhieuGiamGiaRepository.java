@@ -112,4 +112,6 @@ public interface PhieuGiamGiaRepository extends JpaRepository<PhieuGiamGia, UUID
     and p.trangThai=:trangThai
 """)
     Optional<Integer> findSoLuongGiamGiaById(UUID SaleId , String trangThai);
+
+    PhieuGiamGia findByMa(String ma);
 }
