@@ -7,6 +7,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.example.backend.common.PageResponse;
 import org.example.backend.dto.response.dotGiamGia.DotGiamGiaResponse;
 import org.example.backend.dto.response.phieuGiamGia.phieuGiamGiaReponse;
+import org.example.backend.dto.response.phieuGiamGia.phieuGiamGiaReponseAdmin;
 import org.example.backend.models.PhieuGiamGia;
 import org.example.backend.repositories.PhieuGiamGiaRepository;
 import org.quartz.JobBuilder;
@@ -37,18 +38,14 @@ public class PhieuGiamGiaService extends GenericServiceImpl<PhieuGiamGia , UUID>
         super(repository);
         this. PGGrepository= PGGRepository;
     }
+    //laays pgg ban hang tai quay
+    public List<phieuGiamGiaReponseAdmin> getAllPGGAdmin(String keyFind) {
 
-//    public PageResponse<List<phieuGiamGiaReponse>> getAllPGG(int page, int itemsPerPage) {
-//        Pageable pageable = PageRequest.of(page, itemsPerPage);
-//        Page<phieuGiamGiaReponse> PGGPage = PGGrepository.getAllPhieuGiamGia(pageable);
-//
-//        return PageResponse.<List<phieuGiamGiaReponse>>builder()
-//                .page(PGGPage.getNumber())
-//                .size(PGGPage.getSize())
-//                .totalPage(PGGPage.getTotalPages())
-//                .items(PGGPage.getContent())
-//                .build();
-//    }
+        String dasudung ="Đã sử dụng";
+
+
+        return PGGrepository.searchPhieuGiamGiaBanHangAdmin(keyFind,dasudung);
+    }
 
     private final PhieuGiamGiaRepository PGGrepository;
 
@@ -210,4 +207,7 @@ public class PhieuGiamGiaService extends GenericServiceImpl<PhieuGiamGia , UUID>
         }
         return availableQuantity.get() >= requiredQuantity;
     }
+
+
+
 }

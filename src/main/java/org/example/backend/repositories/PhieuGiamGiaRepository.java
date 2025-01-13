@@ -9,6 +9,7 @@ import jakarta.persistence.criteria.Root;
 import org.example.backend.dto.request.dotGiamGia.DotGiamGiaSearch;
 import org.example.backend.dto.response.dotGiamGia.DotGiamGiaResponse;
 import org.example.backend.dto.response.phieuGiamGia.phieuGiamGiaReponse;
+import org.example.backend.dto.response.phieuGiamGia.phieuGiamGiaReponseAdmin;
 import org.example.backend.models.PhieuGiamGia;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -93,6 +94,30 @@ public interface PhieuGiamGiaRepository extends JpaRepository<PhieuGiamGia, UUID
                 """)
     Page<phieuGiamGiaReponse> searchPhieuGiamGia(Pageable pageable, String keyFind, String trangThai,
                                                  Instant minNgay, Instant maxNgay, BigDecimal minGia, BigDecimal maxGia);
+
+    // pgg bên bán hàng tại quầy
+    @Query("""
+        select new org.example.backend.dto.response.phieuGiamGia.phieuGiamGiaReponseAdmin(
+                        p.id,
+                        CASE
+                            WHEN COALESCE(pnh.trangThai, 'Đã sử dụng') =:dasudung OR pnh.idNguoiDung IS NULL THEN '00000000-0000-0000-0000-000000000000'
+                            ELSE pnh.idNguoiDung.id
+                        END,
+                        p.ma, p.ten, p.loai, p.giaTri, p.giamToiDa, p.mucDo,
+                        p.ngayBatDau, p.ngayKetThuc, p.soLuong, p.dieuKien, p.trangThai
+                    )
+        from PhieuGiamGia p
+        left join PhieuGiamGiaNguoiDung pnh on p.id = pnh.idPhieuGiamGia.id
+        where p.deleted = false
+        and p.id not in (
+                    select pgct2.idPhieuGiamGia.id 
+                    from PhieuGiamGiaChiTiet pgct2 
+                    where pgct2.trangThai = :dasudung
+                )
+        AND (COALESCE(:#{#keyFind}, '') = '' OR p.ma like %:#{#keyFind}% OR p.ten like %:#{#keyFind}%)
+        """)
+    List<phieuGiamGiaReponseAdmin> searchPhieuGiamGiaBanHangAdmin( String keyFind, String dasudung);
+
 
     List<PhieuGiamGia> findByNgayKetThucBeforeAndTrangThaiNot(Instant now, String trangThai);
     
