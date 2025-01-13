@@ -21,6 +21,7 @@ import org.example.backend.repositories.SanPhamChiTietRepository;
 import org.example.backend.services.GioHangChiTietService;
 import org.example.backend.services.GioHangService;
 import org.example.backend.services.HoaDonChiTietService;
+import org.example.backend.services.HoaDonService;
 import org.example.backend.services.LichSuHoaDonService;
 import org.example.backend.services.SanPhamChiTietService;
 import org.example.backend.services.ThanhToanService;
@@ -62,7 +63,7 @@ public class banHangClientController {
 //    @Autowired
 //    GioHangChiTietService gioHangChiTietService;
     @Autowired
-    private TraHangService traHangService;
+    private HoaDonService hoaDonService;
     @Autowired
     private HoaDonChiTietService hoaDonChiTietService;
     @Autowired
@@ -179,28 +180,28 @@ public class banHangClientController {
     }
 
        // API để lấy hóa đơn theo ID khách hàng
-//    @GetMapping(PRODUCT_RETURN_GET_BY_IDKH)
-//    public ResponseEntity<List<hoaDonClientResponse>> getHoaDonByIdNguoiDung(@PathVariable UUID idNguoiDung) {
-//        List<hoaDonClientResponse> hoaDonChiTietList = traHangService.getHoaDonByIdNguoiDung(idNguoiDung);
-//        if (hoaDonChiTietList.isEmpty()) {
-//            return ResponseEntity.noContent().build();
-//        }
-//        return ResponseEntity.ok(hoaDonChiTietList);
-//    }
+   @GetMapping(PRODUCT_RETURN_GET_BY_IDKH)
+   public ResponseEntity<List<hoaDonClientResponse>> getHoaDonByIdNguoiDung(@PathVariable UUID idNguoiDung) {
+       List<hoaDonClientResponse> hoaDonChiTietList = hoaDonService.getHoaDonByIdNguoiDung(idNguoiDung);
+       if (hoaDonChiTietList.isEmpty()) {
+           return ResponseEntity.noContent().build();
+       }
+       return ResponseEntity.ok(hoaDonChiTietList);
+   }
 
     
-//    @GetMapping(PRODUCT_RETURN_DETAIL_BY_ID)
-//    public ResponseEntity<hoaDonClientResponse> getHoaDonCtById(
-//            @RequestParam(value = "itemsPerPage", defaultValue = "5") int itemsPerPage,
-//            @RequestParam(value = "page", defaultValue = "0") int page,
-//            @PathVariable UUID id
-//    ) {
-//        hoaDonClientResponse hoaDonChiTiet = traHangService.getHoaDonById(id);
-//        if (hoaDonChiTiet != null) {
-//            return ResponseEntity.ok().body(hoaDonChiTiet);
-//        }
-//        return ResponseEntity.notFound().build();
-//    }
+   @GetMapping(PRODUCT_RETURN_DETAIL_BY_ID)
+   public ResponseEntity<hoaDonClientResponse> getHoaDonCtById(
+           @RequestParam(value = "itemsPerPage", defaultValue = "5") int itemsPerPage,
+           @RequestParam(value = "page", defaultValue = "0") int page,
+           @PathVariable UUID id
+   ) {
+       hoaDonClientResponse hoaDonChiTiet = hoaDonService.getHoaDonById(id);
+       if (hoaDonChiTiet != null) {
+           return ResponseEntity.ok().body(hoaDonChiTiet);
+       }
+       return ResponseEntity.notFound().build();
+   }
 
     // set phuong thuc thanh toan bên client khi thanh toan
     @PostMapping(SELL_CLIENT_SET_PHUONG_THUC_THANH_TOAN)
