@@ -51,7 +51,7 @@ public class TraHangService extends GenericServiceImpl<TraHang, UUID> {
 //        }
 //        return hoaDonClientResponse;
 //    }
-
+//
 //    public hoaDonClientResponse getHoaDonById(UUID id) {
 //        HoaDon hd = hoaDonRepository.findById(id).orElse(null);
 //        hoaDonClientResponse hoaDonClient = new hoaDonClientResponse();
@@ -73,8 +73,8 @@ public class TraHangService extends GenericServiceImpl<TraHang, UUID> {
 //        hoaDonClient.setHoaDonChiTiets(hoaDonChiTietRepository.getByPageHoaDonChiTiet(PageRequest.of(0, 5),hd.getId()).getContent());
 //        return hoaDonClient;
 //    }
-
-
+//
+//
 //    public List<hoaDonChiTietReponse> getHoaDonCtById(UUID id) {
 //        return traHangRepository.getHoaDonCtByID(id);
 //    }

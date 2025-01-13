@@ -262,6 +262,7 @@ public class Admin {
     public static final String PAY_GET_ALL = PAY + "/all";
     public static final String PAY_GET_BY_ID = PAY + "/{id}";
     public static final String PAY_CREATE = PAY + "/create";
+    public static final String PAY_CREATE_V2 = PAY + "/createv2";
     public static final String PAY_UPDATE = PAY + "/update/{id}";
     public static final String PAY_DELETE = PAY + "/delete/{id}";
 
