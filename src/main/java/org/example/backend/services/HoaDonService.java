@@ -7,7 +7,10 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.example.backend.common.PageResponse;
 import org.example.backend.dto.response.phieuGiamGia.phieuGiamGiaReponse;
 import org.example.backend.dto.response.quanLyDonHang.QuanLyDonHangRespose;
+import org.example.backend.dto.response.quanLyDonHang.hoaDonChiTietReponse;
+import org.example.backend.dto.response.quanLyDonHang.hoaDonClientResponse;
 import org.example.backend.models.HoaDon;
+import org.example.backend.repositories.HoaDonChiTietRepository;
 import org.example.backend.repositories.HoaDonRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,16 +23,19 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 @Service
 public class HoaDonService extends GenericServiceImpl<HoaDon, UUID> {
-    public HoaDonService(JpaRepository<HoaDon, UUID> repository,HoaDonRepository hoaDonRepository) {
+    public HoaDonService(JpaRepository<HoaDon, UUID> repository, HoaDonRepository hoaDonRepository,HoaDonChiTietRepository hoaDonChiTietRepository) {
         super(repository);
         this.hoaDonRepository = hoaDonRepository;
+        this.hoaDonChiTietRepository = hoaDonChiTietRepository;
     }
 
+    private final HoaDonChiTietRepository hoaDonChiTietRepository;
     private final HoaDonRepository hoaDonRepository;
 
     public List<QuanLyDonHangRespose> getHDGetAll() {
@@ -40,9 +46,9 @@ public class HoaDonService extends GenericServiceImpl<HoaDon, UUID> {
         return hoaDonRepository.getHoaDonbyID(id);
     }
 
-    public PageResponse<List<QuanLyDonHangRespose>> getHoaDonByStats(int page, int size,String status) {
+    public PageResponse<List<QuanLyDonHangRespose>> getHoaDonByStats(int page, int size, String status) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<QuanLyDonHangRespose> qlhdPage = hoaDonRepository.GetAllHoaDonByTrangThai(pageable,status);
+        Page<QuanLyDonHangRespose> qlhdPage = hoaDonRepository.GetAllHoaDonByTrangThai(pageable, status);
 
         return PageResponse.<List<QuanLyDonHangRespose>>builder()
                 .page(qlhdPage.getNumber())
@@ -52,16 +58,18 @@ public class HoaDonService extends GenericServiceImpl<HoaDon, UUID> {
                 .build();
     }
 
-    // Phương thức lấy số lượng hóa đơn cho từng trạng thái trong danh sách truyền vào
+    // Phương thức lấy số lượng hóa đơn cho từng trạng thái trong danh sách truyền
+    // vào
     public List<Long> countHoaDonByStatuses(List<String> statuses) {
         return hoaDonRepository.countHoaDonByTrangThaiList(statuses);
     }
 
     public PageResponse<List<QuanLyDonHangRespose>> searchHoaDon(int page, int itemsPerPage, String keyFind,
-                                                             String loai, Instant minNgay, Instant maxNgay, BigDecimal minGia, BigDecimal maxGia,String status) {
+            String loai, Instant minNgay, Instant maxNgay, BigDecimal minGia, BigDecimal maxGia, String status) {
         Pageable pageable = PageRequest.of(page, itemsPerPage);
         String choXacNhan = "Chờ Xác Nhận";
-        Page<QuanLyDonHangRespose> HDPage = hoaDonRepository.searchHoaDon(pageable,keyFind,loai,minNgay,maxNgay,minGia,maxGia,status,choXacNhan);
+        Page<QuanLyDonHangRespose> HDPage = hoaDonRepository.searchHoaDon(pageable, keyFind, loai, minNgay, maxNgay,
+                minGia, maxGia, status, choXacNhan);
         return PageResponse.<List<QuanLyDonHangRespose>>builder()
                 .page(HDPage.getNumber())
                 .size(HDPage.getSize())
@@ -102,7 +110,8 @@ public class HoaDonService extends GenericServiceImpl<HoaDon, UUID> {
             row.createCell(6).setCellValue(invoice.getLoaiHoaDon());
 
             // Định dạng ngày "Ngày Tạo"
-            row.createCell(7).setCellValue(invoice.getNgayTao() != null ? invoice.getNgayTao().toString() : "Không xác định");
+            row.createCell(7)
+                    .setCellValue(invoice.getNgayTao() != null ? invoice.getNgayTao().toString() : "Không xác định");
 
             row.createCell(8).setCellValue(invoice.getTrangThai());
         }
@@ -113,6 +122,54 @@ public class HoaDonService extends GenericServiceImpl<HoaDon, UUID> {
         workbook.close();
 
         return outputStream.toByteArray();
+    }
+
+    public List<hoaDonClientResponse> getHoaDonByIdNguoiDung(UUID idNguoiDung) {
+       List<QuanLyDonHangRespose> hoaDon = hoaDonRepository.getHoaDonByIdKh(idNguoiDung);
+       List<hoaDonClientResponse> hoaDonClientResponse = new ArrayList<>();
+       for (QuanLyDonHangRespose hd : hoaDon) {
+       hoaDonClientResponse hoaDonClient = new hoaDonClientResponse();
+       hoaDonClient.setId(hd.getId());
+       hoaDonClient.setMaHD(hd.getMaHD());
+       hoaDonClient.setTenKhachHang(hd.getTenKhachHang());
+       hoaDonClient.setSoDienThoai(hd.getSoDienThoai());
+       hoaDonClient.setDiaChi(hd.getDiaChi());
+       hoaDonClient.setTongTien(hd.getTongTien());
+       hoaDonClient.setLoaiHoaDon(hd.getLoaiHoaDon());
+       hoaDonClient.setNgayTao(hd.getNgayTao());
+       hoaDonClient.setTrangThai(hd.getTrangThai());
+       hoaDonClient.setDeleted(hd.getDeleted());
+       hoaDonClient.setHoaDonChiTiets(hoaDonChiTietRepository.getByPageHoaDonChiTiet(PageRequest.of(0, 5),hd.getId()).getContent());
+       hoaDonClientResponse.add(hoaDonClient);
+       }
+       return hoaDonClientResponse;
+   }
+
+    public hoaDonClientResponse getHoaDonById(UUID id) {
+        HoaDon hd = hoaDonRepository.findById(id).orElse(null);
+        hoaDonClientResponse hoaDonClient = new hoaDonClientResponse();
+        hoaDonClient.setId(hd.getId());
+        hoaDonClient.setMaHD(hd.getMa());
+        hoaDonClient.setTenKhachHang(hd.getIdNguoiDung().getTen());
+        hoaDonClient.setSoDienThoai(hd.getSoDienThoai());
+        hoaDonClient.setDiaChi(hd.getDiaChi());
+        hoaDonClient.setGiaGoc(hd.getGiaGoc());
+        hoaDonClient.setGiaGiam(hd.getGiaGiam());
+        hoaDonClient.setTongTien(hd.getTongTien());
+        hoaDonClient.setGhiChu(hd.getGhiChu());
+        hoaDonClient.setNgayDuKienNhan(hd.getNgayDuKienNhan());
+        hoaDonClient.setTienVanChuyen(hd.getTienVanChuyen());
+        hoaDonClient.setLoaiHoaDon(hd.getLoaiHoaDon());
+        hoaDonClient.setNgayTao(hd.getNgayTao());
+        hoaDonClient.setTrangThai(hd.getTrangThai());
+        hoaDonClient.setDeleted(hd.getDeleted());
+        hoaDonClient.setHoaDonChiTiets(
+                hoaDonChiTietRepository.getByPageHoaDonChiTiet(PageRequest.of(0, 5), hd.getId()).getContent());
+        return hoaDonClient;
+    }
+
+    public List<hoaDonChiTietReponse> getHoaDonCtById(UUID id) {
+        return hoaDonRepository.getHoaDonCtByID(id);
     }
 
 }
