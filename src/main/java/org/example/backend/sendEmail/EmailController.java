@@ -1,18 +1,21 @@
 package org.example.backend.sendEmail;
 
 import lombok.RequiredArgsConstructor;
+import org.example.backend.models.LichSuHoaDon;
 import org.example.backend.models.NguoiDung;
-import org.example.backend.models.PhieuGiamGia;
+
+import org.example.backend.repositories.LichSuHoaDonRepository;
 import org.example.backend.repositories.NguoiDungRepository;
 import org.example.backend.repositories.PhieuGiamGiaRepository;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpStatus;
+
+
+import org.example.backend.repositories.TraHangRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.Optional;
+import java.util.UUID;
+
 
 @RestController
 @RequestMapping("api/v1/email")
@@ -21,6 +24,8 @@ public class EmailController {
     private final EmailService emailService;
     private final NguoiDungRepository nguoiDungRepository;
     private final PhieuGiamGiaRepository phieuGiamGiaRepository;
+    private final TraHangRepository traHangRepository;
+    private final LichSuHoaDonRepository lichSuHoaDonRepository;
 
     @GetMapping("/sendNewAccountNVEmail")
     public String sendNewAccountNVEmail() {
@@ -110,7 +115,18 @@ public class EmailController {
 //
 //        return ResponseEntity.ok(responseMessage);
 //    }
+        @GetMapping("/kiem-tra-trang-thai")
+        public ResponseEntity<?> checkIfAllOrdersCompleted(@RequestParam UUID idHoaDon) {
+            String trangThai = "Đã hoàn thành";
+            String status = "Đã Thanh Toán";
+            boolean allCompleted = traHangRepository.areAllOrdersCompleted(idHoaDon, trangThai,status);
 
+            if (allCompleted) {
+                return ResponseEntity.ok("Tất cả các đơn hàng đã ở trạng thái 'Đã hoàn thành'.");
+            } else {
+                return ResponseEntity.ok("Đơn hàng chưa đủ yêu cầu");
+            }
+        }
 
 
 }
