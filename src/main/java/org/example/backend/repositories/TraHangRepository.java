@@ -16,21 +16,21 @@ import java.util.UUID;
 
 @Repository
 public interface TraHangRepository extends JpaRepository<TraHang, UUID> {
-    // @Query("""
-    // select new org.example.backend.dto.response.traHang.TraHangResponse(
-    // t.id, t.idSpct, t.soLuong, t.lyDo, t.ngayTao, t.ngaySua, t.nguoiTao,
-    // t.nguoiSua, t.trangThai, t.deleted
-    // )
-    // from TraHang t ,
-    // SanPhamChiTiet sp
-    // where t.deleted = false
-    // """)
-    // List<TraHangResponse> getAllTraHang();
+//     @Query("""
+//     select new org.example.backend.dto.response.traHang.TraHangResponse(
+//     t.id, t.idSpct, t.soLuong, t.lyDo, t.ngayTao, t.ngaySua, t.nguoiTao,
+//     t.nguoiSua, t.trangThai, t.deleted
+//     )
+//     from TraHang t ,
+//     SanPhamChiTiet sp
+//     where t.deleted = false
+//     """)
+//     List<TraHangResponse> getAllTraHang();
 
 //    @Query("""
 //                select new org.example.backend.dto.response.traHang.TraHangResponse(
-//                    t.id, t.idSpct.id, spct.idSanPham.ten, spct.idMauSac.ten, spct.idKichThuoc.ten,
-//                    t.soLuong, t.lyDo, t.ngayTao, t.ngaySua, t.nguoiTao, t.nguoiSua, t.trangThai,
+//                    t.id, t.idSanPhamChiTiet.id, spct.idSanPham.ten, spct.idMauSac.ten, spct.idKichThuoc.ten,
+//                    t.soLuong, t.lyDo, t.ngayTao, t.ngaySua, spct.nguoiTao, spct.nguoiSua, t.trangThai,
 //                    spct.hinhAnh, t.deleted
 //                )
 //                from TraHang t
@@ -42,7 +42,7 @@ public interface TraHangRepository extends JpaRepository<TraHang, UUID> {
 //    // // Tìm các hóa đơn kh đã mua theo ID người dùng
 //    @Query("""
 //            select new org.example.backend.dto.response.quanLyDonHang.QuanLyDonHangRespose(
-//                    hd.id, hd.ma, hd.idNguoiDung.ten, hd.soDienThoai, hd.diaChi, hd.tongTien, hd.loaiHoaDon, hd.ngayTao, hd.trangThai, hd.deleted
+//                    hd.id, hd.ma,hd.idNguoiDung.id, hd.idNguoiDung.ten, hd.soDienThoai, hd.diaChi, hd.tongTien, hd.loaiHoaDon, hd.ngayTao, hd.trangThai, hd.deleted
 //                )
 //                from HoaDon hd
 //                where hd.deleted = false and hd.idNguoiDung.id = :idNguoiDung
@@ -63,4 +63,5 @@ public interface TraHangRepository extends JpaRepository<TraHang, UUID> {
 
     TraHang findTraHangByIdNguoiDungAndIdHoaDonAndIdSanPhamChiTiet(NguoiDung nguoiDung, HoaDon hoaDon, SanPhamChiTiet sanPhamChiTiet);
 
+    List<TraHang> findAllByIdHoaDon(HoaDon hoaDon);
 }
