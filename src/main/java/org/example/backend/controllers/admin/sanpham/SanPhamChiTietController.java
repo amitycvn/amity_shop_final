@@ -188,17 +188,18 @@ public class SanPhamChiTietController {
     public ResponseEntity<?> detail(@PathVariable UUID id) {
         return ResponseEntity.ok(sanPhamChiTietRepository.findById(id).orElse(null));
     }
-    //tim kieems cux
+    //tim kieems spct trong ban hang tại quầy
     @GetMapping(Admin.PRODUCT_DETAIL_SEARCH)
     public ResponseEntity<?> search(
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "5") int size,
             @RequestParam(defaultValue = "ngayTao") String sortBy,
             @RequestParam(defaultValue = "desc") String sortDir,
-            @RequestParam(defaultValue = "") String hang,
+            @RequestParam(defaultValue = "") String tenSanPham,
             @RequestParam(defaultValue = "") String mauSac,
             @RequestParam(defaultValue = "") String kichThuoc) {
-        SanPhamChiTietSearchRequest searchRequest = new SanPhamChiTietSearchRequest();
+        SanPhamChiTietSearchRequest2 searchRequest = new SanPhamChiTietSearchRequest2();
+        searchRequest.setTenSanPham(tenSanPham);
         searchRequest.setMauSac(mauSac);
         searchRequest.setKichThuoc(kichThuoc);
         String trangThai = "Hoạt động";
@@ -252,7 +253,7 @@ public class SanPhamChiTietController {
         return ResponseEntity.ok(responseData);
     }
 
-    /// tim kiem spct trong tất cả spct -- bán hàng
+    /// tim kiem spct trong tất cả spct -- quản lí sản phẩm
 
     @GetMapping(Admin.PRODUCT_DETAIL_SEARCH2)
     public ResponseEntity<?> search(
@@ -266,7 +267,7 @@ public class SanPhamChiTietController {
             @RequestParam(defaultValue = "") String tenSanPhamChiTiet,
             @RequestParam(required = false) String trangThai) {
 
-        SanPhamChiTietSearchRequest2 searchRequest = new SanPhamChiTietSearchRequest2();
+        SanPhamChiTietSearchRequest searchRequest = new SanPhamChiTietSearchRequest();
         searchRequest.setMauSac(mauSac);
         searchRequest.setKichThuoc(kichThuoc);
         searchRequest.setTenSanPhamChiTiet(tenSanPhamChiTiet);

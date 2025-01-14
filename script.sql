@@ -1188,3 +1188,28 @@ BEGIN
 END;
 
 
+CREATE TRIGGER trg_phieu_giam_gia_ma_tu_sinh
+    ON dbo.phieu_giam_gia
+    AFTER INSERT
+AS
+BEGIN
+UPDATE dbo.phieu_giam_gia
+SET ma = 'phieu_giam_gia_' + RIGHT('00000' + CAST((SELECT COUNT(*) FROM dbo.phieu_giam_gia) AS NVARCHAR(50)), 5)
+WHERE id IN (SELECT id FROM inserted);
+END;
+GO
+
+
+CREATE TABLE [dbo].[tra_hang] (
+    [id] UNIQUEIDENTIFIER PRIMARY KEY,         -- ID trả hàng (UUID)
+    [id_hoa_don] UNIQUEIDENTIFIER NOT NULL,      -- Liên kết đến đơn hàng
+    [id_nguoi_dung] UNIQUEIDENTIFIER NOT NULL,       -- Liên kết đến người dùng
+    [id_spct] UNIQUEIDENTIFIER NOT NULL,       -- Liên kết đến người dùng
+    [ly_do] NVARCHAR(255) NOT NULL,           -- Lý do trả hàng
+    [trang_thai] NVARCHAR(50) DEFAULT N'Đang xử lý yêu cầu',   -- Trạng thái trả hàng
+    [ngay_tao] DATETIME DEFAULT GETDATE(),  -- Ngày yêu cầu trả
+    [ngay_sua] DATETIME DEFAULT GETDATE(),   -- Ngày cập nhật cuối
+    CONSTRAINT FK_tra_hang_hoa_don FOREIGN KEY (id_hoa_don) REFERENCES hoa_don (id) ON DELETE CASCADE,
+    CONSTRAINT FK_tra_hang_nguoi_dung FOREIGN KEY (id_nguoi_dung) REFERENCES nguoi_dung (id) ON DELETE CASCADE,
+    CONSTRAINT FK_tra_hang_spct FOREIGN KEY (id_spct) REFERENCES san_pham_chi_tiet (id) ON DELETE CASCADE,
+);
