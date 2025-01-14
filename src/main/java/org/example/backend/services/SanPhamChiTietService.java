@@ -217,7 +217,8 @@ public class SanPhamChiTietService extends GenericServiceImpl<SanPhamChiTiet, UU
         Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortField); // Tạo Sort
         Pageable pageable = PageRequest.of(page, size, sort); // Tạo Pageable
 
-        return sanPhamRepository.search(ma, ten, idChatLieu, idLopLot, idHang, idDeGiay, idDanhMuc, pageable);
+        String trangThai = "Hoạt động";
+        return sanPhamRepository.search(ma, ten, idChatLieu, idLopLot, idHang, idDeGiay, idDanhMuc,trangThai, pageable);
     }
 
     public List<SanPhamChiTietDTO> mapToDTO(List<SanPhamChiTiet> entities) {
