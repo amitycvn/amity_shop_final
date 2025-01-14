@@ -64,4 +64,6 @@ public interface TraHangRepository extends JpaRepository<TraHang, UUID> {
     TraHang findTraHangByIdNguoiDungAndIdHoaDonAndIdSanPhamChiTiet(NguoiDung nguoiDung, HoaDon hoaDon, SanPhamChiTiet sanPhamChiTiet);
 
     List<TraHang> findAllByIdHoaDon(HoaDon hoaDon);
+
+    List<TraHang> findAllByIdNguoiDung(NguoiDung nguoiDung);
 }

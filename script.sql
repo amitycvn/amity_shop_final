@@ -1176,8 +1176,8 @@ INSERT INTO [dbo].[nguoi_dung]
 VALUES 
     ( 'admin', 'admin@gmail.com', '0123456789', '$2a$10$MqeShHw9YqMt19byWf6BSOSdC7TxtgkVVCmFXsIWmi2witCGa6HyG', N'admin', N', ', '1990-01-01', N'Nam', NULL, '000000000', 100, N'Admin', N'Admin', '2023-01-01 10:00:00', '2023-01-02 15:00:00', N'admin', N'Hoạt động', 0);
 
-
-	CREATE TRIGGER trg_hoa_don_ma_tu_sinh
+GO
+CREATE TRIGGER trg_hoa_don_ma_tu_sinh
 ON dbo.hoa_don
 AFTER INSERT
 AS
@@ -1187,4 +1187,14 @@ BEGIN
     WHERE id IN (SELECT id FROM inserted);
 END;
 
+go
+CREATE TRIGGER trg_dot_giam_gia_ma_tu_sinh
+ON dbo.dot_giam_gia
+AFTER INSERT
+AS
+BEGIN
+    UPDATE dbo.dot_giam_gia
+    SET ma = 'dot_giam_gia_' + RIGHT('00000' + CAST((SELECT COUNT(*) FROM dbo.dot_giam_gia) AS NVARCHAR(50)), 5)
+    WHERE id IN (SELECT id FROM inserted);
+END;
 

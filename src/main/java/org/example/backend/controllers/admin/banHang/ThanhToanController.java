@@ -51,6 +51,7 @@ public class ThanhToanController {
         t.setIdHoaDon(hoaDon);
         t.setPhuongThuc(thanhToanRequest.getPhuongThuc());
         t.setTongTien(thanhToanRequest.getTongTien());
+        t.setMoTa(thanhToanRequest.getMoTa());
         return ResponseEntity.ok(thanhToanRepository.save(t));
     }
 }
