@@ -306,6 +306,7 @@ public class DotGiamGiaController {
         }
     }
 
+
     @DeleteMapping(SALE_DELETE)
     public ResponseEntity<?> deleteSale(@PathVariable UUID id) {
         Optional<DotGiamGia> dotGiamGia = dotGiamGiaService.findById(id);

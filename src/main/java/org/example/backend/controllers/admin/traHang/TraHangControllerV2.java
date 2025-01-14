@@ -190,8 +190,6 @@ public class TraHangControllerV2 {
                 if (thanhToan == null) {
                     return ResponseEntity.badRequest().body("Không tìm thấy thông tin thanh toán cho hóa đơn: " + hoaDon.getId());
                 }
-
-
                 // Kiểm tra trạng thái dựa trên phương thức thanh toán
                 if (thanhToan.getPhuongThuc().equalsIgnoreCase("Thanh toán khi nhận hàng")) {
                     if (!hoaDon.getTrangThai().equalsIgnoreCase("Đã Thanh Toán")) {
@@ -208,12 +206,6 @@ public class TraHangControllerV2 {
                 // Nếu loại hóa đơn không hợp lệ
                 return ResponseEntity.badRequest().body("Loại hóa đơn không hợp lệ: " + hoaDon.getLoaiHoaDon());
             }
-
-
-            // Lấy thông tin người dùng
-
-
-
             // Duyệt danh sách sản phẩm trong yêu cầu trả hàng
             for (UUID sanPhamChiTiet : traHangRequest.getSanPhamChiTiet()) {
                 SanPhamChiTiet sanPhamChiTiet1 = sanPhamChiTietRepository.findById(sanPhamChiTiet)
@@ -224,7 +216,6 @@ public class TraHangControllerV2 {
                 if (!hoaDonChiTiet.getIdSpct().getId().equals(sanPhamChiTiet1.getId())) {
                     throw new RuntimeException("Sản phẩm không thuộc đơn hàng này.");
                 }
-
                 // Kiểm tra đã tồn tại trả hàng cho sản phẩm này hay chưa
                 TraHang traHang = traHangRepository.findTraHangByIdNguoiDungAndIdHoaDonAndIdSanPhamChiTiet(nguoiDung, hoaDon, sanPhamChiTiet1);
                 if (traHang != null) {

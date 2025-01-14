@@ -164,11 +164,13 @@ public interface HoaDonChiTietRepository extends JpaRepository<HoaDonChiTiet, UU
             "ORDER BY tong_so_luong DESC;\n", nativeQuery = true)
     List<Object[]> top5SanPham();
 
-    @Query(value = "select sp.ten,spct.hinh_anh,spct.gia_ban,spct.so_luong\n" +
+    @Query(value = "select TOP 5 sp.ten,spct.hinh_anh,spct.gia_ban,spct.so_luong ,ms.ten,kt.ten\n" +
             "from san_pham_chi_tiet spct \n" +
             "JOIN san_pham sp ON spct.id_san_pham = sp.id\n" +
-            "where spct.so_luong <50\n"+
-            "ORDER BY spct.so_luong DESC;\n", nativeQuery = true)
+            "join mau_sac ms on spct.id_mau_sac = ms.id\n" +
+            "join kich_thuoc kt on spct.id_kich_thuoc = kt.id\n" +
+            "where spct.so_luong <50 and spct.so_luong>0\n"+
+            "ORDER BY spct.so_luong ASC ;\n", nativeQuery = true)
     List<Object[]> sanPhamSapHet();
 
 

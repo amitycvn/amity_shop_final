@@ -52,13 +52,14 @@ public interface SanPhamChiTietRepository extends JpaRepository<SanPhamChiTiet, 
                     s.soLuong,s.giaBan,s.giaNhap,s.trangThai,s.hinhAnh,s.moTa
                     )
                     from SanPhamChiTiet s
-                    where s.deleted=false and s.trangThai =:trangThai
-
+                    join s.idSanPham sp 
+                    where s.deleted=false and s.trangThai =:trangThai and sp.trangThai =:trangThai and s.soLuong >0
+                    AND (COALESCE(:#{#SPCTSearch.tenSanPham}, '') ='' OR s.idSanPham.ten LIKE %:#{#SPCTSearch.tenSanPham}%)
                     AND (COALESCE(:#{#SPCTSearch.kichThuoc}, '') ='' OR s.idKichThuoc.ten LIKE %:#{#SPCTSearch.kichThuoc}%)
                     AND (COALESCE(:#{#SPCTSearch.mauSac}, '') ='' OR s.idMauSac.ten LIKE %:#{#SPCTSearch.mauSac}%)
 
             """)
-    Page<SanPhamChiTietRespon> search(Pageable pageable, SanPhamChiTietSearchRequest SPCTSearch, String trangThai);
+    Page<SanPhamChiTietRespon> search(Pageable pageable, SanPhamChiTietSearchRequest2 SPCTSearch, String trangThai);
 
     // tim kiếm spct trong tất cả các spct--bán hàng
     @Query("""
@@ -73,7 +74,7 @@ public interface SanPhamChiTietRepository extends JpaRepository<SanPhamChiTiet, 
                 AND (:#{#SPCTSearch.tenSanPhamChiTiet} IS NULL OR s.ten LIKE %:#{#SPCTSearch.tenSanPhamChiTiet}%)
                 AND (:#{#SPCTSearch.trangThai} IS NULL OR s.trangThai = :#{#SPCTSearch.trangThai})
             """)
-    Page<SanPhamChiTietRespon> search2(Pageable pageable, SanPhamChiTietSearchRequest2 SPCTSearch);
+    Page<SanPhamChiTietRespon> search2(Pageable pageable, SanPhamChiTietSearchRequest SPCTSearch);
 
     @Query("""
                     select new org.example.backend.dto.response.SanPham.SanPhamChiTietRespon(s.id,s.idSanPham.id,
