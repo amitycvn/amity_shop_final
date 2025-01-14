@@ -34,7 +34,6 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-
 import static org.example.backend.constants.Status.HOAT_DONG;
 import static org.example.backend.constants.Status.SAP_DIEN_RA;
 import static org.example.backend.constants.api.Admin.*;
@@ -47,7 +46,6 @@ import static org.example.backend.constants.api.Admin.SALE_PRODUCT_DETAIL_GET_AL
 import static org.example.backend.constants.api.Admin.SALE_SEARCH_VALUE;
 import static org.example.backend.constants.api.Admin.SALE_SET_DELETE;
 import static org.example.backend.constants.api.Admin.SALE_UPDATE;
-
 
 @RestController
 public class DotGiamGiaController {
@@ -64,35 +62,37 @@ public class DotGiamGiaController {
 
     @GetMapping(SALE_GET_ALL)
     public ResponseEntity<?> getAllSalePaginate(@RequestParam(value = "page", defaultValue = "0") int page,
-                                                @RequestParam(value = "size", defaultValue = "5") int size,
-                                                @RequestParam(defaultValue = "ngayTao") String sortBy,
-                                                @RequestParam(defaultValue = "desc") String sortDir) {
-        PageResponse<List<DotGiamGiaResponse>> dotGiamGiaPage = dotGiamGiaService.dotGiamGiaGetAllPaginate(page, size, sortBy, sortDir);
-        ResponseData<PageResponse<List<DotGiamGiaResponse>>> responseData = ResponseData.<PageResponse<List<DotGiamGiaResponse>>>builder()
+            @RequestParam(value = "size", defaultValue = "5") int size,
+            @RequestParam(defaultValue = "ngayTao") String sortBy,
+            @RequestParam(defaultValue = "desc") String sortDir) {
+        PageResponse<List<DotGiamGiaResponse>> dotGiamGiaPage = dotGiamGiaService.dotGiamGiaGetAllPaginate(page, size,
+                sortBy, sortDir);
+        ResponseData<PageResponse<List<DotGiamGiaResponse>>> responseData = ResponseData
+                .<PageResponse<List<DotGiamGiaResponse>>>builder()
                 .message("Get all sale paginate")
                 .status(HttpStatus.OK.value())
                 .data(dotGiamGiaPage).build();
         return ResponseEntity.ok().body(responseData);
     }
-    //dot gg ben client
+    // dot gg ben client
 
     @GetMapping(SALE_GET_ALL_CLIENT)
-    public ResponseEntity<?> getAllClientPaginate(){
-        List<String> trangThais = List.of(HOAT_DONG,SAP_DIEN_RA);
+    public ResponseEntity<?> getAllClientPaginate() {
+        List<String> trangThais = List.of(HOAT_DONG, SAP_DIEN_RA);
         return ResponseEntity.ok(dotGiamGiaRepository.getAllDotGiamGiaClient(trangThais));
     }
+
     @GetMapping(SALE_SEARCH_VALUE)
     public ResponseEntity<?> searchSalePaginate(@RequestParam(value = "page", defaultValue = "0") int page,
-                                                @RequestParam(value = "size", defaultValue = "5") int size,
-                                                @RequestParam(defaultValue = "ngayTao") String sortBy,
-                                                @RequestParam(defaultValue = "desc") String sortDir,
-                                                @RequestParam(defaultValue = "") String value,
-                                                @RequestParam(defaultValue = "") Instant minNgay,
-                                                @RequestParam(defaultValue = "") Instant maxNgay,
-                                                @RequestParam(defaultValue = "") String trangThai,
-                                                @RequestParam(defaultValue = "") BigDecimal minGia,
-                                                @RequestParam(defaultValue = "") BigDecimal maxGia
-                                                ){
+            @RequestParam(value = "size", defaultValue = "5") int size,
+            @RequestParam(defaultValue = "ngayTao") String sortBy,
+            @RequestParam(defaultValue = "desc") String sortDir,
+            @RequestParam(defaultValue = "") String value,
+            @RequestParam(defaultValue = "") Instant minNgay,
+            @RequestParam(defaultValue = "") Instant maxNgay,
+            @RequestParam(defaultValue = "") String trangThai,
+            @RequestParam(defaultValue = "") BigDecimal minGia,
+            @RequestParam(defaultValue = "") BigDecimal maxGia) {
         DotGiamGiaSearch dotGiamGiaSearch = new DotGiamGiaSearch();
         dotGiamGiaSearch.setMaxGia(maxGia);
         dotGiamGiaSearch.setMinGia(minGia);
@@ -100,8 +100,10 @@ public class DotGiamGiaController {
         dotGiamGiaSearch.setMinNgay(minNgay);
         dotGiamGiaSearch.setMaxNgay(maxNgay);
         dotGiamGiaSearch.setValue(value);
-        PageResponse<List<DotGiamGiaResponse>> searchDggPage = dotGiamGiaService.searchDotGiamGia(page, size, sortBy, sortDir, dotGiamGiaSearch);
-        ResponseData<PageResponse<List<DotGiamGiaResponse>>> responseData = ResponseData.<PageResponse<List<DotGiamGiaResponse>>>builder()
+        PageResponse<List<DotGiamGiaResponse>> searchDggPage = dotGiamGiaService.searchDotGiamGia(page, size, sortBy,
+                sortDir, dotGiamGiaSearch);
+        ResponseData<PageResponse<List<DotGiamGiaResponse>>> responseData = ResponseData
+                .<PageResponse<List<DotGiamGiaResponse>>>builder()
                 .message("Search Sale")
                 .status(HttpStatus.OK.value())
                 .data(searchDggPage).build();
@@ -112,33 +114,38 @@ public class DotGiamGiaController {
     public ResponseEntity<?> createSale(@RequestBody DotGiamGiaCreate dotGiamGiaCreate) {
         try {
             // Kiểm tra mã
-//            if (dotGiamGiaCreate.getMa() == null || dotGiamGiaCreate.getMa().isBlank() ||
-//                dotGiamGiaCreate.getMa().length() < 5 || dotGiamGiaCreate.getMa().length() > 10) {
-//                return ResponseEntity.badRequest().body("Mã phải có độ dài từ 5 đến 10 ký tự");
-//            }
+            // if (dotGiamGiaCreate.getMa() == null || dotGiamGiaCreate.getMa().isBlank() ||
+            // dotGiamGiaCreate.getMa().length() < 5 || dotGiamGiaCreate.getMa().length() >
+            // 10) {
+            // return ResponseEntity.badRequest().body("Mã phải có độ dài từ 5 đến 10 ký
+            // tự");
+            // }
 
             // Kiểm tra tên
-            if (dotGiamGiaCreate.getTen() == null || dotGiamGiaCreate.getTen().isBlank() ||
-                dotGiamGiaCreate.getTen().length() < 5 || dotGiamGiaCreate.getTen().length() > 20) {
+            if (dotGiamGiaCreate.getTen().trim() == null || dotGiamGiaCreate.getTen().trim().isBlank() ||
+                    dotGiamGiaCreate.getTen().trim().length() < 5 || dotGiamGiaCreate.getTen().trim().length() > 20) {
                 return ResponseEntity.badRequest().body("Tên phải có độ dài từ 5 đến 20 ký tự");
             }
 
             // Kiểm tra giá trị
-//            if (dotGiamGiaCreate.getGiaTri() == null || dotGiamGiaCreate.getGiaTri().compareTo(BigDecimal.ZERO) <= 0 ||
-//                dotGiamGiaCreate.getGiaTri().compareTo(new BigDecimal("999999999")) > 0) {
-//                return ResponseEntity.badRequest().body("Giá trị tiền mặt phải lớn hơn 10,000 và nhỏ hơn 999,999,999");
-//            }
+            // if (dotGiamGiaCreate.getGiaTri() == null ||
+            // dotGiamGiaCreate.getGiaTri().compareTo(BigDecimal.ZERO) <= 0 ||
+            // dotGiamGiaCreate.getGiaTri().compareTo(new BigDecimal("999999999")) > 0) {
+            // return ResponseEntity.badRequest().body("Giá trị tiền mặt phải lớn hơn 10,000
+            // và nhỏ hơn 999,999,999");
+            // }
 
             if (dotGiamGiaCreate.getLoai() != null) {
                 if (dotGiamGiaCreate.getLoai()) {
                     // Tiền mặt phải lớn hơn 10,000
-                    if (dotGiamGiaCreate.getGiaTri().compareTo(new BigDecimal("10000")) < 0 || dotGiamGiaCreate.getGiaTri().compareTo(new BigDecimal("999999999")) > 0) {
+                    if (dotGiamGiaCreate.getGiaTri().compareTo(new BigDecimal("10000")) < 0
+                            || dotGiamGiaCreate.getGiaTri().compareTo(new BigDecimal("999999999")) > 0) {
                         return ResponseEntity.badRequest().body("Giá trị tiền mặt phải từ 10,000 đến 999.999.999");
                     }
                 } else {
                     // Phần trăm phải từ 10 đến 80
                     if (dotGiamGiaCreate.getGiaTri().compareTo(new BigDecimal("10")) < 0 ||
-                        dotGiamGiaCreate.getGiaTri().compareTo(new BigDecimal("80")) > 0) {
+                            dotGiamGiaCreate.getGiaTri().compareTo(new BigDecimal("80")) > 0) {
                         return ResponseEntity.badRequest().body("Phần trăm giảm giá phải từ 10 đến 80");
                     }
                 }
@@ -151,15 +158,16 @@ public class DotGiamGiaController {
                 return ResponseEntity.badRequest().body("Hình thức không được để trống");
             }
 
-
             // Kiểm tra điều kiện
             if ("Theo sản phẩm".equals(dotGiamGiaCreate.getHinhThuc())) {
                 dotGiamGiaCreate.setDieuKien(-1);
             } else if ("Theo hóa đơn".equals(dotGiamGiaCreate.getHinhThuc())) {
                 if (dotGiamGiaCreate.getDieuKien() == null ||
-                    (dotGiamGiaCreate.getDieuKien() != -1 &&
-                     (dotGiamGiaCreate.getDieuKien() < 10000 || dotGiamGiaCreate.getDieuKien() > 100000000))) {
-                    return ResponseEntity.badRequest().body("Điều kiện phải lớn hơn 10,000, nhỏ hơn 100,000,000 hoặc bằng -1");
+                        (dotGiamGiaCreate.getDieuKien() != -1 &&
+                                (dotGiamGiaCreate.getDieuKien() < 10000
+                                        || dotGiamGiaCreate.getDieuKien() > 100000000))) {
+                    return ResponseEntity.badRequest()
+                            .body("Điều kiện phải lớn hơn 10,000, nhỏ hơn 100,000,000 hoặc bằng -1");
                 }
             } else {
                 return ResponseEntity.badRequest().body("Hình thức không hợp lệ");
@@ -186,8 +194,6 @@ public class DotGiamGiaController {
                 dotGiamGiaCreate.setTrangThai("Sắp diễn ra");
             }
 
-
-
             // Nếu tất cả kiểm tra đều hợp lệ, tiến hành lưu
             DotGiamGia d = new DotGiamGia();
             dotGiamGiaMapper.createDotGiamGiaFromDto(dotGiamGiaCreate, d);
@@ -199,43 +205,42 @@ public class DotGiamGiaController {
         }
     }
 
-
-
-
     @PutMapping(SALE_UPDATE)
     public ResponseEntity<?> updateSale(
             @PathVariable UUID id,
             @RequestBody DotGiamGiaUpdate dotGiamGiaUpdate) {
         try {
-            DotGiamGia existingDotGiamGia = dotGiamGiaService.findById(id).orElseThrow(()-> new RuntimeException("Đợt giảm giá không tồn tại"));
-            if (existingDotGiamGia==null) {
+            DotGiamGia existingDotGiamGia = dotGiamGiaService.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Đợt giảm giá không tồn tại"));
+            if (existingDotGiamGia == null) {
                 return ResponseEntity.notFound().build();
             }
 
             // Kiểm tra mã
-//            if (dotGiamGiaUpdate.getMa() == null || dotGiamGiaUpdate.getMa().isBlank() ||
-//                dotGiamGiaUpdate.getMa().length() < 5 || dotGiamGiaUpdate.getMa().length() > 10) {
-//                return ResponseEntity.badRequest().body("Mã phải có độ dài từ 5 đến 10 ký tự");
-//            }
+            // if (dotGiamGiaUpdate.getMa() == null || dotGiamGiaUpdate.getMa().isBlank() ||
+            // dotGiamGiaUpdate.getMa().length() < 5 || dotGiamGiaUpdate.getMa().length() >
+            // 10) {
+            // return ResponseEntity.badRequest().body("Mã phải có độ dài từ 5 đến 10 ký
+            // tự");
+            // }
 
             // Kiểm tra tên
             if (dotGiamGiaUpdate.getTen() == null || dotGiamGiaUpdate.getTen().isBlank() ||
-                dotGiamGiaUpdate.getTen().length() < 5 || dotGiamGiaUpdate.getTen().length() > 20) {
+                    dotGiamGiaUpdate.getTen().length() < 5 || dotGiamGiaUpdate.getTen().length() > 20) {
                 return ResponseEntity.badRequest().body("Tên phải có độ dài từ 5 đến 20 ký tự");
             }
-
-
 
             if (dotGiamGiaUpdate.getLoai() != null) {
                 if (dotGiamGiaUpdate.getLoai()) {
                     // Tiền mặt phải lớn hơn 10,000
-                    if (dotGiamGiaUpdate.getGiaTri().compareTo(new BigDecimal("10000")) < 0 || dotGiamGiaUpdate.getGiaTri().compareTo(new BigDecimal("999999999")) > 0) {
+                    if (dotGiamGiaUpdate.getGiaTri().compareTo(new BigDecimal("10000")) < 0
+                            || dotGiamGiaUpdate.getGiaTri().compareTo(new BigDecimal("999999999")) > 0) {
                         return ResponseEntity.badRequest().body("Giá trị tiền mặt phải từ 10,000 đến 999.999.999");
                     }
                 } else {
                     // Phần trăm phải từ 10 đến 80
                     if (dotGiamGiaUpdate.getGiaTri().compareTo(new BigDecimal("10")) < 0 ||
-                        dotGiamGiaUpdate.getGiaTri().compareTo(new BigDecimal("80")) > 0) {
+                            dotGiamGiaUpdate.getGiaTri().compareTo(new BigDecimal("80")) > 0) {
                         return ResponseEntity.badRequest().body("Phần trăm giảm giá phải từ 10 đến 80");
                     }
                 }
@@ -245,7 +250,7 @@ public class DotGiamGiaController {
 
             // Kiểm tra giá trị
             if (dotGiamGiaUpdate.getGiaTri() == null || dotGiamGiaUpdate.getGiaTri().compareTo(BigDecimal.ZERO) <= 0 ||
-                dotGiamGiaUpdate.getGiaTri().compareTo(new BigDecimal("999999999")) > 0) {
+                    dotGiamGiaUpdate.getGiaTri().compareTo(new BigDecimal("999999999")) > 0) {
                 return ResponseEntity.badRequest().body("Giá trị tiền mặt phải lớn hơn 10,000 và nhỏ hơn 999,999,999");
             }
 
@@ -259,9 +264,11 @@ public class DotGiamGiaController {
                 dotGiamGiaUpdate.setDieuKien(-1);
             } else if ("Theo hóa đơn".equals(dotGiamGiaUpdate.getHinhThuc())) {
                 if (dotGiamGiaUpdate.getDieuKien() == null ||
-                    (dotGiamGiaUpdate.getDieuKien() != -1 &&
-                     (dotGiamGiaUpdate.getDieuKien() < 10000 || dotGiamGiaUpdate.getDieuKien() > 100000000))) {
-                    return ResponseEntity.badRequest().body("Điều kiện phải lớn hơn 10,000, nhỏ hơn 100,000,000 hoặc bằng -1");
+                        (dotGiamGiaUpdate.getDieuKien() != -1 &&
+                                (dotGiamGiaUpdate.getDieuKien() < 10000
+                                        || dotGiamGiaUpdate.getDieuKien() > 100000000))) {
+                    return ResponseEntity.badRequest()
+                            .body("Điều kiện phải lớn hơn 10,000, nhỏ hơn 100,000,000 hoặc bằng -1");
                 }
             } else {
                 return ResponseEntity.badRequest().body("Hình thức không hợp lệ");
@@ -290,8 +297,6 @@ public class DotGiamGiaController {
                 dotGiamGiaUpdate.setTrangThai("Sắp diễn ra");
             }
 
-
-
             // Cập nhật dữ liệu
             DotGiamGia dotGiamGia = existingDotGiamGia;
             dotGiamGiaMapper.updateDotGiamGiaFromDto(dotGiamGiaUpdate, dotGiamGia);
@@ -311,8 +316,6 @@ public class DotGiamGiaController {
         }
         return ResponseEntity.notFound().build();
     }
-
-
 
     @GetMapping(SALE_GET_BY_ID)
     public ResponseEntity<?> getSaleById(@PathVariable UUID id) {

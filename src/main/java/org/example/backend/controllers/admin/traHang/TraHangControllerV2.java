@@ -162,13 +162,24 @@ public class TraHangControllerV2 {
             NguoiDung nguoiDung = nguoiDungRepository.findById(traHangRequest.getIdNguoiDung())
                     .orElseThrow(() -> new RuntimeException("NguoiDung Not Found"));
 
+            // Kiểm tra người dùng có sở hữu hóa đơn này không
+            if (!hoaDon.getIdNguoiDung().getId().equals(nguoiDung.getId())) {
+                return ResponseEntity.badRequest().body("Người dùng không tồn tại đơn hàng này.");
+            }
             List<TraHang> traHang1 = traHangRepository.findAllByIdHoaDon(hoaDon);
             System.out.println("ạdgjagdjagdj"+traHang1);
             if (!traHang1.isEmpty()) {
                 return ResponseEntity.badRequest().body("Hóa đơn đã được tạo yêu cầu trả hàng.");
             }
 
-            if (hoaDon.getLoaiHoaDon().equalsIgnoreCase("Bán hàng tại quầy")) {
+            // Kiểm tra thời gian tạo hóa đơn (kiểu Instant) có vượt quá 7 ngày không
+            Instant ngaySua = hoaDon.getNgaySua(); // Kiểu Instant
+            Instant hienTai = Instant.now(); // Lấy thời gian hiện tại
+            if (Duration.between(ngaySua, hienTai).toDays() > 7) {
+                return ResponseEntity.badRequest().body("Không thể tạo trả hàng vì hóa đơn đã quá 7 ngày kể từ ngày tạo.");
+            }
+
+            if (hoaDon.getLoaiHoaDon().equalsIgnoreCase("bán hàng tại quầy")) {
                 // Đối với "Bán hàng tại quầy", trạng thái phải là "Đã Thanh Toán"
                 if (!hoaDon.getTrangThai().equalsIgnoreCase("Đã Thanh Toán")) {
                     return ResponseEntity.badRequest().body("Trạng thái của hóa đơn là " + hoaDon.getTrangThai() + ". Chưa đủ điều kiện thực hiện trả hàng. (Đã Thanh Toán)");
@@ -179,7 +190,6 @@ public class TraHangControllerV2 {
                 if (thanhToan == null) {
                     return ResponseEntity.badRequest().body("Không tìm thấy thông tin thanh toán cho hóa đơn: " + hoaDon.getId());
                 }
-
                 // Kiểm tra trạng thái dựa trên phương thức thanh toán
                 if (thanhToan.getPhuongThuc().equalsIgnoreCase("Thanh toán khi nhận hàng")) {
                     if (!hoaDon.getTrangThai().equalsIgnoreCase("Đã Thanh Toán")) {
@@ -196,20 +206,6 @@ public class TraHangControllerV2 {
                 // Nếu loại hóa đơn không hợp lệ
                 return ResponseEntity.badRequest().body("Loại hóa đơn không hợp lệ: " + hoaDon.getLoaiHoaDon());
             }
-
-            // Kiểm tra thời gian tạo hóa đơn (kiểu Instant) có vượt quá 7 ngày không
-            Instant ngaySua = hoaDon.getNgaySua(); // Kiểu Instant
-            Instant hienTai = Instant.now(); // Lấy thời gian hiện tại
-            if (Duration.between(ngaySua, hienTai).toDays() > 7) {
-                return ResponseEntity.badRequest().body("Không thể tạo trả hàng vì hóa đơn đã quá 7 ngày kể từ ngày tạo.");
-            }
-            // Lấy thông tin người dùng
-
-            // Kiểm tra người dùng có sở hữu hóa đơn này không
-            if (!hoaDon.getIdNguoiDung().getId().equals(nguoiDung.getId())) {
-                return ResponseEntity.badRequest().body("Người dùng không tồn tại đơn hàng này.");
-            }
-
             // Duyệt danh sách sản phẩm trong yêu cầu trả hàng
             for (UUID sanPhamChiTiet : traHangRequest.getSanPhamChiTiet()) {
                 SanPhamChiTiet sanPhamChiTiet1 = sanPhamChiTietRepository.findById(sanPhamChiTiet)
@@ -220,7 +216,6 @@ public class TraHangControllerV2 {
                 if (!hoaDonChiTiet.getIdSpct().getId().equals(sanPhamChiTiet1.getId())) {
                     throw new RuntimeException("Sản phẩm không thuộc đơn hàng này.");
                 }
-
                 // Kiểm tra đã tồn tại trả hàng cho sản phẩm này hay chưa
                 TraHang traHang = traHangRepository.findTraHangByIdNguoiDungAndIdHoaDonAndIdSanPhamChiTiet(nguoiDung, hoaDon, sanPhamChiTiet1);
                 if (traHang != null) {

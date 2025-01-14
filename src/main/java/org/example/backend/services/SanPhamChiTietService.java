@@ -11,9 +11,11 @@ import org.example.backend.dto.response.banHang.banHangClientResponse;
 import org.example.backend.dto.response.dotGiamGia.DotGiamGiaResponse;
 import org.example.backend.dto.response.sanPhamV2.SanPhamChiTietDTO;
 import org.example.backend.dto.response.sanPhamV2.SanPhamChiTietResponse;
+import org.example.backend.models.ChatLieu;
 import org.example.backend.models.DanhMuc;
 import org.example.backend.models.DeGiay;
 import org.example.backend.models.Hang;
+import org.example.backend.models.LopLot;
 import org.example.backend.models.MauSac;
 import org.example.backend.models.PhieuGiamGia;
 import org.example.backend.models.SanPham;
@@ -195,8 +197,27 @@ public class SanPhamChiTietService extends GenericServiceImpl<SanPhamChiTiet, UU
         );
     }
 
-    public List<SanPham> getAllSanPham(){
-        return sanPhamRepository.findAllByTrangThai("Hoạt động");
+//    public Page<SanPham> getAllSanPham(Pageable pageable, String ma, String ten, ChatLieu chatLieu, LopLot lopLot, DeGiay deGiay, DanhMuc danhMuc){
+//        return sanPhamRepository.findAllByMaAndTenAndIdChatLieuAndIdLopLotAndIdDeGiayAndIdDanhMuc(pageable, ma, ten, chatLieu, lopLot, deGiay, danhMuc);
+//    }
+
+    public Page<SanPham> searchSanPham(
+            String ma,
+            String ten,
+            UUID idChatLieu,
+            UUID idLopLot,
+            UUID idHang,
+            UUID idDeGiay,
+            UUID idDanhMuc,
+            int page,
+            int size,
+            String sortField,
+            String sortDirection) {
+
+        Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortField); // Tạo Sort
+        Pageable pageable = PageRequest.of(page, size, sort); // Tạo Pageable
+
+        return sanPhamRepository.search(ma, ten, idChatLieu, idLopLot, idHang, idDeGiay, idDanhMuc, pageable);
     }
 
     public List<SanPhamChiTietDTO> mapToDTO(List<SanPhamChiTiet> entities) {

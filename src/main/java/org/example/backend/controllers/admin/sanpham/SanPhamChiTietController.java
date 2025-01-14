@@ -439,8 +439,24 @@ public class SanPhamChiTietController {
     }
 
     @GetMapping("/api/v1/product_v2")
-    public ResponseEntity<?> getAllSanPhamV2() {
-        return ResponseEntity.ok(sanPhamChiTietService.getAllSanPham());
+    public ResponseEntity<?> getAllSanPhamV2(
+            @RequestParam(required = false) String ma,
+            @RequestParam(required = false) String ten,
+            @RequestParam(required = false) UUID idChatLieu,
+            @RequestParam(required = false) UUID idLopLot,
+            @RequestParam(required = false) UUID idHang,
+            @RequestParam(required = false) UUID idDeGiay,
+            @RequestParam(required = false) UUID idDanhMuc,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size,
+            @RequestParam(defaultValue = "ngayTao") String sortField,
+            @RequestParam(defaultValue = "ASC") String sortDirection
+
+    ) {
+        Page<SanPham> result = sanPhamChiTietService.searchSanPham(
+                ma, ten, idChatLieu, idLopLot, idHang, idDeGiay, idDanhMuc, page, size, sortField, sortDirection);
+
+        return ResponseEntity.ok(result);
     }
 
 //    //check so luowng spct
