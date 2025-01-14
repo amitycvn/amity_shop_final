@@ -369,17 +369,22 @@ public interface SanPhamChiTietRepository extends JpaRepository<SanPhamChiTiet, 
                     s.idSanPham.idHang.ten as tenHang,
                     s.soLuong as soLuong,
                     COALESCE(d.id, '00000000-0000-0000-0000-000000000000') as dotGiamGia,
-                    COALESCE(d.loai, false ) as loaiGiamGia,
-                    COALESCE(d.giaTri, 0) as giaTriGiam,
+                    COALESCE(d.loai, false) as loaiGiamGia,
+                    CASE
+                        WHEN d.trangThai =:trangThai THEN COALESCE(d.giaTri, 0)
+                        ELSE 0
+                    END as giaTriGiam,
                     s.giaBan as giaBan,
                     CASE
-                        WHEN COALESCE(d.loai, false ) = false THEN s.giaBan * COALESCE(d.giaTri, 0) / 100
-                        ELSE COALESCE(d.giaTri, 0)
+                        WHEN d.trangThai =:trangThai AND COALESCE(d.loai, false) = false THEN s.giaBan * COALESCE(d.giaTri, 0) / 100
+                        WHEN d.trangThai =:trangThai THEN COALESCE(d.giaTri, 0)
+                        ELSE 0
                     END as giaGiam,
                     s.giaBan -
                     CASE
-                        WHEN COALESCE(d.loai, false ) = false THEN s.giaBan * COALESCE(d.giaTri, 0) / 100
-                        ELSE COALESCE(d.giaTri, 0)
+                        WHEN d.trangThai =:trangThai AND COALESCE(d.loai, false) = false THEN s.giaBan * COALESCE(d.giaTri, 0) / 100
+                        WHEN d.trangThai =:trangThai THEN COALESCE(d.giaTri, 0)
+                        ELSE 0
                     END as giaSauGiam,
                     s.hinhAnh,
                     COALESCE(s.moTa, 'Sản Phẩm Chất Lượng') as moTa,
@@ -394,7 +399,7 @@ public interface SanPhamChiTietRepository extends JpaRepository<SanPhamChiTiet, 
                 where s.id =:id 
                 order by giaSauGiam asc
             """)
-    List<banHangClient> getBanHangClientbyIDSPCT(UUID id);
+    List<banHangClient> getBanHangClientbyIDSPCT(UUID id,String trangThai);
     @Query("""
                 select new org.example.backend.dto.response.banHang.banHangClient(
                     s.id,
@@ -406,17 +411,22 @@ public interface SanPhamChiTietRepository extends JpaRepository<SanPhamChiTiet, 
                     s.idSanPham.idHang.ten as tenHang,
                     s.soLuong as soLuong,
                     COALESCE(d.id, '00000000-0000-0000-0000-000000000000') as dotGiamGia,
-                    COALESCE(d.loai, false ) as loaiGiamGia,
-                    COALESCE(d.giaTri, 0) as giaTriGiam,
+                    COALESCE(d.loai, false) as loaiGiamGia,
+                    CASE
+                        WHEN d.trangThai =:trangThai THEN COALESCE(d.giaTri, 0)
+                        ELSE 0
+                    END as giaTriGiam,
                     s.giaBan as giaBan,
                     CASE
-                        WHEN COALESCE(d.loai, false ) = false THEN s.giaBan * COALESCE(d.giaTri, 0) / 100
-                        ELSE COALESCE(d.giaTri, 0)
+                        WHEN d.trangThai =:trangThai AND COALESCE(d.loai, false) = false THEN s.giaBan * COALESCE(d.giaTri, 0) / 100
+                        WHEN d.trangThai =:trangThai THEN COALESCE(d.giaTri, 0)
+                        ELSE 0
                     END as giaGiam,
                     s.giaBan -
                     CASE
-                        WHEN COALESCE(d.loai, false ) = false THEN s.giaBan * COALESCE(d.giaTri, 0) / 100
-                        ELSE COALESCE(d.giaTri, 0)
+                        WHEN d.trangThai =:trangThai AND COALESCE(d.loai, false) = false THEN s.giaBan * COALESCE(d.giaTri, 0) / 100
+                        WHEN d.trangThai =:trangThai THEN COALESCE(d.giaTri, 0)
+                        ELSE 0
                     END as giaSauGiam,
                     s.hinhAnh,
                     COALESCE(s.moTa, 'Sản Phẩm Chất Lượng') as moTa,
@@ -431,6 +441,6 @@ public interface SanPhamChiTietRepository extends JpaRepository<SanPhamChiTiet, 
                 where s.id =:id 
                 order by giaSauGiam asc
             """)
-    List<banHangClient> getBanHangClientbyIDSPCTV2(UUID id);
+    List<banHangClient> getBanHangClientbyIDSPCTV2(UUID id,String trangThai);
 
 }
