@@ -99,7 +99,7 @@ public interface SanPhamChiTietRepository extends JpaRepository<SanPhamChiTiet, 
 
     @Query("""
                      select new org.example.backend.dto.response.SanPham.SanPhamChiTietRespon(s.id,s.idSanPham.id,
-                    s.idSanPham.ten,s.idMauSac.id,
+                    s.ten,s.idMauSac.id,
                     s.idMauSac.ten,s.idKichThuoc.id,s.idKichThuoc.ten,
                     s.soLuong,s.giaBan,s.giaNhap,s.trangThai,s.hinhAnh,s.moTa
                     )

@@ -1,6 +1,8 @@
 package org.example.backend.repositories;
 
+import org.example.backend.models.DotGiamGia;
 import org.example.backend.models.DotGiamGiaSpct;
+import org.example.backend.models.SanPhamChiTiet;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -23,6 +25,6 @@ public interface DotGiamGiaSpctRepository extends JpaRepository<DotGiamGiaSpct, 
             "AND dgg.hinh_thuc = N'Theo sản phẩm'", nativeQuery = true)
     List<DotGiamGiaSpct> findActiveDiscountsByProductDetail(UUID sanPhamChiTietId);
 
-
+    boolean existsByIdDotGiamGiaAndIdSpct(DotGiamGia idDotGiamGia, SanPhamChiTiet idSpct);
 
 }

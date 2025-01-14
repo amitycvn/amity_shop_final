@@ -32,4 +32,5 @@ public class TraHangReponse {
     private Instant ngayTao;
     private Instant ngaySua;
     private String lyDo;
+    private String hinhAnh;
 }

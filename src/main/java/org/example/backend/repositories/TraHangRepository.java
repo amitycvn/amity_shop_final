@@ -30,5 +30,7 @@ public interface TraHangRepository extends JpaRepository<TraHang, UUID> {
 
 
     List<TraHang> findAllByIdHoaDon(HoaDon hoaDon);
+
+    List<TraHang> findAllByIdNguoiDung(NguoiDung nguoiDung);
 }
 
