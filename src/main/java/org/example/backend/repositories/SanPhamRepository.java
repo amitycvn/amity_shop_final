@@ -74,6 +74,7 @@ public interface SanPhamRepository extends JpaRepository<SanPham, UUID> {
        "AND (:idHang IS NULL OR sp.idHang.id = :idHang) " +
        "AND (:idDeGiay IS NULL OR sp.idDeGiay.id = :idDeGiay) " +
        "AND (:idDanhMuc IS NULL OR sp.idDanhMuc.id = :idDanhMuc) " +
+       "AND (:trangThai IS NULL OR sp.trangThai = :trangThai) " +
        "AND sp.deleted = FALSE")
 Page<SanPham> search(
         @Param("ma") String ma,
@@ -83,5 +84,6 @@ Page<SanPham> search(
         @Param("idHang") UUID idHang,
         @Param("idDeGiay") UUID idDeGiay,
         @Param("idDanhMuc") UUID idDanhMuc,
+        @Param("trangThai") String trangThai,
         Pageable pageable);
 }
