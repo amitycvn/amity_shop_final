@@ -76,6 +76,22 @@ public interface NguoiDungRepository extends JpaRepository<NguoiDung, UUID> {
     Page<NhanVienRespon> searchUserNhanVien(Pageable pageable, String keyword, String gioiTinh, String trangThai);
 
     @Query("""
+        select new org.example.backend.dto.response.NhanVien.NhanVienRespon(
+            nd.id, nd.ma, nd.email, nd.sdt, nd.matKhau, nd.ten, nd.diaChi, nd.ngaySinh, nd.gioiTinh, nd.hinhAnh, nd.cccd, nd.chucVu, nd.trangThai, nd.deleted)
+        from NguoiDung nd
+        where nd.chucVu = 'khachhang' 
+        and nd.deleted = false
+        and (
+            (:keyword is null or :keyword = '' or 
+            lower(nd.ten) like lower(concat('%', :keyword, '%')) or
+            lower(nd.sdt) like lower(concat('%', :keyword, '%')) or
+            lower(nd.email) like lower(concat('%', :keyword, '%')))
+        )
+        and (:trangThai is null or :trangThai = '' or nd.trangThai = :trangThai)
+    """)
+    Page<NhanVienRespon> searchUserNhanVienBanHangTaiQuay(Pageable pageable, String keyword, String trangThai);
+
+    @Query("""
     select new org.example.backend.dto.response.NhanVien.NhanVienRespon(
         nd.id, nd.ma, nd.email, nd.sdt, nd.matKhau, nd.ten, nd.diaChi, nd.ngaySinh, 
         nd.gioiTinh, nd.hinhAnh, nd.cccd, nd.chucVu, nd.trangThai, nd.deleted

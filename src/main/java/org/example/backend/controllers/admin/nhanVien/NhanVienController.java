@@ -305,6 +305,20 @@
             return ResponseEntity.ok().body(responseData);
         }
 
+        @GetMapping("/api/v1/admin/tim-khach-hang")
+        public ResponseEntity<?> searchUserNhanVienBanHangTaiQuay(
+                @RequestParam(value = "page", defaultValue = "0") int page,
+                @RequestParam(value = "size", defaultValue = "5") int size,
+                @RequestParam(value = "keyword",defaultValue = "") String keyword
+        ) {
+            PageResponse<List<NhanVienRespon>> searchNhanVienValue = nhanVienService.searchNhanVienBanHangTaiQuay(page,size,keyword,"Hoạt động");
+            ResponseData<PageResponse<List<NhanVienRespon>>> responseData = ResponseData.<PageResponse<List<NhanVienRespon>>>builder()
+                    .message("Search Sale")
+                    .status(HttpStatus.OK.value())
+                    .data(searchNhanVienValue).build();
+            return ResponseEntity.ok().body(responseData);
+        }
+
         @GetMapping(USER_SORT)
         public ResponseEntity<List<NhanVienRespon>> sortUserNhanVien(
 
