@@ -1,9 +1,6 @@
 package org.example.backend.dto.request.banHang;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -12,6 +9,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Getter
 @Setter
+@ToString
 public class HoaDonChiTietRequestV2 {
     private UUID idSpct;
     private Integer soLuong;
