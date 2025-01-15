@@ -35,7 +35,14 @@ public class DotGiamGiaService extends GenericServiceImpl<DotGiamGia, UUID> {
     }
 
     public void setDeletedDotGiamGia(Boolean deleted, UUID id){
-        dotGiamGiaRepository.updateDetailDotGiamGia(deleted, id);
+        if (deleted==true){
+            DotGiamGia dotGiamGia =dotGiamGiaRepository.findById(id).orElse(null);
+            if (dotGiamGia!=null){
+                dotGiamGia.setDeleted(deleted);
+                dotGiamGia.setTrangThai("Bị hủy");
+            }
+        }
+
     }
 
     public PageResponse<List<DotGiamGiaResponse>> dotGiamGiaGetAllPaginate(int page, int size, String sortBy, String sortDir) {

@@ -166,8 +166,13 @@ public class DotGiamGiaController {
                         (dotGiamGiaCreate.getDieuKien() != -1 &&
                                 (dotGiamGiaCreate.getDieuKien() < 10000
                                         || dotGiamGiaCreate.getDieuKien() > 100000000))) {
+
+
                     return ResponseEntity.badRequest()
                             .body("Điều kiện phải lớn hơn 10,000, nhỏ hơn 100,000,000 hoặc bằng -1");
+                }
+                else if (dotGiamGiaCreate.getDieuKien().intValue() < dotGiamGiaCreate.getGiaTri().intValue()) {
+                    return ResponseEntity.badRequest().body("Điều kiện phải lớn hơn giá trị");
                 }
             } else {
                 return ResponseEntity.badRequest().body("Hình thức không hợp lệ");
@@ -332,8 +337,9 @@ public class DotGiamGiaController {
     public ResponseEntity<?> setSaleDelete(@PathVariable UUID id) {
         DotGiamGia d = dotGiamGiaService.findById(id).orElse(null);
         if (d != null) {
-            dotGiamGiaService.setDeletedDotGiamGia(!d.getDeleted(), id);
-            return ResponseEntity.ok().body("Set deleted id: " + id);
+            d.setDeleted(true);
+            d.setTrangThai("Bị hủy");
+            return ResponseEntity.ok().body(dotGiamGiaRepository.save(d));
         }
         return ResponseEntity.notFound().build();
     }
