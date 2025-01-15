@@ -22,6 +22,7 @@ public interface DotGiamGiaSpctRepository extends JpaRepository<DotGiamGiaSpct, 
             "WHERE spg.id_spct = :sanPhamChiTietId " +
             "AND dgg.ngay_bat_dau <= CURRENT_TIMESTAMP " +
             "AND dgg.ngay_ket_thuc >= CURRENT_TIMESTAMP " +
+            "AND dgg.trang_thai = N'Hoạt động' " +
             "AND dgg.hinh_thuc = N'Theo sản phẩm'", nativeQuery = true)
     List<DotGiamGiaSpct> findActiveDiscountsByProductDetail(UUID sanPhamChiTietId);
 

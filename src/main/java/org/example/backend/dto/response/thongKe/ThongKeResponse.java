@@ -22,10 +22,11 @@ import java.util.UUID;
 
 public class ThongKeResponse {
     private UUID idHoaDon;           // ID hóa đơn
-    private Long tongSoLuong;      // Tổng số lượng bán ra
+    private Long tongSoLuong;
+    private BigDecimal phiVanChuyen;// Tổng số lượng bán ra
     private BigDecimal doanhThu;         // Doanh thu sau chiết khấu
     private BigDecimal tongGiaNhap;      // Tổng giá nhập
-    private BigDecimal lai;              // Lợi nhuận
+    private BigDecimal lai;
     private String trangThai;        // Trạng thái
     private Boolean deleted;
 }
