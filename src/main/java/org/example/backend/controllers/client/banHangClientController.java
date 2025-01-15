@@ -3,6 +3,7 @@ package org.example.backend.controllers.client;
 import org.example.backend.common.PageResponse;
 import org.example.backend.common.ResponseData;
 import org.example.backend.constants.api.Admin;
+import org.example.backend.controllers.admin.banHang.BanHangClientResponse;
 import org.example.backend.dto.request.phieuGiamGia.phieuGiamGiaRequestAdd;
 import org.example.backend.dto.response.banHang.banHangClient;
 import org.example.backend.dto.response.banHang.banHangClientResponse;
@@ -147,12 +148,12 @@ public class banHangClientController {
             @RequestParam(value = "giaMax", required = false) BigDecimal giaMax
     ) {
         // Gọi service để lấy dữ liệu
-        PageResponse<List<banHangClientResponse>> bhPage = sanPhamChiTietService.searchBanHangClient(
+        PageResponse<List<BanHangClientResponse>> bhPage = sanPhamChiTietService.searchBanHangClient(
                 page, itemsPerPage, tenSp, tenKichThuoc, tenMauSac,tenDanhMuc,tenHang,giaMin, giaMax
         );
 
         // Tạo ResponseData
-        ResponseData<PageResponse<List<banHangClientResponse>>> responseData = ResponseData.<PageResponse<List<banHangClientResponse>>>builder()
+        ResponseData<PageResponse<List<BanHangClientResponse>>> responseData = ResponseData.<PageResponse<List<BanHangClientResponse>>>builder()
                 .message("Get all banHangClient done")
                 .status(HttpStatus.OK.value())
                 .data(bhPage)

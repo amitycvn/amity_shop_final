@@ -3,6 +3,7 @@ package org.example.backend.services;
 import jakarta.persistence.EntityNotFoundException;
 import org.example.backend.common.PageResponse;
 import org.example.backend.constants.Status;
+import org.example.backend.controllers.admin.banHang.BanHangClientResponse;
 import org.example.backend.dto.request.sanPhamV2.SanPhamChiTietRequest;
 import org.example.backend.dto.request.sanPhamV2.SanPhamChiTietV2Request;
 import org.example.backend.dto.response.NhanVien.NhanVienRespon;
@@ -78,17 +79,17 @@ public class SanPhamChiTietService extends GenericServiceImpl<SanPhamChiTiet, UU
                 .items(bhPage.getContent()).build();
     }
 
-    public PageResponse<List<banHangClientResponse>> searchBanHangClient(
+    public PageResponse<List<BanHangClientResponse>> searchBanHangClient(
             int page, int itemsPerPage,
             String tenSp, String tenKichThuoc, String tenMauSac,String tenDanhMuc,String tenHang,
             BigDecimal giaMin, BigDecimal giaMax
     ) {
         Pageable pageable = PageRequest.of(page, itemsPerPage);
-        Page<banHangClientResponse> results = SPCTRepository.searchBanHangClient(
-                tenSp, tenKichThuoc, tenMauSac, giaMin, giaMax, pageable
+        Page<BanHangClientResponse> results = SPCTRepository.searchBanHangClient(
+                tenSp, tenKichThuoc, tenMauSac, giaMin, giaMax, "Hoạt động", "Hoạt động", pageable
         );
 
-        return PageResponse.<List<banHangClientResponse>>builder()
+        return PageResponse.<List<BanHangClientResponse>>builder()
                 .page(results.getNumber())
                 .size(results.getSize())
                 .totalPage(results.getTotalPages())
