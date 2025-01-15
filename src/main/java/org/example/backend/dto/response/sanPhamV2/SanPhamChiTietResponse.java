@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
@@ -37,6 +38,20 @@ public class SanPhamChiTietResponse {
         private Integer soLuong;
         private String hinhAnh;
         private Boolean deleted;
+        private List<Sale> sales; // Thông tin giảm giá
+
+        @AllArgsConstructor
+        @Getter
+        @Setter
+        public static class Sale {
+            private UUID id;// ID của đợt giảm giá
+            private String ma;
+            private String ten;           // Tên đợt giảm giá
+            private Boolean loai;
+            private BigDecimal giaTri;
+            private Instant ngayBatDau;// Thời gian bắt đầu
+            private Instant ngayKetThuc;// Thời gian kết thúc
+        }
     }
 
 }

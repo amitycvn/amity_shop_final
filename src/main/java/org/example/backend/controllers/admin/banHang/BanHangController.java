@@ -246,11 +246,12 @@ public ResponseEntity<?> create() {
     @PostMapping("/api/v1/client/sellClient/checkThongTinHoaDon1")
     public ResponseEntity<?> checkThongTinHoaDon1(@RequestBody thongTinHoaDon request) {
         String hoatDong = "Hoạt động";
-
+        System.out.println("ksahdfisuhfisu"+request.getListHoaDonChiTiet());
         for (HoaDonChiTietRequestV2 hdct : request.getListHoaDonChiTiet()) {
             banHangClient hd = sanPhamChiTietService.getbanHangClientbyIDSPCTV2(hdct.getIdSpct());
             BigDecimal giaNhapRounded = hd.getGiaSauGiam().setScale(0, RoundingMode.HALF_UP);
-
+            System.out.println("sdjgfsjdgfjsdgjs"+giaNhapRounded);
+            System.out.println("sdjgfsjdgfjsdgjs"+hdct.getGia());
             if (hdct.getGia().compareTo(giaNhapRounded) != 0) {
                 return ResponseEntity.badRequest().body("Giá sản phẩm đã thay đổi");
             }

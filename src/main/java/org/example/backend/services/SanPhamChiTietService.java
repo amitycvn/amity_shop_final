@@ -48,6 +48,8 @@ public class SanPhamChiTietService extends GenericServiceImpl<SanPhamChiTiet, UU
     private LopLotRepository lopLotRepository;
     @Autowired
     private ChatLieuRepository chatLieuRepository;
+    @Autowired
+    private DotGiamGiaSpctRepository dotGiamGiaSpctRepository;
 
     public SanPhamChiTietService(JpaRepository<SanPhamChiTiet, UUID> repository, SanPhamChiTietRepository SPCTRepository) {
         super(repository);
@@ -167,11 +169,8 @@ public class SanPhamChiTietService extends GenericServiceImpl<SanPhamChiTiet, UU
                 new EntityNotFoundException("Sản phẩm không tồn tại.")
         );
 
-
-
         // Tìm các sản phẩm chi tiết liên quan
         List<SanPhamChiTiet> chiTietList = sanPhamChiTietRepository.findByIdSanPhamAndTrangThai(sanPham, "Hoạt động");
-
         if (chiTietList.isEmpty()) {
             throw new EntityNotFoundException("Không có sản phẩm chi tiết cho sản phẩm này.");
         }
@@ -183,19 +182,38 @@ public class SanPhamChiTietService extends GenericServiceImpl<SanPhamChiTiet, UU
                 sanPham.getIdChatLieu() != null ? sanPham.getIdChatLieu().getTen() : "Chưa có",
                 sanPham.getIdLopLot() != null ? sanPham.getIdLopLot().getTen() : "Chưa có",
                 chiTietList.stream()
-                        .map(item -> new SanPhamChiTietResponse.Variant(
-                                item.getId(),
-                                item.getTen(),
-                                item.getIdMauSac() != null ? item.getIdMauSac().getTen() : "Chưa có",
-                                item.getIdKichThuoc() != null ? item.getIdKichThuoc().getTen() : "Chưa có",
-                                item.getGiaBan(),
-                                item.getSoLuong(),
-                                item.getHinhAnh(),
-                                item.getDeleted()
-                        ))
+                        .map(item -> {
+                            // Lấy thông tin các đợt giảm giá
+                            List<SanPhamChiTietResponse.Variant.Sale> sales = dotGiamGiaSpctRepository
+                                    .findActiveDiscountsByProductDetail(item.getId())
+                                    .stream()
+                                    .map(discount -> new SanPhamChiTietResponse.Variant.Sale(
+                                            discount.getId(),
+                                            discount.getIdDotGiamGia().getTen(),
+                                            discount.getIdDotGiamGia().getMa(),
+                                            discount.getIdDotGiamGia().getLoai(),
+                                            discount.getIdDotGiamGia().getGiaTri(),
+                                            discount.getIdDotGiamGia().getNgayBatDau(),
+                                            discount.getIdDotGiamGia().getNgayKetThuc()
+                                    ))
+                                    .collect(Collectors.toList());
+
+                            return new SanPhamChiTietResponse.Variant(
+                                    item.getId(),
+                                    item.getTen(),
+                                    item.getIdMauSac() != null ? item.getIdMauSac().getTen() : "Chưa có",
+                                    item.getIdKichThuoc() != null ? item.getIdKichThuoc().getTen() : "Chưa có",
+                                    item.getGiaBan(),
+                                    item.getSoLuong(),
+                                    item.getHinhAnh(),
+                                    item.getDeleted(),
+                                    sales
+                            );
+                        })
                         .collect(Collectors.toList())
         );
     }
+
 
 //    public Page<SanPham> getAllSanPham(Pageable pageable, String ma, String ten, ChatLieu chatLieu, LopLot lopLot, DeGiay deGiay, DanhMuc danhMuc){
 //        return sanPhamRepository.findAllByMaAndTenAndIdChatLieuAndIdLopLotAndIdDeGiayAndIdDanhMuc(pageable, ma, ten, chatLieu, lopLot, deGiay, danhMuc);
@@ -266,7 +284,7 @@ public banHangClient getbanHangClientbyIDSPCT(UUID id) {
 }
 
 public banHangClient getbanHangClientbyIDSPCTV2(UUID id) {
-   List<banHangClient> bhClient = SPCTRepository.getBanHangClientbyIDSPCTV2(id);
+   List<banHangClient> bhClient = SPCTRepository.getBanHangClientbyIDSPCTV2(id, "Hoạt động");
     return bhClient.get(0);
 }
 
