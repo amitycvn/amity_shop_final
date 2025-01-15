@@ -476,7 +476,6 @@
                 @RequestParam(value = "ngaySinh",defaultValue = "") Instant ngaySinh,
                 @RequestParam(value = "gioiTinh",defaultValue = "") String gioiTinh,
                 @RequestParam(value = "hinhAnh" , required = false) MultipartFile hinhAnh,
-                @RequestParam(value = "cccd" , defaultValue = "") String cccd,
                 @RequestParam(value = "trangThai" ,defaultValue = "") String trangThai
         ) throws IOException {
             Optional<NguoiDung> exitNguoiDung = nhanVienService.findById(id);
@@ -504,14 +503,8 @@
             if (gioiTinh.trim().isEmpty()) {
                 return ResponseEntity.badRequest().body("Giới tính không được để trống.");
             }
-            if (cccd.trim().isEmpty()) {
-                return ResponseEntity.badRequest().body("CCCD không được để trống.");
-            }
             if (trangThai.trim().isEmpty()) {
                 return ResponseEntity.badRequest().body("Trạng thái không được để trống.");
-            }
-            if (!cccd.matches("\\d{12}")) {
-                return ResponseEntity.badRequest().body("CCCD phải có đúng 12 chữ số.");
             }
             if (!sdt.matches("\\d{10}")) {
                 return ResponseEntity.badRequest().body("Số điện thoại phải có đúng 10 chữ số.");
@@ -535,7 +528,6 @@
             } else {
                 nd.setHinhAnh(nd.getHinhAnh());
             }
-            nd.setCccd(cccd);
             nd.setTrangThai(trangThai);
 
             nhanVienService.save(nd);
