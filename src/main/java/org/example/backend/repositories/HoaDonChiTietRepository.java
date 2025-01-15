@@ -41,9 +41,10 @@ public interface HoaDonChiTietRepository extends JpaRepository<HoaDonChiTiet, UU
     SELECT new org.example.backend.dto.response.thongKe.ThongKeResponse(
         hd.id,
         SUM(hdct.soLuong),
-        SUM(hdct.idHoaDon.tongTien-  COALESCE(hdct.giaGiam, 0)),
+        SUM(hdct.idHoaDon.tienVanChuyen),
+        SUM(hdct.idHoaDon.tongTien-  COALESCE(hdct.idHoaDon.tienVanChuyen, 0)),
         SUM(hdct.soLuong * spct.giaNhap),
-        (SUM(hdct.idHoaDon.tongTien-  COALESCE(hdct.giaGiam, 0))) - (SUM(hdct.soLuong * spct.giaNhap)),
+        (SUM(hdct.idHoaDon.tongTien-  COALESCE(hdct.idHoaDon.tienVanChuyen, 0))) - (SUM(hdct.soLuong * spct.giaNhap)),
         hd.trangThai,
         hd.deleted)
     FROM HoaDonChiTiet hdct
@@ -62,9 +63,10 @@ public interface HoaDonChiTietRepository extends JpaRepository<HoaDonChiTiet, UU
     SELECT new org.example.backend.dto.response.thongKe.ThongKeResponse(
         hd.id,
         SUM(hdct.soLuong),
-        SUM(hdct.idHoaDon.tongTien-  COALESCE(hdct.giaGiam, 0)),
+         SUM(hdct.idHoaDon.tienVanChuyen),
+         SUM(hdct.idHoaDon.tongTien-  COALESCE(hdct.idHoaDon.tienVanChuyen, 0)),
         SUM(hdct.soLuong * spct.giaNhap),
-        (SUM(hdct.idHoaDon.tongTien-  COALESCE(hdct.giaGiam, 0))) - (SUM(hdct.soLuong * spct.giaNhap)),
+      (SUM(hdct.idHoaDon.tongTien-  COALESCE(hdct.idHoaDon.tienVanChuyen, 0))) - (SUM(hdct.soLuong * spct.giaNhap)),
         hd.trangThai,
         hd.deleted)
     FROM HoaDonChiTiet hdct
@@ -82,9 +84,10 @@ public interface HoaDonChiTietRepository extends JpaRepository<HoaDonChiTiet, UU
     SELECT new org.example.backend.dto.response.thongKe.ThongKeResponse(
         hd.id,
         SUM(hdct.soLuong),
-        SUM(hdct.idHoaDon.tongTien-  COALESCE(hdct.giaGiam, 0)),
+         SUM(hdct.idHoaDon.tienVanChuyen),
+        SUM(hdct.idHoaDon.tongTien-  COALESCE(hdct.idHoaDon.tienVanChuyen, 0)),
         SUM(hdct.soLuong * spct.giaNhap),
-        (SUM(hdct.idHoaDon.tongTien-  COALESCE(hdct.giaGiam, 0))) - (SUM(hdct.soLuong * spct.giaNhap)),
+        (SUM(hdct.idHoaDon.tongTien-  COALESCE(hdct.idHoaDon.tienVanChuyen, 0))) - (SUM(hdct.soLuong * spct.giaNhap)),
         hd.trangThai,
         hd.deleted)
     FROM HoaDonChiTiet hdct
@@ -104,9 +107,10 @@ public interface HoaDonChiTietRepository extends JpaRepository<HoaDonChiTiet, UU
     SELECT new org.example.backend.dto.response.thongKe.ThongKeResponse(
         hd.id,
         SUM(hdct.soLuong),
-        SUM(hdct.idHoaDon.tongTien - COALESCE(hdct.giaGiam, 0)),
+         SUM(hdct.idHoaDon.tienVanChuyen),
+        SUM(hdct.idHoaDon.tongTien),
         SUM(hdct.soLuong * spct.giaNhap),
-        (SUM(hdct.idHoaDon.tongTien - COALESCE(hdct.giaGiam, 0))) - (SUM(hdct.soLuong * spct.giaNhap)),
+        (SUM(hdct.idHoaDon.tongTien-  COALESCE(hdct.idHoaDon.tienVanChuyen, 0))) - (SUM(hdct.soLuong * spct.giaNhap)),
         hd.trangThai,
         hd.deleted)
     FROM HoaDonChiTiet hdct

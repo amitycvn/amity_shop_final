@@ -63,6 +63,8 @@ public class BanHangController {
     @Autowired
     private DotGiamGiaSpctRepository dotGiamGiaSpctRepository;
     @Autowired
+    private DotGiamGiaRepository dotGiamGiaRepository;
+    @Autowired
     private NguoiDungRepository nguoiDungRepository;
 
     //    @GetMapping(Admin.SELL_GET_ALL)
@@ -244,14 +246,22 @@ public ResponseEntity<?> create() {
 
     // check hóa đơn tại quầy
     @PostMapping("/api/v1/client/sellClient/checkThongTinHoaDon1")
-    public ResponseEntity<?> checkThongTinHoaDon1(@RequestBody thongTinHoaDon request) {
+    public ResponseEntity<?> checkThongTinHoaDon1(@RequestBody thongTinHoaDon request, @RequestParam(value = "idDgg", required = false) UUID idDgg) {
         String hoatDong = "Hoạt động";
         System.out.println("ksahdfisuhfisu"+request.getListHoaDonChiTiet());
+        if (idDgg != null){
+            try {
+                if(!dotGiamGiaRepository.findById(idDgg).orElse(null).getTrangThai().equals(hoatDong)){
+                    return ResponseEntity.badRequest().body("Đợt giảm giá đã thay đổi");
+                }
+            }catch (Exception e) {
+                e.printStackTrace();
+                return ResponseEntity.badRequest().body("Đợt giảm giá Không Tồn Tại");
+            }
+        }
         for (HoaDonChiTietRequestV2 hdct : request.getListHoaDonChiTiet()) {
             banHangClient hd = sanPhamChiTietService.getbanHangClientbyIDSPCTV2(hdct.getIdSpct());
             BigDecimal giaNhapRounded = hd.getGiaSauGiam().setScale(0, RoundingMode.HALF_UP);
-            System.out.println("sdjgfsjdgfjsdgjs"+giaNhapRounded);
-            System.out.println("sdjgfsjdgfjsdgjs"+hdct.getGia());
             if (hdct.getGia().compareTo(giaNhapRounded) != 0) {
                 return ResponseEntity.badRequest().body("Giá sản phẩm đã thay đổi");
             }
