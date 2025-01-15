@@ -123,8 +123,8 @@ public class DotGiamGiaController {
 
             // Kiểm tra tên
             if (dotGiamGiaCreate.getTen().trim() == null || dotGiamGiaCreate.getTen().trim().isBlank() ||
-                    dotGiamGiaCreate.getTen().trim().length() < 5 || dotGiamGiaCreate.getTen().trim().length() > 20) {
-                return ResponseEntity.badRequest().body("Tên phải có độ dài từ 5 đến 20 ký tự");
+                    dotGiamGiaCreate.getTen().trim().length() < 5 || dotGiamGiaCreate.getTen().trim().length() > 50) {
+                return ResponseEntity.badRequest().body("Tên phải có độ dài từ 5 đến 50 ký tự");
             }
 
             // Kiểm tra giá trị

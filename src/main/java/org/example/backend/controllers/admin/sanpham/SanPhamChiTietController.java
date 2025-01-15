@@ -452,7 +452,7 @@ public class SanPhamChiTietController {
             @RequestParam(required = false) UUID idDeGiay,
             @RequestParam(required = false) UUID idDanhMuc,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "5") int size,
+            @RequestParam(defaultValue = "8") int size,
             @RequestParam(defaultValue = "ngayTao") String sortField,
             @RequestParam(defaultValue = "ASC") String sortDirection
 
