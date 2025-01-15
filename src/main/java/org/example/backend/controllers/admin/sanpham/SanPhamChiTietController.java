@@ -101,7 +101,7 @@ public class SanPhamChiTietController {
             boolean exists = sanPhamChiTietRepository.existsByIdSanPhamAndIdMauSacAndIdKichThuoc(
                     sanPhamRepository.findById(idSanPham).orElse(null), idMauSac, idKichThuoc);
             if (exists) {
-                return ResponseEntity.badRequest().body("Biến thể đã tồn tại trong sản phẩm chi tiết!");
+                return ResponseEntity.badRequest().body("Biến thể màu "+idMauSac.getTen()+" và kích thước "+idKichThuoc.getTen()+"đã tồn tại trong sản phẩm chi tiết!");
             }
             String tenSpct = sanPhamRepository.findById(idSanPham).orElse(null).getTen() + " - " + idKichThuoc.getTen() + " - " + idMauSac.getTen();
             // Tạo mới sản phẩm chi tiết
