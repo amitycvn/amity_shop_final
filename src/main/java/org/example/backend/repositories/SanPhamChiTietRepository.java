@@ -1,6 +1,7 @@
 package org.example.backend.repositories;
 
 import jakarta.transaction.Transactional;
+import org.example.backend.controllers.admin.banHang.BanHangClientResponse;
 import org.example.backend.dto.request.dotGiamGia.DotGiamGiaSearch;
 import org.example.backend.dto.request.sanPham.SanPhamChiTietSearchRequest;
 import org.example.backend.dto.request.sanPham.SanPhamChiTietSearchRequest2;
@@ -209,12 +210,14 @@ public interface SanPhamChiTietRepository extends JpaRepository<SanPhamChiTiet, 
     // tim kiem spct ben client
 
     @Query("""
-                select new org.example.backend.dto.response.banHang.banHangClientResponse(
+                select new org.example.backend.controllers.admin.banHang.BanHangClientResponse(
                     s.id,
                     s.idSanPham.ten as tenSp,
                     s.ten as tenSpct,
                     s.idMauSac.ten as tenMauSac,
                     s.idKichThuoc.ten as tenKichThuoc,
+                    s.idSanPham.idHang.ten as tenHang,
+                    s.idSanPham.idDanhMuc.ten as tenDanhMuc,
                     s.soLuong as soLuong,
                     COALESCE(d.id, '00000000-0000-0000-0000-000000000000') as dotGiamGia,
                     COALESCE(d.loai, false) as loaiGiamGia,
@@ -244,14 +247,19 @@ public interface SanPhamChiTietRepository extends JpaRepository<SanPhamChiTiet, 
                   and (:tenMauSac is null or s.idMauSac.ten like %:tenMauSac%)
                   and (:giaMin is null or s.giaBan >= :giaMin)
                   and (:giaMax is null or s.giaBan <= :giaMax)
+                  and (:spTrangThai is null or s.idSanPham.trangThai = :spTrangThai)
+                  and (:spctTrangThai is null or s.trangThai = :spctTrangThai)
             """)
-    Page<banHangClientResponse> searchBanHangClient(
+    Page<BanHangClientResponse> searchBanHangClient(
             @Param("tenSp") String tenSp,
             @Param("tenKichThuoc") String tenKichThuoc,
             @Param("tenMauSac") String tenMauSac,
             @Param("giaMin") BigDecimal giaMin,
             @Param("giaMax") BigDecimal giaMax,
-            Pageable pageable);
+            String spTrangThai,
+            String spctTrangThai,
+            Pageable pageable
+    );
 
     // lấy ra 5 sản phẩm mới nhất
 
