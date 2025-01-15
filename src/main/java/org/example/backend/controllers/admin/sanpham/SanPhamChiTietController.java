@@ -81,6 +81,7 @@ public class SanPhamChiTietController {
     @PostMapping(value = Admin.PRODUCT_DETAIL_CREATE, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> create(
             @PathVariable("id") UUID idSanPham,
+
             @RequestParam("idMauSac") MauSac idMauSac,
             @RequestParam("idKichThuoc") KichThuoc idKichThuoc,
             @RequestParam("soLuong") int soLuong,
@@ -102,10 +103,13 @@ public class SanPhamChiTietController {
             if (exists) {
                 return ResponseEntity.badRequest().body("Biến thể đã tồn tại trong sản phẩm chi tiết!");
             }
-
+            String tenSpct = sanPhamRepository.findById(idSanPham).orElse(null).getTen() + " - " + idKichThuoc.getTen() + " - " + idMauSac.getTen();
             // Tạo mới sản phẩm chi tiết
             SanPhamChiTiet s = new SanPhamChiTiet();
+            // Tạo tên sản phẩm chi tiết
+
             s.setIdSanPham(sanPhamRepository.findById(idSanPham).orElse(null));
+            s.setTen(tenSpct);
             s.setIdMauSac(idMauSac);
             s.setIdKichThuoc(idKichThuoc);
             s.setSoLuong(soLuong);

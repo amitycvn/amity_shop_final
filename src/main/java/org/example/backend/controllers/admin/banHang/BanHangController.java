@@ -281,7 +281,7 @@ public ResponseEntity<?> create() {
             }
             String trangThaiPhieuGiamGia = "Đang diễn ra";
             if (!phieuGiamGia.getTrangThai().equals(trangThaiPhieuGiamGia)) {
-                return ResponseEntity.badRequest().body("Phiếu giảm giá chưa được diễn ra");
+                return ResponseEntity.badRequest().body("Phiếu giảm giá chưa được diễn ra hoặc kết thúc");
             }
             if (phieuGiamGia.getGiaTri().compareTo(request.getIdPhieuGiamGia().getGiaTri()) != 0) {
                 return ResponseEntity.badRequest().body("Phiếu giảm giá đã thay đổi");
