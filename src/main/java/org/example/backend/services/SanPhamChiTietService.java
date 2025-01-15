@@ -279,14 +279,15 @@ public boolean checkProductQuantity(UUID productId, int requiredQuantity) {
 
 
 public banHangClient getbanHangClientbyIDSPCT(UUID id) {
-   List<banHangClient> bhClient = SPCTRepository.getBanHangClientbyIDSPCT(id);
+    String trangThai = "Hoạt động";
+   List<banHangClient> bhClient = SPCTRepository.getBanHangClientbyIDSPCT(id,trangThai);
     return bhClient.get(0);
 }
 
-public banHangClient getbanHangClientbyIDSPCTV2(UUID id) {
-   List<banHangClient> bhClient = SPCTRepository.getBanHangClientbyIDSPCTV2(id, "Hoạt động");
+public banHangClient getbanHangClientbyIDSPCTV2(UUID id) {  
+    String trangThai = "Hoạt động";
+   List<banHangClient> bhClient = SPCTRepository.getBanHangClientbyIDSPCTV2(id,trangThai);
     return bhClient.get(0);
 }
-
 
 }
