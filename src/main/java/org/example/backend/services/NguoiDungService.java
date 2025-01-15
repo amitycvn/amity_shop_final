@@ -76,6 +76,16 @@ public class NguoiDungService extends GenericServiceImpl<NguoiDung, UUID> {
                 .items(seacrchNhanVienPaginate.getContent()).build();
     }
 
+    public PageResponse<List<NhanVienRespon>> searchNhanVienBanHangTaiQuay(int page, int size, String keyword, String trangThai) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<NhanVienRespon> seacrchNhanVienPaginate = nguoiDungRepository.searchUserNhanVienBanHangTaiQuay(pageable, keyword, trangThai);
+        return PageResponse.<List<NhanVienRespon>>builder()
+                .page(seacrchNhanVienPaginate.getNumber())
+                .size(seacrchNhanVienPaginate.getSize())
+                .totalPage(seacrchNhanVienPaginate.getTotalPages())
+                .items(seacrchNhanVienPaginate.getContent()).build();
+    }
+
     public List<NhanVienRespon> sortNhanVien() {
         return nguoiDungRepository.sortNhanVien();
     }
