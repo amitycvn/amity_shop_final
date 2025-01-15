@@ -261,11 +261,11 @@ public ResponseEntity<?> create() {
             }
 
             // Kiểm tra trạng thái sản phẩm
-            if (hd.getTrangThai() == null || !hd.getTrangThai().equals(hoatDong)) {
-                return ResponseEntity.badRequest().body("Sản phẩm đã ngừng bán");
+            if (hd.getTrangThai().trim() == null || !hd.getTrangThai().trim().equals(hoatDong)) {
+                return ResponseEntity.badRequest().body("Sản phẩm đã ngừng bán ");
             }
-            if (hd.getTrangThaiSanPham() == null || !hd.getTrangThaiSanPham().equals(hoatDong)) {
-                return ResponseEntity.badRequest().body("Sản phẩm đã ngừng bán");
+            if (hd.getTrangThaiSanPham().trim() == null || !hd.getTrangThaiSanPham().trim().equals(hoatDong)) {
+                return ResponseEntity.badRequest().body("Sản phẩm đã ngừng bán ");
             }
         }
 
