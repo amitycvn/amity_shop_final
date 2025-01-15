@@ -262,8 +262,9 @@ public interface NguoiDungRepository extends JpaRepository<NguoiDung, UUID> {
     @Query("""
     select nd
     from NguoiDung nd
-    where nd.ma = :ma and nd.deleted = false
+    where nd.id = :id and nd.deleted = false and nd.trangThai=:trangThai
 """)
-    Boolean findByMa(@Param("ma") String ma);
+    Boolean findByIdNguoiDung(@Param("id") String id);
+
 
 }
