@@ -425,6 +425,11 @@ public class SanPhamChiTietController {
         return ResponseEntity.ok(sanPhamChiTiets);
     }
 
+    @PutMapping("/api/v1/admin/product/update-status/{id}")
+    public ResponseEntity<?> updateSanPhamChiTiet(@PathVariable UUID id) {
+        return ResponseEntity.ok().body(sanPhamChiTietRepository.updateTrangThaiByIdSanPham(id, "Hoạt động"));
+    }
+
     @GetMapping("/api/v1/admin/product/get-all")
     public ResponseEntity<?> getAllSanPhamChiTiet() {
         return ResponseEntity.ok(sanPhamChiTietRepository.findAll());

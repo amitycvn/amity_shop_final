@@ -157,7 +157,8 @@ public class SanPhamChiTietService extends GenericServiceImpl<SanPhamChiTiet, UU
                 chiTiet.setSoLuong(request.getSoLuong());
                 chiTiet.setMoTa(request.getMoTa());
                 chiTiet.setTen(chiTiet.getIdSanPham().getTen()+" - "+chiTiet.getIdKichThuoc().getTen()+" - "+chiTiet.getIdMauSac().getTen());
-                chiTiet.setTrangThai(Status.DANG_DUOC_KHOI_TAO);
+                chiTiet.setTrangThai(Status.HOAT_DONG);
+                chiTiet.setHinhAnh("https://res.cloudinary.com/dlwrhv088/image/upload/v1736578615/kucjd9rq8fvobvtcdst5.jpg");
                 sanPhamChiTiets.add(chiTiet);
             }
         }
