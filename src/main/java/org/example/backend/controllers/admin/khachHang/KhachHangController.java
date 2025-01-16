@@ -349,7 +349,8 @@ public class KhachHangController {
 
     @GetMapping(CUSTOMER_GET_BY_SDT)
     public ResponseEntity<?> getAllCustomerBySDT(@RequestParam(value = "sdt", defaultValue = "") String sdt) {
-        return ResponseEntity.ok(nguoiDungRepository.timKiemSDT(sdt));
+        String trangThai = "Hoạt động";
+        return ResponseEntity.ok(nguoiDungRepository.timKiemSDT(sdt,trangThai));
     }
 
     @GetMapping(CUSTOMER_SORT)
@@ -367,5 +368,6 @@ public class KhachHangController {
             @RequestParam(value = "password", defaultValue = "") String password) {
         return ResponseEntity.ok(khachHangService.login(email, password));
     }
+
 
 }

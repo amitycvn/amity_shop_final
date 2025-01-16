@@ -38,37 +38,36 @@ public interface HoaDonChiTietRepository extends JpaRepository<HoaDonChiTiet, UU
 //    Page<QuanLyDonHangRespose> getByPageHoaDon(Pageable pageable);
 
     @Query("""
-    SELECT new org.example.backend.dto.response.thongKe.ThongKeResponse(
-        hd.id,
-        SUM(hdct.soLuong),
-        SUM(hdct.idHoaDon.tienVanChuyen),
-        SUM(hdct.idHoaDon.tongTien-  COALESCE(hdct.idHoaDon.tienVanChuyen, 0)),
-        SUM(hdct.soLuong * spct.giaNhap),
-        (SUM(hdct.idHoaDon.tongTien-  COALESCE(hdct.idHoaDon.tienVanChuyen, 0))) - (SUM(hdct.soLuong * spct.giaNhap)),
-        hd.trangThai,
-        hd.deleted)
-    FROM HoaDonChiTiet hdct
-    JOIN HoaDon hd ON hdct.idHoaDon.id = hd.id
-    JOIN SanPhamChiTiet spct ON hdct.idSpct.id = spct.id
-    LEFT JOIN PhieuGiamGia pg ON hdct.idHoaDon.idPhieuGiamGia.id = pg.id
-    LEFT JOIN DotGiamGia dg ON hdct.idHoaDon.idDotGiamGia.id = dg.id
-    WHERE hd.trangThai = :trangThai
-      AND hd.deleted = false
-      AND FUNCTION('YEAR', hd.ngayTao) = :year
-    GROUP BY hd.id, hd.trangThai, hd.deleted
-""")
+        SELECT new org.example.backend.dto.response.thongKe.ThongKeResponse(
+            hd.id,
+            SUM(hdct.soLuong),
+            MAX(hdct.idHoaDon.tienVanChuyen),
+            MAX(hdct.idHoaDon.tongTien - COALESCE(hdct.idHoaDon.tienVanChuyen, 0)),
+            SUM(hdct.soLuong * spct.giaNhap),
+            MAX(hdct.idHoaDon.tongTien - COALESCE(hdct.idHoaDon.tienVanChuyen, 0)) - SUM(hdct.soLuong * spct.giaNhap),
+            hd.trangThai,
+            hd.deleted)
+        FROM HoaDonChiTiet hdct
+        JOIN HoaDon hd ON hdct.idHoaDon.id = hd.id
+        JOIN SanPhamChiTiet spct ON hdct.idSpct.id = spct.id
+        WHERE hd.trangThai = :trangThai
+          AND hd.deleted = false
+          AND FUNCTION('YEAR', hd.ngayTao) = :year
+        GROUP BY hd.id, hd.trangThai, hd.deleted
+    """)
     List<ThongKeResponse> getAllThongKe(@Param("trangThai") String trangThai, @Param("year") int year);
+
 
     @Query("""
     SELECT new org.example.backend.dto.response.thongKe.ThongKeResponse(
-        hd.id,
-        SUM(hdct.soLuong),
-         SUM(hdct.idHoaDon.tienVanChuyen),
-         SUM(hdct.idHoaDon.tongTien-  COALESCE(hdct.idHoaDon.tienVanChuyen, 0)),
-        SUM(hdct.soLuong * spct.giaNhap),
-      (SUM(hdct.idHoaDon.tongTien-  COALESCE(hdct.idHoaDon.tienVanChuyen, 0))) - (SUM(hdct.soLuong * spct.giaNhap)),
-        hd.trangThai,
-        hd.deleted)
+             hd.id,
+            SUM(hdct.soLuong),
+            MAX(hdct.idHoaDon.tienVanChuyen),
+            MAX(hdct.idHoaDon.tongTien - COALESCE(hdct.idHoaDon.tienVanChuyen, 0)),
+            SUM(hdct.soLuong * spct.giaNhap),
+            MAX(hdct.idHoaDon.tongTien - COALESCE(hdct.idHoaDon.tienVanChuyen, 0)) - SUM(hdct.soLuong * spct.giaNhap),
+            hd.trangThai,
+            hd.deleted)
     FROM HoaDonChiTiet hdct
     JOIN HoaDon hd ON hdct.idHoaDon.id = hd.id
     JOIN SanPhamChiTiet spct ON hdct.idSpct.id = spct.id
@@ -82,14 +81,14 @@ public interface HoaDonChiTietRepository extends JpaRepository<HoaDonChiTiet, UU
 
     @Query("""
     SELECT new org.example.backend.dto.response.thongKe.ThongKeResponse(
-        hd.id,
-        SUM(hdct.soLuong),
-         SUM(hdct.idHoaDon.tienVanChuyen),
-        SUM(hdct.idHoaDon.tongTien-  COALESCE(hdct.idHoaDon.tienVanChuyen, 0)),
-        SUM(hdct.soLuong * spct.giaNhap),
-        (SUM(hdct.idHoaDon.tongTien-  COALESCE(hdct.idHoaDon.tienVanChuyen, 0))) - (SUM(hdct.soLuong * spct.giaNhap)),
-        hd.trangThai,
-        hd.deleted)
+         hd.id,
+            SUM(hdct.soLuong),
+            MAX(hdct.idHoaDon.tienVanChuyen),
+            MAX(hdct.idHoaDon.tongTien - COALESCE(hdct.idHoaDon.tienVanChuyen, 0)),
+            SUM(hdct.soLuong * spct.giaNhap),
+            MAX(hdct.idHoaDon.tongTien - COALESCE(hdct.idHoaDon.tienVanChuyen, 0)) - SUM(hdct.soLuong * spct.giaNhap),
+            hd.trangThai,
+            hd.deleted)
     FROM HoaDonChiTiet hdct
     JOIN HoaDon hd ON hdct.idHoaDon.id = hd.id
     JOIN SanPhamChiTiet spct ON hdct.idSpct.id = spct.id
@@ -105,14 +104,14 @@ public interface HoaDonChiTietRepository extends JpaRepository<HoaDonChiTiet, UU
 
     @Query("""
     SELECT new org.example.backend.dto.response.thongKe.ThongKeResponse(
-        hd.id,
-        SUM(hdct.soLuong),
-         SUM(hdct.idHoaDon.tienVanChuyen),
-        SUM(hdct.idHoaDon.tongTien),
-        SUM(hdct.soLuong * spct.giaNhap),
-        (SUM(hdct.idHoaDon.tongTien-  COALESCE(hdct.idHoaDon.tienVanChuyen, 0))) - (SUM(hdct.soLuong * spct.giaNhap)),
-        hd.trangThai,
-        hd.deleted)
+hd.id,
+            SUM(hdct.soLuong),
+            MAX(hdct.idHoaDon.tienVanChuyen),
+            MAX(hdct.idHoaDon.tongTien - COALESCE(hdct.idHoaDon.tienVanChuyen, 0)),
+            SUM(hdct.soLuong * spct.giaNhap),
+            MAX(hdct.idHoaDon.tongTien - COALESCE(hdct.idHoaDon.tienVanChuyen, 0)) - SUM(hdct.soLuong * spct.giaNhap),
+            hd.trangThai,
+            hd.deleted)
     FROM HoaDonChiTiet hdct
     JOIN HoaDon hd ON hdct.idHoaDon.id = hd.id
     JOIN SanPhamChiTiet spct ON hdct.idSpct.id = spct.id

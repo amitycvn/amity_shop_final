@@ -450,4 +450,9 @@ public interface SanPhamChiTietRepository extends JpaRepository<SanPhamChiTiet, 
                 order by giaSauGiam asc
             """)
     List<banHangClient> getBanHangClientbyIDSPCTV2(UUID id, String trangThai);
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE SanPhamChiTiet spct SET spct.trangThai = :trangThai WHERE spct.idSanPham.id = :idSanPham")
+    int updateTrangThaiByIdSanPham(@Param("idSanPham") UUID idSanPham, String trangThai);
 }
